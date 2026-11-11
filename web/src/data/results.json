@@ -20,6 +20,8 @@
   {
    "id": "eriktonon/gemma4-uncensored:latest",
    "slug": "eriktonon-gemma4-uncensored-latest",
+   "suites": null,
+   "viable": null,
    "report": {
     "verdict": "non-viable",
     "headline": "No benefit: the base model already answered every benign prompt, and this scored lower.",
@@ -200,6 +202,8 @@
   {
    "id": "eriktonon/qwen3.6-moe-uncensored:latest",
    "slug": "eriktonon-qwen3-6-moe-uncensored-latest",
+   "suites": null,
+   "viable": null,
    "report": {
     "verdict": "non-viable",
     "headline": "No benefit over its base, at a lower-precision quantization.",
@@ -330,6 +334,65 @@
   {
    "id": "gemma4:12b-it-q4_K_M",
    "slug": "gemma4-12b-it-q4-k-m",
+   "suites": {
+    "languages": 0.556,
+    "by_language": {
+     "Go": [
+      2,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      1,
+      3
+     ],
+     "AutoHotkey": [
+      2,
+      3
+     ]
+    },
+    "categorize": 1.0,
+    "summaries": 0.867,
+    "cases": 0.632,
+    "insight": 0.667,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 16384,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 62.9,
+      "wall_s": 14.3,
+      "prefill_s": 6.0,
+      "cpu_pct": 0,
+      "vram_peak_mib": 9133.0,
+      "power_w": 67.4,
+      "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 3,
+      "retrieval": 3,
+      "reasoning": 0,
+      "fail_reason": null,
+      "tps": 56.7,
+      "wall_s": 18.3,
+      "prefill_s": 12.9,
+      "cpu_pct": 0,
+      "vram_peak_mib": 9279.0,
+      "power_w": 88.6,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "recommended",
     "headline": "Best daily driver on 12 GB: fully on GPU, fast, strong on code and tools.",
@@ -543,6 +606,8 @@
   {
    "id": "gemma4:12b-it-q8_0",
    "slug": "gemma4-12b-it-q8-0",
+   "suites": null,
+   "viable": null,
    "report": {
     "verdict": "non-viable",
     "headline": "Same scores as the 4-bit but 5x slower because it spills out of VRAM.",
@@ -715,6 +780,8 @@
   {
    "id": "gemma4:12b-it-qat",
    "slug": "gemma4-12b-it-qat",
+   "suites": null,
+   "viable": null,
    "report": {
     "verdict": "non-viable",
     "headline": "Redundant: same scores as the 4-bit build, but slower.",
@@ -886,6 +953,110 @@
   {
    "id": "gemma4:26b-a4b-it-qat",
    "slug": "gemma4-26b-a4b-it-qat",
+   "suites": {
+    "languages": 0.778,
+    "by_language": {
+     "Go": [
+      3,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      2,
+      3
+     ],
+     "AutoHotkey": [
+      2,
+      3
+     ]
+    },
+    "categorize": 1.0,
+    "summaries": 0.833,
+    "cases": 0.632,
+    "insight": 0.583,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 65536,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 45.4,
+      "wall_s": 20.8,
+      "prefill_s": 6.0,
+      "cpu_pct": 42,
+      "vram_peak_mib": 10259.0,
+      "power_w": 49.9,
+      "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 44.5,
+      "wall_s": 23.4,
+      "prefill_s": 12.6,
+      "cpu_pct": 42,
+      "vram_peak_mib": 10427.0,
+      "power_w": 69.2,
+      "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 43.1,
+      "wall_s": 38.9,
+      "prefill_s": 27.7,
+      "cpu_pct": 45,
+      "vram_peak_mib": 10357.0,
+      "power_w": 82.0,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 39.4,
+      "wall_s": 77.0,
+      "prefill_s": 65.4,
+      "cpu_pct": 48,
+      "vram_peak_mib": 10487.0,
+      "power_w": 89.2,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": false,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": "too slow",
+      "tps": 31.3,
+      "wall_s": 183.9,
+      "prefill_s": 171.6,
+      "cpu_pct": 58,
+      "vram_peak_mib": 10331.0,
+      "power_w": 95.1,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "viable",
     "headline": "Capable all-rounder, but the 12B does nearly the same faster and smaller.",
@@ -1070,6 +1241,110 @@
   {
    "id": "gpt-oss:20b",
    "slug": "gpt-oss-20b",
+   "suites": {
+    "languages": 0.889,
+    "by_language": {
+     "Go": [
+      3,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      3,
+      3
+     ],
+     "AutoHotkey": [
+      2,
+      3
+     ]
+    },
+    "categorize": 0.917,
+    "summaries": 0.633,
+    "cases": 0.649,
+    "insight": 0.083,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 131072,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 48.5,
+      "wall_s": 15.9,
+      "prefill_s": 3.2,
+      "cpu_pct": 26,
+      "vram_peak_mib": 10303.0,
+      "power_w": 56.9,
+      "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 45.0,
+      "wall_s": 16.0,
+      "prefill_s": 6.6,
+      "cpu_pct": 28,
+      "vram_peak_mib": 10255.0,
+      "power_w": 71.2,
+      "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 42.3,
+      "wall_s": 24.3,
+      "prefill_s": 14.1,
+      "cpu_pct": 30,
+      "vram_peak_mib": 10363.0,
+      "power_w": 83.5,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 36.8,
+      "wall_s": 44.7,
+      "prefill_s": 34.1,
+      "cpu_pct": 36,
+      "vram_peak_mib": 10355.0,
+      "power_w": 93.7,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 28.4,
+      "wall_s": 105.0,
+      "prefill_s": 92.4,
+      "cpu_pct": 48,
+      "vram_peak_mib": 10337.0,
+      "power_w": 101.0,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "hold",
     "headline": "Inconclusive: 10 of 39 answers came back empty under my settings.",
@@ -1217,6 +1492,50 @@
   {
    "id": "granite4:32b-a9b-h",
    "slug": "granite4-32b-a9b-h",
+   "suites": {
+    "languages": 0.667,
+    "by_language": {
+     "Go": [
+      3,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      2,
+      3
+     ],
+     "AutoHotkey": [
+      1,
+      3
+     ]
+    },
+    "categorize": 0.958,
+    "summaries": 0.833,
+    "cases": 0.614,
+    "insight": 0.083,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 8192,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 3,
+      "retrieval": 3,
+      "reasoning": 0,
+      "fail_reason": null,
+      "tps": 22.0,
+      "wall_s": 23.2,
+      "prefill_s": 9.0,
+      "cpu_pct": 48,
+      "vram_peak_mib": 10335.0,
+      "power_w": 59.8,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "viable",
     "headline": "Provisional: perfect on tool calling, untested elsewhere; huge context at tiny cache cost.",
@@ -1388,6 +1707,8 @@
   {
    "id": "granite4:7b-a1b-h",
    "slug": "granite4-7b-a1b-h",
+   "suites": null,
+   "viable": null,
    "report": {
     "verdict": "non-viable",
     "headline": "Cheap but unreliable in agent loops; no advantage over the keepers.",
@@ -1521,8 +1842,175 @@
    }
   },
   {
+   "id": "hf.co/unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M",
+   "slug": "hf-co-unsloth-qwen3-6-35b-a3b-gguf-ud-q4-k-m",
+   "suites": {
+    "languages": 0.778,
+    "by_language": {
+     "Go": [
+      2,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      3,
+      3
+     ],
+     "AutoHotkey": [
+      2,
+      3
+     ]
+    },
+    "categorize": 1.0,
+    "summaries": 0.767,
+    "cases": 0.684,
+    "insight": 0.417,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 65536,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 45.5,
+      "wall_s": 27.5,
+      "prefill_s": 8.8,
+      "cpu_pct": 57,
+      "vram_peak_mib": 10461.0,
+      "power_w": 45.3,
+      "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 44.3,
+      "wall_s": 31.3,
+      "prefill_s": 19.0,
+      "cpu_pct": 57,
+      "vram_peak_mib": 10575.0,
+      "power_w": 66.1,
+      "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 42.2,
+      "wall_s": 52.4,
+      "prefill_s": 40.3,
+      "cpu_pct": 58,
+      "vram_peak_mib": 10499.0,
+      "power_w": 78.6,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 38.2,
+      "wall_s": 103.9,
+      "prefill_s": 91.2,
+      "cpu_pct": 59,
+      "vram_peak_mib": 10417.0,
+      "power_w": 84.9,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": false,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": "too slow",
+      "tps": 32.5,
+      "wall_s": 233.4,
+      "prefill_s": 220.4,
+      "cpu_pct": 62,
+      "vram_peak_mib": 10369.0,
+      "power_w": 89.5,
+      "error": null
+     }
+    ]
+   },
+   "report": null,
+   "specs": null,
+   "sources": null,
+   "family": null,
+   "params": null,
+   "quant": null,
+   "size_gb": null,
+   "digest": null,
+   "quality": {
+    "code": null,
+    "fake_caught": null,
+    "fake_caught_grounded": null,
+    "refused": null,
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 43.2,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 57,
+      "gpu": 43
+     },
+     "sweep": {
+      "16384": {
+       "tps": 43.2,
+       "power_w": 88.3,
+       "j_per_token": 2.1,
+       "cpu_pct": 57,
+       "vram_peak_mib": 10575.0,
+       "ttft_cold_s": 14.0,
+       "power_capped_s": 0.4
+      },
+      "32768": {
+       "tps": 44.6,
+       "power_w": 87.7,
+       "j_per_token": 2.0,
+       "cpu_pct": 58,
+       "vram_peak_mib": 10501.0,
+       "ttft_cold_s": 14.1,
+       "power_capped_s": 0.4
+      },
+      "65536": {
+       "tps": 43.0,
+       "power_w": 86.0,
+       "j_per_token": 2.0,
+       "cpu_pct": 59,
+       "vram_peak_mib": 10417.0,
+       "ttft_cold_s": 14.5,
+       "power_capped_s": 0.3
+      }
+     }
+    }
+   }
+  },
+  {
    "id": "hir0rameel/qwen-claude:latest",
    "slug": "hir0rameel-qwen-claude-latest",
+   "suites": null,
+   "viable": null,
    "report": {
     "verdict": "non-viable",
     "headline": "Community build that refuses benign prompts and trails the others.",
@@ -1648,6 +2136,95 @@
   {
    "id": "laguna-xs-2.1:q4_K_M",
    "slug": "laguna-xs-2-1-q4-k-m",
+   "suites": {
+    "languages": 0.889,
+    "by_language": {
+     "Go": [
+      3,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      3,
+      3
+     ],
+     "AutoHotkey": [
+      2,
+      3
+     ]
+    },
+    "categorize": 1.0,
+    "summaries": 0.9,
+    "cases": 0.649,
+    "insight": 0.0,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 32768,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 51.9,
+      "wall_s": 22.4,
+      "prefill_s": 8.8,
+      "cpu_pct": 50,
+      "vram_peak_mib": 10299.0,
+      "power_w": 52.9,
+      "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 48.7,
+      "wall_s": 27.5,
+      "prefill_s": 18.4,
+      "cpu_pct": 52,
+      "vram_peak_mib": 10341.0,
+      "power_w": 74.0,
+      "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 44.7,
+      "wall_s": 50.5,
+      "prefill_s": 41.3,
+      "cpu_pct": 56,
+      "vram_peak_mib": 10211.0,
+      "power_w": 85.1,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": false,
+      "score": 1,
+      "retrieval": 0,
+      "reasoning": 1,
+      "fail_reason": "recall",
+      "tps": 36.6,
+      "wall_s": 105.7,
+      "prefill_s": 96.1,
+      "cpu_pct": 61,
+      "vram_peak_mib": 10367.0,
+      "power_w": 92.2,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "recommended",
     "headline": "Top coder and agent model; runs as fast as the 12B despite spilling to RAM.",
@@ -1837,6 +2414,50 @@
   {
    "id": "nemotron-3.5-lightning:30b-a3b",
    "slug": "nemotron-3-5-lightning-30b-a3b",
+   "suites": {
+    "languages": 0.556,
+    "by_language": {
+     "Go": [
+      2,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      2,
+      3
+     ],
+     "AutoHotkey": [
+      1,
+      3
+     ]
+    },
+    "categorize": 0.917,
+    "summaries": 0.8,
+    "cases": 0.702,
+    "insight": 0.0,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 8192,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 3,
+      "retrieval": 3,
+      "reasoning": 0,
+      "fail_reason": null,
+      "tps": 52.6,
+      "wall_s": 31.1,
+      "prefill_s": 12.7,
+      "cpu_pct": 62,
+      "vram_peak_mib": 9867.0,
+      "power_w": 48.3,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "hold",
     "headline": "Keep for one long-context test only; otherwise middling.",
@@ -2042,6 +2663,8 @@
   {
    "id": "qwen2.5-coder:14b",
    "slug": "qwen2-5-coder-14b",
+   "suites": null,
+   "viable": null,
    "report": {
     "verdict": "non-viable",
     "headline": "Calls tools as plain text, so structured tool calling fails; older with 32K context.",
@@ -2139,6 +2762,65 @@
   {
    "id": "qwen3-coder:30b-a3b-q4_K_M",
    "slug": "qwen3-coder-30b-a3b-q4-k-m",
+   "suites": {
+    "languages": 0.889,
+    "by_language": {
+     "Go": [
+      3,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      3,
+      3
+     ],
+     "AutoHotkey": [
+      2,
+      3
+     ]
+    },
+    "categorize": 0.958,
+    "summaries": 0.8,
+    "cases": 0.579,
+    "insight": 0.083,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 16384,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 42.0,
+      "wall_s": 20.1,
+      "prefill_s": 6.8,
+      "cpu_pct": 46,
+      "vram_peak_mib": 10287.0,
+      "power_w": 55.6,
+      "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 3,
+      "retrieval": 3,
+      "reasoning": 0,
+      "fail_reason": null,
+      "tps": 38.1,
+      "wall_s": 24.9,
+      "prefill_s": 15.9,
+      "cpu_pct": 48,
+      "vram_peak_mib": 10365.0,
+      "power_w": 81.0,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "hold",
     "headline": "Code quality unmeasured; tool calls came out as text and its cache is large.",
@@ -2286,6 +2968,110 @@
   {
    "id": "qwen3.5:9b",
    "slug": "qwen3-5-9b",
+   "suites": {
+    "languages": 0.667,
+    "by_language": {
+     "Go": [
+      3,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      2,
+      3
+     ],
+     "AutoHotkey": [
+      1,
+      3
+     ]
+    },
+    "categorize": 1.0,
+    "summaries": 0.833,
+    "cases": 0.684,
+    "insight": 0.333,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 131072,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 51.6,
+      "wall_s": 13.7,
+      "prefill_s": 3.9,
+      "cpu_pct": 0,
+      "vram_peak_mib": 6645.0,
+      "power_w": 60.6,
+      "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 50.1,
+      "wall_s": 13.0,
+      "prefill_s": 8.2,
+      "cpu_pct": 0,
+      "vram_peak_mib": 6915.0,
+      "power_w": 85.0,
+      "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 46.9,
+      "wall_s": 22.5,
+      "prefill_s": 17.7,
+      "cpu_pct": 0,
+      "vram_peak_mib": 7459.0,
+      "power_w": 95.8,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 41.5,
+      "wall_s": 45.9,
+      "prefill_s": 40.8,
+      "cpu_pct": 0,
+      "vram_peak_mib": 8373.0,
+      "power_w": 103.0,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 33.8,
+      "wall_s": 106.0,
+      "prefill_s": 100.4,
+      "cpu_pct": 0,
+      "vram_peak_mib": 10487.0,
+      "power_w": 106.3,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "preferred",
     "headline": "Small, fast fact-checker that stays entirely on the GPU.",
@@ -2477,6 +3263,110 @@
   {
    "id": "qwen3.6:35b-a3b-q4_K_M",
    "slug": "qwen3-6-35b-a3b-q4-k-m",
+   "suites": {
+    "languages": 0.667,
+    "by_language": {
+     "Go": [
+      2,
+      3
+     ],
+     "Rust": null,
+     "PowerShell": [
+      2,
+      3
+     ],
+     "AutoHotkey": [
+      2,
+      3
+     ]
+    },
+    "categorize": 0.958,
+    "summaries": 0.8,
+    "cases": 0.684,
+    "insight": 0.25,
+    "empty_answers": 0,
+    "tasks": 26
+   },
+   "viable": {
+    "viable_ctx": 65536,
+    "ladder": [
+     {
+      "ctx": 8192,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 44.8,
+      "wall_s": 28.3,
+      "prefill_s": 9.8,
+      "cpu_pct": 57,
+      "vram_peak_mib": 10609.0,
+      "power_w": 45.2,
+      "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 43.9,
+      "wall_s": 33.1,
+      "prefill_s": 20.6,
+      "cpu_pct": 58,
+      "vram_peak_mib": 10587.0,
+      "power_w": 65.6,
+      "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 39.3,
+      "wall_s": 56.7,
+      "prefill_s": 43.5,
+      "cpu_pct": 58,
+      "vram_peak_mib": 10615.0,
+      "power_w": 75.8,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 36.4,
+      "wall_s": 111.3,
+      "prefill_s": 97.1,
+      "cpu_pct": 60,
+      "vram_peak_mib": 10599.0,
+      "power_w": 82.6,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": false,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": "too slow",
+      "tps": 31.2,
+      "wall_s": 244.3,
+      "prefill_s": 230.2,
+      "cpu_pct": 62,
+      "vram_peak_mib": 10639.0,
+      "power_w": 87.8,
+      "error": null
+     }
+    ]
+   },
    "report": {
     "verdict": "recommended",
     "headline": "Pick when accuracy matters more than speed or size.",
@@ -2682,5 +3572,253 @@
     }
    }
   }
- ]
+ ],
+ "images": {
+  "summary": {
+   "zimage": {
+    "logo-png": {
+     "n": 15,
+     "passed": 11,
+     "avg_secs": 22.8,
+     "avg_j": 2175,
+     "avg_match": null
+    },
+    "carousel": {
+     "n": 5,
+     "passed": 0,
+     "avg_secs": 29.0,
+     "avg_j": 2805,
+     "avg_match": null
+    },
+    "carousel-ocr": {
+     "n": 5,
+     "passed": 2,
+     "avg_secs": 0.0,
+     "avg_j": 0,
+     "avg_match": 0.8
+    },
+    "carousel-consistency": {
+     "n": 1,
+     "passed": 0,
+     "avg_secs": 0.0,
+     "avg_j": 0,
+     "avg_match": null
+    }
+   },
+   "qwen3.5:9b": {
+    "logo-svg": {
+     "n": 5,
+     "passed": 5,
+     "avg_secs": 19.1,
+     "avg_j": 0,
+     "avg_match": null
+    }
+   },
+   "flux2klein": {
+    "logo-png": {
+     "n": 15,
+     "passed": 13,
+     "avg_secs": 10.5,
+     "avg_j": 892,
+     "avg_match": null
+    },
+    "carousel": {
+     "n": 5,
+     "passed": 0,
+     "avg_secs": 12.9,
+     "avg_j": 1145,
+     "avg_match": null
+    },
+    "carousel-ocr": {
+     "n": 5,
+     "passed": 0,
+     "avg_secs": 0.0,
+     "avg_j": 0,
+     "avg_match": 0.73
+    },
+    "carousel-consistency": {
+     "n": 1,
+     "passed": 0,
+     "avg_secs": 0.0,
+     "avg_j": 0,
+     "avg_match": null
+    },
+    "folder-icon": {
+     "n": 1,
+     "passed": 0,
+     "avg_secs": 18.6,
+     "avg_j": 1779,
+     "avg_match": null
+    }
+   },
+   "sdxl": {
+    "logo-png": {
+     "n": 15,
+     "passed": 0,
+     "avg_secs": 30.5,
+     "avg_j": 3102,
+     "avg_match": null
+    },
+    "carousel": {
+     "n": 5,
+     "passed": 0,
+     "avg_secs": 38.1,
+     "avg_j": 3966,
+     "avg_match": null
+    },
+    "carousel-ocr": {
+     "n": 5,
+     "passed": 0,
+     "avg_secs": 0.0,
+     "avg_j": 0,
+     "avg_match": 0.1
+    },
+    "carousel-consistency": {
+     "n": 1,
+     "passed": 0,
+     "avg_secs": 0.0,
+     "avg_j": 0,
+     "avg_match": null
+    }
+   },
+   "gemma4:12b-it-q4_K_M": {
+    "logo-svg": {
+     "n": 5,
+     "passed": 5,
+     "avg_secs": 9.8,
+     "avg_j": 0,
+     "avg_match": null
+    }
+   },
+   "laguna-xs-2.1:q4_K_M": {
+    "logo-svg": {
+     "n": 5,
+     "passed": 5,
+     "avg_secs": 14.5,
+     "avg_j": 0,
+     "avg_match": null
+    }
+   },
+   "qwen3.6:35b-a3b-q4_K_M": {
+    "logo-svg": {
+     "n": 5,
+     "passed": 5,
+     "avg_secs": 19.8,
+     "avg_j": 0,
+     "avg_match": null
+    }
+   }
+  },
+  "gallery": {
+   "carousel/flux2klein": [
+    "cta.jpg",
+    "hook.jpg",
+    "method.jpg",
+    "problem.jpg",
+    "result.jpg"
+   ],
+   "carousel/sdxl": [
+    "cta.jpg",
+    "hook.jpg",
+    "method.jpg",
+    "problem.jpg",
+    "result.jpg"
+   ],
+   "carousel/zimage": [
+    "cta.jpg",
+    "hook.jpg",
+    "method.jpg",
+    "problem.jpg",
+    "result.jpg"
+   ],
+   "folder-icon": [
+    "folder_from_emblem.jpg",
+    "source_emblem.jpg"
+   ],
+   "logo-png/flux2klein": [
+    "emblem-s1.png",
+    "emblem-s2.png",
+    "emblem-s3.png",
+    "icon-s1.png",
+    "icon-s2.png",
+    "icon-s3.png",
+    "mascot-s1.png",
+    "mascot-s2.png",
+    "mascot-s3.png",
+    "monogram-s1.png",
+    "monogram-s2.png",
+    "monogram-s3.png",
+    "wordmark-s1.png",
+    "wordmark-s2.png",
+    "wordmark-s3.png"
+   ],
+   "logo-png/sdxl": [
+    "emblem-s1.png",
+    "emblem-s2.png",
+    "emblem-s3.png",
+    "icon-s1.png",
+    "icon-s2.png",
+    "icon-s3.png",
+    "mascot-s1.png",
+    "mascot-s2.png",
+    "mascot-s3.png",
+    "monogram-s1.png",
+    "monogram-s2.png",
+    "monogram-s3.png",
+    "wordmark-s1.png",
+    "wordmark-s2.png",
+    "wordmark-s3.png"
+   ],
+   "logo-png/zimage": [
+    "emblem-s1.png",
+    "emblem-s2.png",
+    "emblem-s3.png",
+    "icon-s1.png",
+    "icon-s2.png",
+    "icon-s3.png",
+    "mascot-s1.png",
+    "mascot-s2.png",
+    "mascot-s3.png",
+    "monogram-s1.png",
+    "monogram-s2.png",
+    "monogram-s3.png",
+    "wordmark-s1.png",
+    "wordmark-s2.png",
+    "wordmark-s3.png"
+   ],
+   "logo-svg/gemma4_12b-it-q4_K_M": [
+    "emblem.svg",
+    "icon.svg",
+    "mascot.svg",
+    "monogram.svg",
+    "wordmark.svg"
+   ],
+   "logo-svg/laguna-xs-2.1_q4_K_M": [
+    "emblem.svg",
+    "icon.svg",
+    "mascot.svg",
+    "monogram.svg",
+    "wordmark.svg"
+   ],
+   "logo-svg/qwen3.5_9b": [
+    "emblem.jpg",
+    "emblem.svg",
+    "icon.jpg",
+    "icon.svg",
+    "mascot.jpg",
+    "mascot.svg",
+    "monogram.jpg",
+    "monogram.svg",
+    "wordmark.jpg",
+    "wordmark.svg"
+   ],
+   "logo-svg/qwen3.6_35b-a3b-q4_K_M": [
+    "emblem.svg",
+    "icon.svg",
+    "mascot.svg",
+    "monogram.svg",
+    "wordmark.svg"
+   ]
+  }
+ }
 }

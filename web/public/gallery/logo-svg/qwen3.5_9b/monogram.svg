@@ -1,0 +1,25 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#F0F4F8"/>
+  
+  <!-- Outer Ring Border -->
+  <circle cx="256" cy="256" r="230" stroke="#3B82F6" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Inner Accent Circle -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#3B82F6" stroke-width="4" opacity="0.5"/>
+  
+  <!-- Letter L Path -->
+  <path d="M180 256V120L220 120V256H180Z" fill="#3B82F6"/>
+  
+  <!-- Letter B Path (Left Loop) -->
+  <path d="M290 120C290 120 270 140 270 180C270 220 290 240 290 240V360H250V120H290Z" fill="#3B82F6"/>
+  
+  <!-- Letter B Path (Right Loop) -->
+  <path d="M290 180C290 180 310 200 310 240C310 280 290 300 290 300V360H250V180H290Z" fill="#3B82F6"/>
+  
+  <!-- Decorative Dots -->
+  <circle cx="140" cy="140" r="8" fill="#3B82F6"/>
+  <circle cx="372" cy="140" r="8" fill="#3B82F6"/>
+  <circle cx="140" cy="372" r="8" fill="#3B82F6"/>
+  <circle cx="372" cy="372" r="8" fill="#3B82F6"/>
+</svg>

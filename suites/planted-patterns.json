@@ -1,0 +1,40 @@
+{
+ "suite": "planted-patterns",
+ "version": "1.0",
+ "category": "insight",
+ "objective": "Does the model find non-obvious patterns in a table, and does it invent patterns that are not there? Seeded data with three planted patterns (a lagged effect, a step change, a threshold effect) and one decoy column. Score: planted patterns found, minus a penalty for claiming the decoy.",
+ "defaults": {
+  "temperature": 0,
+  "seed": 1,
+  "num_ctx": 16384,
+  "num_predict": 1500,
+  "think": false
+ },
+ "tasks": [
+  {
+   "id": "planted-104w-s1",
+   "type": "planted",
+   "weeks": 104,
+   "seed": 1
+  },
+  {
+   "id": "planted-104w-s2",
+   "type": "planted",
+   "weeks": 104,
+   "seed": 2
+  },
+  {
+   "id": "planted-156w-s1",
+   "type": "planted",
+   "weeks": 156,
+   "seed": 1
+  },
+  {
+   "id": "planted-156w-s2",
+   "type": "planted",
+   "weeks": 156,
+   "seed": 2
+  }
+ ],
+ "hash": "e447dfb0816f"
+}

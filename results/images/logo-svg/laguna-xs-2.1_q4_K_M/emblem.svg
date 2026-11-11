@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#1a1a2e"/>
+  
+  <!-- Rays -->
+  <g id="rays">
+    <path d="M256 0 L270 40 L300 40 L256 80 L212 40 L242 40 Z" fill="#f9c74f"/>
+    <path d="M256 0 L270 40 L300 40 L256 80 L212 40 L242 40 Z" fill="#f9c74f" transform="rotate(60 256 0)"/>
+    <path d="M256 0 L270 40 L300 40 L256 80 L212 40 L242 40 Z" fill="#f9c74f" transform="rotate(120 256 0)"/>
+    <path d="M256 0 L270 40 L300 40 L256 80 L212 40 L242 40 Z" fill="#f9c74f" transform="rotate(180 256 0)"/>
+    <path d="M256 0 L270 40 L300 40 L256 80 L212 40 L242 40 Z" fill="#f9c74f" transform="rotate(240 256 0)"/>
+    <path d="M256 0 L270 40 L300 40 L256 80 L212 40 L242 40 Z" fill="#f9c74f" transform="rotate(300 256 0)"/>
+  </g>
+  
+  <!-- Lighthouse Base -->
+  <rect x="220" y="160" width="82" height="200" fill="#3a3a5c" rx="5"/>
+  
+  <!-- Lighthouse Body -->
+  <rect x="240" y="120" width="42" height="40" fill="#3a3a5c"/>
+  
+  <!-- Lantern Room -->
+  <rect x="230" y="80" width="62" height="40" fill="#e0e0e0" rx="3"/>
+  
+  <!-- Light -->
+  <circle cx="256" cy="100" r="8" fill="#f9c74f"/>
+  
+  <!-- Lighthouse Window -->
+  <rect x="245" y="85" width="22" height="10" fill="#2d2d4a"/>
+  
+  <!-- Door -->
+  <rect x="250" y="340" width="12" height="30" fill="#5a5a7a" rx="2"/>
+  
+  <!-- Door Handle -->
+  <circle cx="258" cy="355" r="3" fill="#8a8aaa"/>
+  
+  <!-- Base Details -->
+  <rect x="210" y="360" width="102" height="20" fill="#4a4a6a"/>
+  <rect x="210" y="380" width="102" height="10" fill="#3a3a5c"/>
+  
+  <!-- Flag -->
+  <polygon points="210,160 190,180 210,200" fill="#e63946"/>
+</svg>

@@ -1,0 +1,80 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#FFF8E7"/>
+  
+  <!-- Ears (Left) -->
+  <path d="M140 160 L90 80 L180 130 Z" fill="#FF6B6B"/>
+  <path d="M145 155 L95 75 L185 125 Z" fill="#FF5252"/>
+  
+  <!-- Ears (Right) -->
+  <path d="M370 160 L420 80 L330 130 Z" fill="#FF6B6B"/>
+  <path d="M365 155 L415 75 L325 125 Z" fill="#FF5252"/>
+  
+  <!-- Ear Inner (Left) -->
+  <path d="M100 100 L90 80 L130 110 Z" fill="#FFE4E1"/>
+  
+  <!-- Ear Inner (Right) -->
+  <path d="M410 100 L420 80 L380 110 Z" fill="#FFE4E1"/>
+  
+  <!-- Head Base -->
+  <ellipse cx="256" cy="240" rx="140" ry="120" fill="#FF7043"/>
+  
+  <!-- Snout -->
+  <ellipse cx="256" cy="260" rx="50" ry="40" fill="#FFCCBC"/>
+  
+  <!-- Nose -->
+  <path d="M248 250 L264 250 L256 235 Z" fill="#3E2723"/>
+  
+  <!-- Mouth -->
+  <path d="M240 265 Q256 280 272 265" stroke="#3E2723" stroke-width="4" fill="none" stroke-linecap="round"/>
+  
+  <!-- Whiskers (Left) -->
+  <line x1="210" y1="260" x2="180" y2="250" stroke="#D7CCC8" stroke-width="3"/>
+  <line x1="210" y1="270" x2="180" y2="260" stroke="#D7CCC8" stroke-width="3"/>
+  
+  <!-- Whiskers (Right) -->
+  <line x1="302" y1="260" x2="332" y2="250" stroke="#D7CCC8" stroke-width="3"/>
+  <line x1="302" y1="270" x2="332" y2="260" stroke="#D7CCC8" stroke-width="3"/>
+  
+  <!-- Cheeks -->
+  <circle cx="215" cy="265" r="8" fill="#FFAB91" opacity="0.6"/>
+  <circle cx="297" cy="265" r="8" fill="#FFAB91" opacity="0.6"/>
+  
+  <!-- Eye (Left) -->
+  <ellipse cx="220" cy="230" rx="18" ry="20" fill="#FFF"/>
+  <circle cx="220" cy="230" r="10" fill="#3E2723"/>
+  <circle cx="224" cy="226" r="3" fill="#FFF"/>
+  
+  <!-- Eye (Right) -->
+  <ellipse cx="292" cy="230" rx="18" ry="20" fill="#FFF"/>
+  <circle cx="292" cy="230" r="10" fill="#3E2723"/>
+  <circle cx="296" cy="226" r="3" fill="#FFF"/>
+  
+  <!-- Blush (Left) -->
+  <ellipse cx="205" cy="245" rx="12" ry="8" fill="#FFAB91" opacity="0.4"/>
+  
+  <!-- Blush (Right) -->
+  <ellipse cx="307" cy="245" rx="12" ry="8" fill="#FFAB91" opacity="0.4"/>
+  
+  <!-- Body -->
+  <path d="M256 380 L256 440 L200 440 L200 380 Z" fill="#FF7043"/>
+  
+  <!-- Tail (Left) -->
+  <path d="M160 390 Q120 390 100 420 Q80 450 120 450 Q160 450 180 420 Q200 390 160 390 Z" fill="#FF7043"/>
+  <path d="M160 390 Q120 390 100 420 Q80 450 120 450 Q160 450 180 420 Q200 390 160 390 Z" fill="#FF5252"/>
+  
+  <!-- Tail Tip -->
+  <path d="M100 420 L80 450 L100 470 L120 450 Z" fill="#FFAB91"/>
+  
+  <!-- Legs (Left) -->
+  <rect x="190" y="440" width="20" height="30" rx="5" fill="#FFCCBC"/>
+  
+  <!-- Legs (Right) -->
+  <rect x="282" y="440" width="20" height="30" rx="5" fill="#FFCCBC"/>
+  
+  <!-- Paw Pads (Left) -->
+  <ellipse cx="195" cy="470" rx="6" ry="4" fill="#FFE0B2"/>
+  
+  <!-- Paw Pads (Right) -->
+  <ellipse cx="305" cy="470" rx="6" ry="4" fill="#FFE0B2"/>
+</svg>

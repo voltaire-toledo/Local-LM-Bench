@@ -1,0 +1,168 @@
+{
+ "done": {
+  "tool-calling hf.co/unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M": {
+   "rc": 0,
+   "minutes": 0.9,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "speed-sweep hf.co/unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M": {
+   "rc": 0,
+   "minutes": 1.9,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "main-quality granite4:32b-a9b-h": {
+   "rc": 0,
+   "minutes": 11.4,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "main-quality qwen3-coder:30b-a3b-q4_K_M": {
+   "rc": 0,
+   "minutes": 5.5,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "main-quality hf.co/unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M": {
+   "rc": 0,
+   "minutes": 8.0,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "images core": {
+   "rc": 0,
+   "minutes": 24.2,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "images svg": {
+   "rc": 0,
+   "minutes": 5.3,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites gemma4:12b-it-q4_K_M": {
+   "rc": 0,
+   "minutes": 3.3,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites qwen3.5:9b": {
+   "rc": 0,
+   "minutes": 5.1,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites gemma4:26b-a4b-it-qat": {
+   "rc": 0,
+   "minutes": 4.2,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites laguna-xs-2.1:q4_K_M": {
+   "rc": 0,
+   "minutes": 3.7,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites qwen3.6:35b-a3b-q4_K_M": {
+   "rc": 0,
+   "minutes": 5.4,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites hf.co/unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M": {
+   "rc": 0,
+   "minutes": 4.6,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites granite4:32b-a9b-h": {
+   "rc": 0,
+   "minutes": 5.8,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites nemotron-3.5-lightning:30b-a3b": {
+   "rc": 0,
+   "minutes": 6.1,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites qwen3-coder:30b-a3b-q4_K_M": {
+   "rc": 0,
+   "minutes": 3.4,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "suites gpt-oss:20b": {
+   "rc": 0,
+   "minutes": 3.9,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context gemma4:12b-it-q4_K_M": {
+   "rc": 0,
+   "minutes": 0.6,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context qwen3.5:9b": {
+   "rc": 0,
+   "minutes": 3.6,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context gemma4:26b-a4b-it-qat": {
+   "rc": 0,
+   "minutes": 6.0,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context laguna-xs-2.1:q4_K_M": {
+   "rc": 0,
+   "minutes": 3.6,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context qwen3.6:35b-a3b-q4_K_M": {
+   "rc": 0,
+   "minutes": 8.1,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context hf.co/unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M": {
+   "rc": 0,
+   "minutes": 7.7,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context granite4:32b-a9b-h": {
+   "rc": 0,
+   "minutes": 0.4,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context nemotron-3.5-lightning:30b-a3b": {
+   "rc": 0,
+   "minutes": 0.6,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context qwen3-coder:30b-a3b-q4_K_M": {
+   "rc": 0,
+   "minutes": 0.9,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  },
+  "viable-context gpt-oss:20b": {
+   "rc": 0,
+   "minutes": 3.7,
+   "power_limit_w": 110.0,
+   "other_gpu_procs": []
+  }
+ },
+ "started": "2026-11-11T11:31:45",
+ "finished": "2026-11-11T13:50:02"
+}

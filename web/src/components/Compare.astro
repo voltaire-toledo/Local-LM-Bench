@@ -4,17 +4,25 @@ const { data } = Astro.props;
 <div class="card">
   <div class="row">
     <div class="ctl"><label for="hw">Hardware</label><select id="hw"></select></div>
-    <div class="ctl"><label>Accuracy (no invented facts) <output id="o_f"></output></label><input id="w_f" type="range" min="0" max="10" value="8" /></div>
-    <div class="ctl"><label>Coding <output id="o_c"></output></label><input id="w_c" type="range" min="0" max="10" value="6" /></div>
-    <div class="ctl"><label>Tool calling <output id="o_t"></output></label><input id="w_t" type="range" min="0" max="10" value="6" /></div>
-    <div class="ctl"><label>Speed <output id="o_s"></output></label><input id="w_s" type="range" min="0" max="10" value="2" /></div>
+    <div class="ctl"><label for="minctx">Minimum viable context</label>
+      <select id="minctx"><option value="0">Any</option><option value="8192">8k</option><option value="16384">16k</option><option value="32768">32k</option><option value="65536">64k</option><option value="131072">128k</option></select></div>
     <div class="ctl"><label><input type="checkbox" id="showbad" /> Show non-viable models</label></div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div class="ctl"><label>Accuracy (no invented facts) <output id="o_f"></output></label><input id="w_f" type="range" min="0" max="10" value="8" /></div>
+    <div class="ctl"><label>Coding: Python, Terraform <output id="o_c"></output></label><input id="w_c" type="range" min="0" max="10" value="6" /></div>
+    <div class="ctl"><label>Other languages <output id="o_l"></output></label><input id="w_l" type="range" min="0" max="10" value="5" /></div>
+    <div class="ctl"><label>Tool calling <output id="o_t"></output></label><input id="w_t" type="range" min="0" max="10" value="6" /></div>
+    <div class="ctl"><label>Documents <output id="o_d"></output></label><input id="w_d" type="range" min="0" max="10" value="5" /></div>
+    <div class="ctl"><label>Case reasoning <output id="o_r"></output></label><input id="w_r" type="range" min="0" max="10" value="3" /></div>
+    <div class="ctl"><label>Insight finding <output id="o_i"></output></label><input id="w_i" type="range" min="0" max="10" value="3" /></div>
+    <div class="ctl"><label>Speed <output id="o_s"></output></label><input id="w_s" type="range" min="0" max="10" value="2" /></div>
   </div>
   <p class="note" id="hwnote" style="margin:10px 0 0"></p>
 </div>
 <h2>Ranking</h2>
 <div class="card wrap"><table id="tbl"></table></div>
-<p class="note">Click a row to add it to the side-by-side view (up to 3). A dash means not tested. An asterisk on the weighted score means the model lacks a test you weighted, so its score is partial and it sorts below fully tested models. Speed is generation tok/s with a 3k-token prompt at 16k context; models retired before the speed sweep show an earlier, shorter test and are not comparable.</p>
+<p class="note">Click a row to add it to the side-by-side view (up to 3). A dash means not tested. An asterisk on the weighted score means the model lacks a test you weighted, so its score is partial and it sorts below fully tested models. Viable context is the largest size that passed the planted-fact test at usable speed (see <a href="/tests/">the tests</a>). Speed is generation tok/s with a 3k-token prompt at 16k context; retired models show an earlier, shorter test and are not comparable.</p>
 <h2>Side by side</h2>
 <div class="grid" id="cmp"></div>
 <h2>Model report</h2>
@@ -23,27 +31,32 @@ const { data } = Astro.props;
 const $=s=>document.querySelector(s);const hwSel=$('#hw');let repId=null,sel=[],sortKey='score',asc=false;
 Object.entries(D.hardware).forEach(([k,v])=>hwSel.add(new Option(v.label,k)));
 const frac=a=>a&&a[1]?a[0]/a[1]:null;const fmt=a=>a?a[0]+'/'+a[1]:'–';
-function rows(){const hw=hwSel.value,W={f:+$('#w_f').value,c:+$('#w_c').value,t:+$('#w_t').value,s:+$('#w_s').value};
- ['f','c','t','s'].forEach(k=>$('#o_'+k).textContent=W[k]);
+const pct=v=>v==null?'–':Math.round(v*100)+'%';
+const kk=c=>c==null?'–':c>=1024?Math.round(c/1024)+'k':String(c);
+const avg=a=>{a=a.filter(x=>x!=null);return a.length?a.reduce((p,c)=>p+c,0)/a.length:null};
+const KEYS=['f','c','l','t','d','r','i','s'];
+function rows(){const hw=hwSel.value,W={};KEYS.forEach(k=>{W[k]=+$('#w_'+k).value;$('#o_'+k).textContent=W[k]});const minc=+$('#minctx').value;
  const H=D.hardware[hw],perf=D.models.map(m=>m.perf[hw]).filter(Boolean),maxT=Math.max(...perf.map(p=>p.tps||0),1);
  $('#hwnote').textContent=H.os+' | '+H.runtime+' | '+H.driver+' | '+H.memory_gb+' GB GPU memory';
- return D.models.filter(m=>m.perf[hw]&&($('#showbad').checked||!(m.report&&m.report.verdict==='non-viable'))).map(m=>{const q=m.quality,p=m.perf[hw];
-  const parts=[['f',frac(q.fake_caught)],['c',frac(q.code)],['t',frac(q.tools)],['s',p.tps?p.tps/maxT:null]];
+ return D.models.filter(m=>m.perf[hw]&&($('#showbad').checked||!(m.report&&m.report.verdict==='non-viable'))&&(!minc||(m.viable&&m.viable.viable_ctx>=minc))).map(m=>{const q=m.quality,p=m.perf[hw],s=m.suites||{};
+  const docs=avg([s.categorize,s.summaries]);
+  const parts=[['f',frac(q.fake_caught)],['c',frac(q.code)],['l',s.languages??null],['t',frac(q.tools)],['d',docs],['r',s.cases??null],['i',s.insight??null],['s',p.tps?p.tps/maxT:null]];
   let num=0,den=0;parts.forEach(([k,v])=>{if(v!==null&&W[k]>0){num+=W[k]*v;den+=W[k]}});
   const partial=parts.some(([k,v])=>W[k]>0&&v===null);
-  return {m,q,p,partial,score:den?Math.round(100*num/den):null,fakeF:frac(q.fake_caught),codeF:frac(q.code),toolF:frac(q.tools),tps:p.tps,gpu:p.split?p.split.gpu:null,size:m.size_gb}});}
+  return {m,q,p,s,partial,score:den?Math.round(100*num/den):null,fakeF:frac(q.fake_caught),codeF:frac(q.code),toolF:frac(q.tools),langF:s.languages??null,docF:docs,caseF:s.cases??null,insF:s.insight??null,tps:p.tps,gpu:p.split?p.split.gpu:null,size:m.size_gb,vctx:m.viable?m.viable.viable_ctx:null}});}
 function render(){let r=rows();const k=sortKey;r.sort((a,b)=>{if(k=='score'&&a.partial!=b.partial)return a.partial?1:-1;const x=a[k],y=b[k];if(x==null)return 1;if(y==null)return -1;return asc?x-y:y-x});
- const cols=[['score','Weighted'],['codeF','Code'],['fakeF','Fake items'],['toolF','Tools'],['tps','tok/s'],['gpu','On GPU %'],['size','GB']];
+ const cols=[['score','Weighted'],['vctx','Viable ctx'],['codeF','Py/TF'],['langF','Langs'],['fakeF','Fake items'],['toolF','Tools'],['docF','Docs'],['caseF','Cases'],['insF','Insight'],['tps','tok/s'],['gpu','On GPU %'],['size','GB']];
  let h='<tr><th>Model</th><th style="text-align:left">Verdict</th>'+cols.map(([c,l])=>`<th class="s${k==c&&asc?' a':''}" data-k="${c}">${l}</th>`).join('')+'</tr>';
  r.forEach(x=>{h+=`<tr data-id="${x.m.id}" class="${sel.includes(x.m.id)?'sel':''}"><td>${x.m.id} <span class="chip">${x.m.quant||''}</span></td><td style="text-align:left">${vb(x)}</td>
- <td class="${x.partial?'mut':''}" title="${x.partial?'Not tested on every area you weighted; score covers only the tests it has':''}"><span class="bar" style="width:${x.score||0}px;opacity:${x.partial?.4:1}"></span>${x.score??'–'}${x.partial?'*':''}</td><td>${fmt(x.q.code)}</td><td>${fmt(x.q.fake_caught)}</td><td>${fmt(x.q.tools)}</td>
+ <td class="${x.partial?'mut':''}" title="${x.partial?'Not tested on every area you weighted; score covers only the tests it has':''}"><span class="bar" style="width:${x.score||0}px;opacity:${x.partial?.4:1}"></span>${x.score??'–'}${x.partial?'*':''}</td>
+ <td>${x.m.viable?(x.vctx?kk(x.vctx):'&lt;8k'):'–'}</td><td>${fmt(x.q.code)}</td><td>${pct(x.langF)}</td><td>${fmt(x.q.fake_caught)}</td><td>${fmt(x.q.tools)}</td><td>${pct(x.docF)}</td><td>${pct(x.caseF)}</td><td>${pct(x.insF)}</td>
  <td>${x.tps??'–'}</td><td class="${x.gpu!=null&&x.gpu<100?'bad':''}">${x.gpu??'–'}</td><td>${x.size??'–'}</td></tr>`});
  $('#tbl').innerHTML=h;$('#tbl').querySelectorAll('th.s').forEach(t=>t.onclick=()=>{const c=t.dataset.k;asc=sortKey==c?!asc:false;sortKey=c;render()});
  $('#tbl').querySelectorAll('tr[data-id]').forEach(t=>t.onclick=()=>{if(String(getSelection()))return;const id=t.dataset.id;sel=sel.includes(id)?sel.filter(s=>s!=id):[...sel.slice(-2),id];render()});
  $('#tbl').querySelectorAll('button[data-rep]').forEach(b=>b.onclick=e=>{e.stopPropagation();repId=b.dataset.rep;render();$('#rep').scrollIntoView({behavior:'smooth'})});
  const by=Object.fromEntries(r.map(x=>[x.m.id,x]));
  $('#cmp').innerHTML=sel.length?sel.map(id=>{const x=by[id];if(!x)return'';const b=(l,v,t)=>`<div class="m"><span>${l}</span><span>${t}</span></div><div class="t"><i style="width:${Math.round((v||0)*100)}%"></i></div>`;
-  return `<div class="card"><h3 style="margin:0 0 8px">${id}</h3>${b('Code',x.codeF,fmt(x.q.code))}${b('Fake items caught',x.fakeF,fmt(x.q.fake_caught))}${b('Tool calling',x.toolF,fmt(x.q.tools))}${b('Refusals on benign prompts',x.q.refused?x.q.refused[0]/x.q.refused[1]:0,fmt(x.q.refused))}${b('Speed',x.tps/Math.max(...r.map(y=>y.tps||0),1),(x.tps??'–')+' tok/s')}<div class="m"><span>${x.m.params||''} ${x.m.quant||''}</span><span>${x.size??'–'} GB, ${x.gpu??'?'}% on GPU</span></div></div>`}).join(''):'<p class="note">Select up to three models in the table.</p>';
+  return `<div class="card"><h3 style="margin:0 0 8px">${id}</h3>${b('Python and Terraform',x.codeF,fmt(x.q.code))}${b('Other languages',x.langF,pct(x.langF))}${b('Fake items caught',x.fakeF,fmt(x.q.fake_caught))}${b('Tool calling',x.toolF,fmt(x.q.tools))}${b('Documents',x.docF,pct(x.docF))}${b('Case reasoning',x.caseF,pct(x.caseF))}${b('Insight finding',x.insF,pct(x.insF))}${b('Viable context',x.vctx?x.vctx/131072:0,x.m.viable?(x.vctx?kk(x.vctx):'<8k'):'–')}${b('Speed',x.tps/Math.max(...r.map(y=>y.tps||0),1),(x.tps??'–')+' tok/s')}<div class="m"><span>${x.m.params||''} ${x.m.quant||''}</span><span>${x.size??'–'} GB, ${x.gpu??'?'}% on GPU</span></div></div>`}).join(''):'<p class="note">Select up to three models in the table.</p>';
  $('#rep').innerHTML=reportHTML(by[repId]||null);}
 const vd=x=>(x.m.report&&x.m.report.verdict)||'untriaged';
 const vb=x=>`<span class="v ${vd(x)}">${vd(x)}</span><button data-rep="${x.m.id}">Report</button>`;
@@ -51,7 +64,7 @@ const EV={measured:'measured',inferred:'inferred, not tested',untested:'not test
 const AREAS=[['apps','Real-world applications'],['agentic','Agentic tasks'],['analysis','Analysis and insight surfacing'],['critical','Critical evaluation'],['workflows','Workflows']];
 const li=(l,a)=>a&&a.length?`<p><span class="k">${l}:</span> ${a.join('; ')}</p>`:'';
 function reportHTML(x){if(!x)return'<p class="note">Click Report on a row to see what we determined about that model.</p>';const r=x.m.report;
- const nums=`<p class="note">Measured at 16k context: code ${fmt(x.q.code)}, invented items caught ${fmt(x.q.fake_caught)}, tool calling ${fmt(x.q.tools)}, benign prompts refused ${fmt(x.q.refused)}, ${x.tps??'–'} tok/s, ${x.gpu??'?'}% on GPU, ${x.size??'?'} GB.</p>`;
+ const nums=`<p class="note">At 16k context: Python/Terraform ${fmt(x.q.code)}, other languages ${pct(x.langF)}, invented items caught ${fmt(x.q.fake_caught)}, tool calling ${fmt(x.q.tools)}, documents ${pct(x.docF)}, case reasoning ${pct(x.caseF)}, insight finding ${pct(x.insF)}, viable context ${x.m.viable?(x.vctx?kk(x.vctx):'under 8k'):'not tested'}, ${x.tps??'–'} tok/s, ${x.gpu??'?'}% on GPU, ${x.size??'?'} GB.</p>`;
  const more=`<p><a href="/models/${x.m.slug}/">Full model page: specs, sources and downloads</a></p>`;
  if(!r)return`<div class="card rep"><h3>${x.m.id}</h3><p>No verdict recorded yet.</p>${nums}${more}</div>`;
  return`<div class="card rep"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${x.m.id}</h3><span class="v ${r.verdict}">${r.verdict}</span></div>

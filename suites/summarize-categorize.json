@@ -1,0 +1,293 @@
+{
+ "suite": "summarize-categorize",
+ "version": "1.0",
+ "category": "documents",
+ "objective": "Condense and sort real-looking documents: accurate categorization of tickets, and executive summaries that keep the key facts, stay short and invent nothing.",
+ "defaults": {
+  "temperature": 0,
+  "seed": 1,
+  "num_ctx": 16384,
+  "num_predict": 1500,
+  "think": false
+ },
+ "tasks": [
+  {
+   "id": "categorize-tickets",
+   "type": "labels",
+   "labels": [
+    "identity-access",
+    "network",
+    "endpoint",
+    "application",
+    "security",
+    "cloud-infra"
+   ],
+   "tickets": [
+    {
+     "id": "T01",
+     "text": "User cannot sign in; the MFA prompt loops after getting a new phone.",
+     "label": "identity-access"
+    },
+    {
+     "id": "T02",
+     "text": "VPN connects but internal sites time out for the Boston office.",
+     "label": "network"
+    },
+    {
+     "id": "T03",
+     "text": "Laptop battery is swollen and the trackpad is lifting.",
+     "label": "endpoint"
+    },
+    {
+     "id": "T04",
+     "text": "Expense app throws a 500 error when attaching receipts.",
+     "label": "application"
+    },
+    {
+     "id": "T05",
+     "text": "User got an email from the 'CEO' asking for gift cards and clicked the link.",
+     "label": "security"
+    },
+    {
+     "id": "T06",
+     "text": "A nightly job that stops dev VMs also stopped a production VM.",
+     "label": "cloud-infra"
+    },
+    {
+     "id": "T07",
+     "text": "Cannot reset password; the self-service page says the account is locked.",
+     "label": "identity-access"
+    },
+    {
+     "id": "T08",
+     "text": "Wi-Fi drops every 20 minutes in the third-floor conference rooms.",
+     "label": "network"
+    },
+    {
+     "id": "T09",
+     "text": "Monitor flickers when the docking station is connected.",
+     "label": "endpoint"
+    },
+    {
+     "id": "T10",
+     "text": "A spreadsheet macro stopped working after the Office update.",
+     "label": "application"
+    },
+    {
+     "id": "T11",
+     "text": "Endpoint protection flagged an unknown executable in the Downloads folder.",
+     "label": "security"
+    },
+    {
+     "id": "T12",
+     "text": "The storage account firewall blocks the new build agent's IP address.",
+     "label": "cloud-infra"
+    },
+    {
+     "id": "T13",
+     "text": "New hire needs access to the finance share and the ERP.",
+     "label": "identity-access"
+    },
+    {
+     "id": "T14",
+     "text": "DNS returns the old IP for the intranet portal on some machines.",
+     "label": "network"
+    },
+    {
+     "id": "T15",
+     "text": "Laptop will not boot; blue screen after a driver update.",
+     "label": "endpoint"
+    },
+    {
+     "id": "T16",
+     "text": "CRM search returns nothing for customers added this week.",
+     "label": "application"
+    },
+    {
+     "id": "T17",
+     "text": "Several failed logins from another country on the admin account.",
+     "label": "security"
+    },
+    {
+     "id": "T18",
+     "text": "Kubernetes pods are pending because the node pool hit its quota.",
+     "label": "cloud-infra"
+    },
+    {
+     "id": "T19",
+     "text": "A contractor's guest account expired but they still need the project site.",
+     "label": "identity-access"
+    },
+    {
+     "id": "T20",
+     "text": "Packet loss between the data center and the cloud gateway during backups.",
+     "label": "network"
+    },
+    {
+     "id": "T21",
+     "text": "Printer driver installs fail on the new laptops.",
+     "label": "endpoint"
+    },
+    {
+     "id": "T22",
+     "text": "The reporting tool shows yesterday's numbers; the nightly refresh failed.",
+     "label": "application"
+    },
+    {
+     "id": "T23",
+     "text": "An employee lost a phone that had the corporate mail app signed in.",
+     "label": "security"
+    },
+    {
+     "id": "T24",
+     "text": "Terraform plan wants to destroy the production database after a provider upgrade.",
+     "label": "cloud-infra"
+    }
+   ],
+   "prompt": "Classify each support ticket into exactly one label from: identity-access, network, endpoint, application, security, cloud-infra. Return only a JSON object mapping each ticket id to its label.\n\nT01: User cannot sign in; the MFA prompt loops after getting a new phone.\nT02: VPN connects but internal sites time out for the Boston office.\nT03: Laptop battery is swollen and the trackpad is lifting.\nT04: Expense app throws a 500 error when attaching receipts.\nT05: User got an email from the 'CEO' asking for gift cards and clicked the link.\nT06: A nightly job that stops dev VMs also stopped a production VM.\nT07: Cannot reset password; the self-service page says the account is locked.\nT08: Wi-Fi drops every 20 minutes in the third-floor conference rooms.\nT09: Monitor flickers when the docking station is connected.\nT10: A spreadsheet macro stopped working after the Office update.\nT11: Endpoint protection flagged an unknown executable in the Downloads folder.\nT12: The storage account firewall blocks the new build agent's IP address.\nT13: New hire needs access to the finance share and the ERP.\nT14: DNS returns the old IP for the intranet portal on some machines.\nT15: Laptop will not boot; blue screen after a driver update.\nT16: CRM search returns nothing for customers added this week.\nT17: Several failed logins from another country on the admin account.\nT18: Kubernetes pods are pending because the node pool hit its quota.\nT19: A contractor's guest account expired but they still need the project site.\nT20: Packet loss between the data center and the cloud gateway during backups.\nT21: Printer driver installs fail on the new laptops.\nT22: The reporting tool shows yesterday's numbers; the nightly refresh failed.\nT23: An employee lost a phone that had the corporate mail app signed in.\nT24: Terraform plan wants to destroy the production database after a provider upgrade."
+  },
+  {
+   "id": "summarize-incident",
+   "type": "checklist",
+   "max_words": 120,
+   "prompt": "Summarize the document below in at most 120 words for an executive who has not read it. State only facts that appear in it.\n\nIncident report INC-2291. On 14 March at 09:12 UTC the payments API began returning 429 errors. Root cause: a nightly export job introduced on 12 March ran against the primary storage account and consumed 80 percent of its request quota; a retry loop in the checkout service amplified the load. Impact: 41 minutes of degraded checkout, 3,870 failed orders and an estimated 52,000 dollars in delayed revenue; no data was lost. Detection: an alert fired at 09:19 but was routed to a retired on-call group, so a human noticed only at 09:31 from customer support reports. Mitigation: the export job was paused at 09:44 and the retry loop capped at three attempts. Contributing factors: no load test covered the export job, the quota dashboard had no alert, and the on-call rotation had not been updated after the team reorganization on 1 March. Follow-ups: move the export to a read replica by 28 March (owner Priya), add a quota alert at 60 percent by 21 March (owner Marcus), audit all alert routing by 4 April (owner Priya), and add export jobs to the quarterly load-test plan. The team decided not to roll back the checkout release because it was unrelated to the cause.",
+   "facts": [
+    [
+     "429"
+    ],
+    [
+     "14 march",
+     "09:12"
+    ],
+    [
+     "export"
+    ],
+    [
+     "80 percent",
+     "80%"
+    ],
+    [
+     "retry"
+    ],
+    [
+     "41 min"
+    ],
+    [
+     "3,870",
+     "3870"
+    ],
+    [
+     "52,000",
+     "52k"
+    ],
+    [
+     "retired",
+     "wrong group",
+     "misrouted",
+     "routed"
+    ],
+    [
+     "read replica"
+    ]
+   ],
+   "forbidden": [
+    "(?<!no )(?<!not )data (was|were) lost",
+    "security (breach|incident)|attack",
+    "(was|were|been) rolled back"
+   ]
+  },
+  {
+   "id": "summarize-policy",
+   "type": "checklist",
+   "max_words": 120,
+   "prompt": "Summarize the document below in at most 120 words for an executive who has not read it. State only facts that appear in it.\n\nMemo: tagging policy rollout. Effective 1 June, all new Azure resources must carry four tags: owner, cost-center, environment and data-class. Resources missing tags will be created in a non-compliant state and flagged in the weekly report; from 1 September the policy effect changes from Audit to Deny for production subscriptions only. Development and sandbox subscriptions stay on Audit until further notice. Existing resources have until 31 August to be remediated; the platform team will provide a script and two office-hour sessions per week in June. Exceptions require approval from the cloud governance board and are valid for 90 days. The expected effort is about four hours per application team. Rationale: 23 percent of last quarter's spend, roughly 410,000 dollars, could not be attributed to a team. Questions go to the cloud-governance channel. The data-class tag accepts three values: public, internal and restricted.",
+   "facts": [
+    [
+     "owner"
+    ],
+    [
+     "cost-center",
+     "cost center"
+    ],
+    [
+     "data-class",
+     "data class"
+    ],
+    [
+     "1 june"
+    ],
+    [
+     "1 september"
+    ],
+    [
+     "production"
+    ],
+    [
+     "31 august"
+    ],
+    [
+     "90 days"
+    ],
+    [
+     "23 percent",
+     "23%"
+    ],
+    [
+     "410,000",
+     "410k"
+    ]
+   ],
+   "forbidden": [
+    "five tags",
+    "1 (july|august)",
+    "fines?"
+   ]
+  },
+  {
+   "id": "summarize-meeting",
+   "type": "checklist",
+   "max_words": 120,
+   "prompt": "Summarize the document below in at most 120 words for an executive who has not read it. State only facts that appear in it.\n\nWeekly platform sync. Dana opened by saying the Kubernetes upgrade to 1.31 is on track for 22 April. Luis raised that two internal apps still use a deprecated API and may break; Dana agreed to block the upgrade for those namespaces until they are fixed. Priya reported that the cost report shows a 12 percent drop in compute spend after right-sizing, saving about 18,000 dollars a month. Luis asked whether the number includes the reserved instance purchase; Priya said it does not and will rerun the analysis. Marcus proposed switching the CI runners to spot instances, estimating a 40 percent saving but noting a risk of job interruption; the group decided to pilot it on the documentation pipeline only, for four weeks, before any wider move. Dana asked about the monitoring migration; Marcus said it is blocked on a licensing quote that has not arrived, with no date. Actions: Luis to list affected apps by Friday; Priya to rerun the cost analysis next week; Marcus to set up the spot pilot; Dana to chase the licensing quote.",
+   "facts": [
+    [
+     "1.31"
+    ],
+    [
+     "22 april"
+    ],
+    [
+     "deprecated"
+    ],
+    [
+     "12 percent",
+     "12%"
+    ],
+    [
+     "18,000",
+     "18k"
+    ],
+    [
+     "reserved"
+    ],
+    [
+     "spot"
+    ],
+    [
+     "documentation"
+    ],
+    [
+     "four weeks",
+     "4 weeks"
+    ],
+    [
+     "licens"
+    ]
+   ],
+   "forbidden": [
+    "all (ci )?(pipelines|runners)",
+    "monitoring migration (is |was )?(complete|done|finished)"
+   ]
+  }
+ ],
+ "hash": "e50a0b211888"
+}

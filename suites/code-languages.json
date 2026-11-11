@@ -1,0 +1,100 @@
+{
+ "suite": "code-languages",
+ "version": "1.0",
+ "category": "coding",
+ "objective": "Does coding skill carry beyond Python and Terraform? Same three jobs (merge, parse, fix) in Go, Rust, PowerShell and AutoHotkey v2, executed for real.",
+ "defaults": {
+  "temperature": 0,
+  "seed": 1,
+  "num_ctx": 16384,
+  "num_predict": 1500,
+  "think": false
+ },
+ "tasks": [
+  {
+   "id": "go-merge",
+   "type": "run_code",
+   "lang": "go",
+   "prompt": "Write a Go file (package main, no main function, no tests) that defines `func Merge(intervals [][]int) [][]int`. It merges overlapping or touching [start, end] intervals and returns them sorted by start. An empty input returns an empty slice. Output only one go code block containing the complete file.",
+   "harness": "package main\nimport (\"fmt\"; \"os\"; \"reflect\")\nfunc main() {\n\tcases := []struct{ in, want [][]int }{\n\t\t{[][]int{{1, 3}, {2, 6}, {8, 10}, {15, 18}}, [][]int{{1, 6}, {8, 10}, {15, 18}}},\n\t\t{[][]int{{1, 4}, {4, 5}}, [][]int{{1, 5}}},\n\t\t{[][]int{}, [][]int{}},\n\t\t{[][]int{{5, 6}, {1, 2}}, [][]int{{1, 2}, {5, 6}}},\n\t}\n\tfor _, c := range cases {\n\t\tgot := Merge(c.in)\n\t\tif len(got) == 0 && len(c.want) == 0 { continue }\n\t\tif !reflect.DeepEqual(got, c.want) { fmt.Println(\"FAIL\", c.in, got, c.want); os.Exit(1) }\n\t}\n\tfmt.Println(\"OK\")\n}\n"
+  },
+  {
+   "id": "go-kv",
+   "type": "run_code",
+   "lang": "go",
+   "prompt": "Write a Go file (package main, no main function) defining `func ParseKV(text string) map[string]string`. Each line is key=value. Trim spaces around keys and values. Ignore blank lines, lines whose first non-space character is #, and lines without '='. A later duplicate key overrides an earlier one. Output only one go code block containing the complete file.",
+   "harness": "package main\nimport (\"fmt\"; \"os\")\nfunc main() {\n\tm := ParseKV(\"# c\\n a = 1 \\n\\nb=two words\\na=3\\n  # x\\nbad line\\n\")\n\tif len(m) != 2 || m[\"a\"] != \"3\" || m[\"b\"] != \"two words\" { fmt.Println(\"FAIL\", m); os.Exit(1) }\n\tfmt.Println(\"OK\")\n}\n"
+  },
+  {
+   "id": "go-bugfix",
+   "type": "run_code",
+   "lang": "go",
+   "prompt": "This Go file should return the mean of a slice, and 0 for an empty slice, but it is wrong. Fix it. Output only one go code block containing the complete file. Keep `package main` and do not add a main function.\n\n```go\npackage main\n\nfunc Avg(xs []float64) float64 {\n\tsum := 0.0\n\tfor _, x := range xs {\n\t\tsum += x\n\t}\n\treturn sum / float64(len(xs)+1)\n}\n```",
+   "harness": "package main\nimport (\"fmt\"; \"os\")\nfunc main() {\n\tif Avg([]float64{2, 4, 6}) != 4 || Avg(nil) != 0 { fmt.Println(\"FAIL\"); os.Exit(1) }\n\tfmt.Println(\"OK\")\n}\n"
+  },
+  {
+   "id": "rust-merge",
+   "type": "run_code",
+   "lang": "rust",
+   "prompt": "Write a Rust source file (standard library only, no fn main, no tests) that defines `pub fn merge(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>>`. It merges overlapping or touching [start, end] intervals and returns them sorted by start. An empty input returns an empty Vec. Output only one rust code block containing the complete file.",
+   "harness": "mod solution;\nfn v(a: &[[i32; 2]]) -> Vec<Vec<i32>> { a.iter().map(|x| x.to_vec()).collect() }\nfn main() {\n    assert_eq!(solution::merge(v(&[[1,3],[2,6],[8,10],[15,18]])), v(&[[1,6],[8,10],[15,18]]));\n    assert_eq!(solution::merge(v(&[[1,4],[4,5]])), v(&[[1,5]]));\n    assert_eq!(solution::merge(vec![]), Vec::<Vec<i32>>::new());\n    assert_eq!(solution::merge(v(&[[5,6],[1,2]])), v(&[[1,2],[5,6]]));\n    println!(\"OK\");\n}\n"
+  },
+  {
+   "id": "rust-kv",
+   "type": "run_code",
+   "lang": "rust",
+   "prompt": "Write a Rust source file (standard library only, no fn main) defining `pub fn parse_kv(text: &str) -> std::collections::HashMap<String, String>`. Each line is key=value. Trim spaces around keys and values. Ignore blank lines, lines whose first non-space character is #, and lines without '='. A later duplicate key overrides an earlier one. Output only one rust code block containing the complete file.",
+   "harness": "mod solution;\nfn main() {\n    let m = solution::parse_kv(\"# c\\n a = 1 \\n\\nb=two words\\na=3\\n  # x\\nbad line\\n\");\n    assert_eq!(m.len(), 2);\n    assert_eq!(m.get(\"a\").map(|s| s.as_str()), Some(\"3\"));\n    assert_eq!(m.get(\"b\").map(|s| s.as_str()), Some(\"two words\"));\n    println!(\"OK\");\n}\n"
+  },
+  {
+   "id": "rust-bugfix",
+   "type": "run_code",
+   "lang": "rust",
+   "prompt": "This Rust file should return the mean of a slice, and 0.0 for an empty slice, but it is wrong. Fix it. Output only one rust code block containing the complete file. Do not add a main function.\n\n```rust\npub fn avg(xs: &[f64]) -> f64 {\n    let mut sum = 0.0;\n    for x in xs {\n        sum += x;\n    }\n    sum / (xs.len() as f64 + 1.0)\n}\n```",
+   "harness": "mod solution;\nfn main() {\n    assert_eq!(solution::avg(&[2.0, 4.0, 6.0]), 4.0);\n    assert_eq!(solution::avg(&[]), 0.0);\n    println!(\"OK\");\n}\n"
+  },
+  {
+   "id": "ps-merge",
+   "type": "run_code",
+   "lang": "powershell",
+   "prompt": "Write PowerShell 7 code (function definitions only, no top-level code) defining `Merge-Interval` with a parameter `-Intervals`, an array of two-element arrays @(start,end). It merges overlapping or touching intervals, sorts by start, and outputs one string per merged interval formatted `start-end` (for example `1-6`). Output only one powershell code block containing the complete file.",
+   "harness": ". \"$PSScriptRoot\\solution.ps1\"\n$fail = @()\nif ((@(Merge-Interval -Intervals @(@(1,3),@(2,6),@(8,10),@(15,18))) -join ',') -ne '1-6,8-10,15-18') { $fail += 'c1' }\nif ((@(Merge-Interval -Intervals @(@(1,4),@(4,5))) -join ',') -ne '1-5') { $fail += 'c2' }\nif ((@(Merge-Interval -Intervals @(@(5,6),@(1,2))) -join ',') -ne '1-2,5-6') { $fail += 'c3' }\nif ($fail.Count) { Write-Output ('FAIL ' + ($fail -join ' ')); exit 1 }\nWrite-Output 'OK'\n"
+  },
+  {
+   "id": "ps-kv",
+   "type": "run_code",
+   "lang": "powershell",
+   "prompt": "Write PowerShell 7 code (function definitions only, no top-level code) defining `ConvertFrom-KeyValue` with a string parameter `-Text` that returns a hashtable. Each line is key=value. Trim spaces around keys and values. Ignore blank lines, lines whose first non-space character is #, and lines without '='. A later duplicate key overrides an earlier one. Output only one powershell code block containing the complete file.",
+   "harness": ". \"$PSScriptRoot\\solution.ps1\"\n$h = ConvertFrom-KeyValue -Text \"# c`n a = 1 `n`nb=two words`na=3`n  # x`nbad line`n\"\nif ($h.Count -ne 2 -or $h['a'] -ne '3' -or $h['b'] -ne 'two words') { Write-Output 'FAIL'; exit 1 }\nWrite-Output 'OK'\n"
+  },
+  {
+   "id": "ps-bugfix",
+   "type": "run_code",
+   "lang": "powershell",
+   "prompt": "This PowerShell function should return the mean of the numbers, and 0 for an empty array, but it is wrong. Fix it. Output only one powershell code block containing the complete file. Definitions only, no top-level code.\n\n```powershell\nfunction Get-Average {\n    param([double[]]$Numbers)\n    return ($Numbers | Measure-Object -Sum).Sum / ($Numbers.Count + 1)\n}\n```",
+   "harness": ". \"$PSScriptRoot\\solution.ps1\"\nif ((Get-Average -Numbers 2,4,6) -ne 4 -or (Get-Average -Numbers @()) -ne 0) { Write-Output 'FAIL'; exit 1 }\nWrite-Output 'OK'\n"
+  },
+  {
+   "id": "ahk-merge",
+   "type": "run_code",
+   "lang": "autohotkey",
+   "prompt": "Write AutoHotkey v2 code (function definitions only, no top-level code, no #Requires line) defining `MergeIntervals(intervals)`, where intervals is an Array of two-element Arrays [start, end]. It returns an Array of merged [start, end] Arrays sorted by start, merging overlapping or touching intervals. An empty input returns an empty Array. Output only one autohotkey code block containing the complete file.",
+   "harness": "#Requires AutoHotkey v2.0\n#Include solution.ahk\nFmt(r) {\n    s := \"\"\n    for iv in r\n        s .= (s = \"\" ? \"\" : \",\") iv[1] \"-\" iv[2]\n    return s\n}\nfail := \"\"\nif (Fmt(MergeIntervals([[1,3],[2,6],[8,10],[15,18]])) != \"1-6,8-10,15-18\")\n    fail .= \"c1 \"\nif (Fmt(MergeIntervals([[1,4],[4,5]])) != \"1-5\")\n    fail .= \"c2 \"\nif (Fmt(MergeIntervals([[5,6],[1,2]])) != \"1-2,5-6\")\n    fail .= \"c3 \"\nif (Fmt(MergeIntervals([])) != \"\")\n    fail .= \"c4 \"\nFileAppend((fail = \"\" ? \"OK\" : \"FAIL \" fail) \"`n\", \"*\")\nExitApp\n"
+  },
+  {
+   "id": "ahk-kv",
+   "type": "run_code",
+   "lang": "autohotkey",
+   "prompt": "Write AutoHotkey v2 code (function definitions only, no top-level code, no #Requires line) defining `ParseKV(text)` that returns a Map. Each line is key=value, lines separated by `n. Trim spaces around keys and values. Ignore blank lines, lines whose first non-space character is #, and lines without '='. A later duplicate key overrides an earlier one. Output only one autohotkey code block containing the complete file.",
+   "harness": "#Requires AutoHotkey v2.0\n#Include solution.ahk\nm := ParseKV(\"# c`n a = 1 `n`nb=two words`na=3`n  # x`nbad line`n\")\nok := (m.Count = 2 && m[\"a\"] = \"3\" && m[\"b\"] = \"two words\")\nFileAppend((ok ? \"OK\" : \"FAIL\") \"`n\", \"*\")\nExitApp\n"
+  },
+  {
+   "id": "ahk-bugfix",
+   "type": "run_code",
+   "lang": "autohotkey",
+   "prompt": "This AutoHotkey v2 function should return the mean of the array, and 0 for an empty array, but it is wrong. Fix it. Output only one autohotkey code block containing the complete file. Definitions only, no top-level code.\n\n```autohotkey\nAverage(arr) {\n    sum := 0\n    for v in arr\n        sum += v\n    return sum / (arr.Length + 1)\n}\n```",
+   "harness": "#Requires AutoHotkey v2.0\n#Include solution.ahk\nok := (Average([2,4,6]) = 4 && Average([]) = 0)\nFileAppend((ok ? \"OK\" : \"FAIL\") \"`n\", \"*\")\nExitApp\n"
+  }
+ ],
+ "hash": "e229dd81137a"
+}

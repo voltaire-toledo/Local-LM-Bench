@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/results.json';
+
+const sum = data.images?.summary ?? {};
+const gallery = data.images?.gallery ?? {};
+const dirs = Object.keys(gallery).sort();
+const tests = [
+  ['logo-png', 'Transparent logo PNGs (green-key cutout)'],
+  ['logo-svg', 'SVG logos written by text models'],
+  ['carousel', 'LinkedIn carousel (5 slides)'],
+  ['folder-icon', 'Folder icon derived from a generated logo'],
+];
+const imageModels = Object.keys(sum).filter((m) => ['zimage', 'flux2klein', 'sdxl'].includes(m));
+const label = { zimage: 'Z-Image-Turbo Q8_0', flux2klein: 'FLUX.2 klein 4B Q8_0', sdxl: 'SDXL 1.0' };
+const get = (m, k) => sum[m]?.[k];
+---
+<Base title="Image generation" description="Logos with transparent backgrounds, SVG logos, a LinkedIn carousel and a folder icon, generated on a 12 GB GPU." prose>
+  <h1>Image generation</h1>
+  <p>
+    Four jobs, run on the same RTX 3060 (110 W): transparent logo PNGs, SVG logos, a five-slide LinkedIn carousel and a folder image derived from a generated logo.
+    Full-size outputs stay on my machine; what you see here are small copies.
+  </p>
+
+  {imageModels.length > 0 && (
+    <>
+      <h2>Summary</h2>
+      <div class="wrap">
+        <table>
+          <thead><tr><th>Model</th><th>Logos usable</th><th>Avg seconds per logo</th><th>GPU joules per logo</th><th>Carousel headline match</th></tr></thead>
+          <tbody>
+            {imageModels.map((m) => (
+              <tr>
+                <td>{label[m]}</td>
+                <td>{get(m, 'logo-png') ? `${get(m, 'logo-png').passed} of ${get(m, 'logo-png').n}` : '?'}</td>
+                <td>{get(m, 'logo-png')?.avg_secs ?? '?'}</td>
+                <td>{get(m, 'logo-png')?.avg_j ?? '?'}</td>
+                <td>{get(m, 'carousel-ocr')?.avg_match != null ? `${Math.round(get(m, 'carousel-ocr').avg_match * 100)}%` : '?'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="note">"Usable" means the model made a flat green background, the cutout left clean edges and the subject was not painted green. Headline match is how closely a vision model could read the slide's text back. Both are automatic checks; look at the pictures.</p>
+    </>
+  )}
+
+  {tests.map(([key, title]) => (
+    <>
+      <h2>{title}</h2>
+      {dirs.filter((d) => d.startsWith(key)).length === 0 && <p class="note">No results yet.</p>}
+      {dirs.filter((d) => d.startsWith(key)).map((d) => (
+        <>
+          <h3>{d.split('/').slice(1).join('/') || d}</h3>
+          <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+            {gallery[d].map((f) => (
+              <div>
+                <img src={`/gallery/${d}/${f}`} alt={`${key} ${f}`} loading="lazy" style="width:100%;height:auto;border:.5px solid var(--line);border-radius:8px;background:repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 50% / 16px 16px" />
+                <div class="note">{f.replace(/\.[a-z]+$/, '')}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      ))}
+    </>
+  ))}
+</Base>

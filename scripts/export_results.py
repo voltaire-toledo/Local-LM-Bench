@@ -4,7 +4,7 @@ Inputs (never modified): results/runs.rescored.jsonl (or runs.jsonl), results/to
 results/speed/<label>/speed_runs.jsonl, models/specs.json, models/verdicts.json, models/sources.json.
 Quality is keyed by model; performance is keyed by (model, hardware, power label).
 """
-import json, re, time
+import json, re, shutil, time
 from collections import defaultdict
 from pathlib import Path
 
@@ -50,7 +50,75 @@ def cnt(rows, f):
     return [sum(1 for r in rows if f(r)), len(rows)] if rows else None
 
 
+LANG_OF = {"go": "Go", "rust": "Rust", "ps": "PowerShell", "ahk": "AutoHotkey"}
+
+
+def ratio(pairs):
+    pairs = [(s, m) for s, m in pairs if s is not None and m]
+    return round(sum(s for s, _ in pairs) / sum(m for _, m in pairs), 3) if pairs else None
+
+
+def extras():
+    """New-suite scores, viable context and image summaries (latest record per key; raw files untouched)."""
+    suites = {}
+    for r in latest(jl(ROOT / "results" / "suites.jsonl"), lambda r: (r["model"], r["suite"], r["task"])).values():
+        if "error" in r:
+            continue
+        suites.setdefault(r["model"], []).append(r)
+    s_out = {}
+    for m, rows in suites.items():
+        sel = lambda suite: [(r["score"], r["max"]) for r in rows if r["suite"] == suite]
+        langs = {}
+        for key, name in LANG_OF.items():
+            lr = [(r["score"], r["max"]) for r in rows if r["suite"] == "code-languages" and r["task"].startswith(key + "-")]
+            sc = [x for x in lr if x[0] is not None]
+            langs[name] = [sum(s for s, _ in sc), len(sc)] if sc else None
+        summ = [(r["score"], r["max"]) for r in rows if r["task"].startswith("summarize-")]
+        cat = [(r["score"], r["max"]) for r in rows if r["task"] == "categorize-tickets"]
+        s_out[m] = {"languages": ratio(sel("code-languages")), "by_language": langs, "categorize": ratio(cat), "summaries": ratio(summ), "cases": ratio(sel("consulting-cases")),
+                    "insight": ratio(sel("planted-patterns")), "empty_answers": sum(1 for r in rows if r.get("empty")), "tasks": len(rows)}
+    v_out = {}
+    byv = defaultdict(dict)
+    for r in latest(jl(ROOT / "results" / "viable.jsonl"), lambda r: (r["model"], r["ctx"])).values():
+        byv[r["model"]][r["ctx"]] = r
+    for m, d in byv.items():
+        ladder, best = [], 0
+        for c in sorted(d):
+            r = d[c]
+            ladder.append({"ctx": c, "viable": bool(r.get("viable")), "score": r.get("score"), "retrieval": r.get("retrieval"), "reasoning": r.get("reasoning"), "fail_reason": r.get("fail_reason"), "tps": r.get("gen_tps"), "wall_s": r.get("wall_s"), "prefill_s": r.get("prefill_s"),
+                           "cpu_pct": (r.get("split") or {}).get("cpu"), "vram_peak_mib": r.get("vram_peak_mib"), "power_w": r.get("power_avg_w"), "error": r.get("error")})
+        for x in ladder:
+            if not x["viable"]:
+                break
+            best = x["ctx"]
+        v_out[m] = {"viable_ctx": best, "ladder": ladder}
+    imgs = latest(jl(ROOT / "results" / "images.jsonl"), lambda r: (r["kind"], r["model"], r["name"]))
+    im = defaultdict(lambda: defaultdict(list))
+    for (kind, model, name), r in imgs.items():
+        im[model][kind].append(r)
+    i_out = {}
+    for model, kinds in im.items():
+        e = {}
+        for kind, rs in kinds.items():
+            ok = [x for x in rs if x.get("ok")]
+            e[kind] = {"n": len(rs), "passed": sum(1 for x in rs if x.get("pass")), "avg_secs": round(sum(x["secs"] for x in ok if x.get("secs")) / max(1, sum(1 for x in ok if x.get("secs"))), 1) if ok else None,
+                       "avg_j": round(sum(x["j_per_image"] for x in ok if x.get("j_per_image")) / max(1, sum(1 for x in ok if x.get("j_per_image")))) if ok else None,
+                       "avg_match": round(sum(x["match"] for x in rs if x.get("match") is not None) / max(1, sum(1 for x in rs if x.get("match") is not None)), 2) if kind == "carousel-ocr" else None}
+        i_out[model] = e
+    gallery = {}
+    kp = ROOT / "results" / "images"
+    if kp.exists():
+        for f in sorted(kp.rglob("*")):
+            if f.is_file():
+                gallery.setdefault(str(f.parent.relative_to(kp)).replace("\\", "/"), []).append(f.name)
+        dst = ROOT / "web" / "public" / "gallery"
+        shutil.rmtree(dst, ignore_errors=True)
+        shutil.copytree(kp, dst)
+    return s_out, v_out, {"summary": i_out, "gallery": gallery}
+
+
 def main():
+    SUITE_AGG, VIABLE_AGG, IMAGES = extras()
     rs = ROOT / "results" / "runs.rescored.jsonl"
     runs = latest(jl(rs if rs.exists() else ROOT / "results" / "runs.jsonl"), lambda r: (r["model"], r["id"], r["variant"], r["ctx"], r["rep"]))
     tool = latest(jl(ROOT / "results" / "toolruns.jsonl"), lambda r: (r["model"], r["id"], r["variant"], r["ctx"]))
@@ -85,7 +153,7 @@ def main():
         sp = specs.get(m, {})
         src = sources.get("models", {}).get(m)
         out["models"].append({
-            "id": m, "slug": slug(m), "report": verdicts.get(m), "specs": sp or None, "sources": src,
+            "id": m, "slug": slug(m), "suites": SUITE_AGG.get(m), "viable": VIABLE_AGG.get(m), "report": verdicts.get(m), "specs": sp or None, "sources": src,
             "family": sp.get("family"), "params": sp.get("parameters"), "quant": sp.get("quantization"), "size_gb": sp.get("size_gb"), "digest": sp.get("digest"),
             "quality": {
                 "code": cnt(code, lambda r: r["result"].get("pass")),
@@ -97,6 +165,7 @@ def main():
                              "tps_source": "sweep" if s16 else ("short-test" if old_tps else None),
                              "split": ({"cpu": s16["cpu_pct"], "gpu": 100 - s16["cpu_pct"]} if s16 and s16["cpu_pct"] is not None else old_split),
                              "sweep": sw or None}}})
+    out["images"] = IMAGES
     d = ROOT / "web" / "src" / "data"
     d.mkdir(parents=True, exist_ok=True)
     (d / "results.json").write_text(json.dumps(out, indent=1), encoding="utf-8")

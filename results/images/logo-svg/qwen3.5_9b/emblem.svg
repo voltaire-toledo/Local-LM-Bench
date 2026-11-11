@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#f4f4f4"/>
+  
+  <!-- Ground -->
+  <path d="M0 384 L512 384 L512 512 L0 512 Z" fill="#e0e0e0"/>
+
+  <!-- Lighthouse Base (Brick-like pattern simplified) -->
+  <rect x="192" y="200" width="128" height="184" rx="16" fill="#d32f2f"/>
+  
+  <!-- Lighthouse Body (White stripes) -->
+  <path d="M256 200 L256 384 M224 200 L224 384 M288 200 L288 384" stroke="#fff" stroke-width="16" fill="none"/>
+  
+  <!-- Lighthouse Top (Roof) -->
+  <path d="M192 200 L256 140 L320 200 Z" fill="#333"/>
+  
+  <!-- Lighthouse Light Room -->
+  <rect x="224" y="140" width="64" height="60" rx="8" fill="#fff"/>
+  
+  <!-- The Light Source -->
+  <circle cx="256" cy="170" r="16" fill="#ffeb3b"/>
+  
+  <!-- Rays (Simple lines) -->
+  <line x1="256" y1="170" x2="256" y2="80" stroke="#ffeb3b" stroke-width="4" opacity="0.6"/>
+  <line x1="256" y1="170" x2="192" y2="100" stroke="#ffeb3b" stroke-width="4" opacity="0.6"/>
+  <line x1="256" y1="170" x2="320" y2="100" stroke="#ffeb3b" stroke-width="4" opacity="0.6"/>
+  <line x1="256" y1="170" x2="200" y2="80" stroke="#ffeb3b" stroke-width="4" opacity="0.6"/>
+  <line x1="256" y1="170" x2="312" y2="80" stroke="#ffeb3b" stroke-width="4" opacity="0.6"/>
+  
+  <!-- Window on the side -->
+  <rect x="240" y="240" width="32" height="40" rx="4" fill="#fff" stroke="#ccc" stroke-width="2"/>
+</svg>

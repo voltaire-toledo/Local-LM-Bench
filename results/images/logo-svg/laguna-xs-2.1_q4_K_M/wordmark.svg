@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <style>
+    .n { fill: #2563eb; }
+    .o { fill: #dc2626; }
+    .r { fill: #d97706; }
+    .t h w i n d { fill: #16a34a; }
+  </style>
+  <g font-family="sans-serif" font-weight="900" font-size="96">
+    <text x="10" y="300" class="n">N</text>
+    <text x="110" y="300" class="o">O</text>
+    <text x="210" y="300" class="r">R</text>
+    <text x="290" y="300" class="t">T</text>
+    <text x="370" y="300" class="h">H</text>
+    <text x="460" y="300" class="w">W</text>
+    <text x="550" y="300" class="i">I</text>
+    <text x="610" y="300" class="n">N</text>
+    <text x="670" y="300" class="d">D</text>
+  </g>
+</svg>

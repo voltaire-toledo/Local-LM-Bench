@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main Leaf Body (Path) -->
+  <path d="M256 48C256 48 200 96 200 160C200 224 256 272 256 272C256 272 312 224 312 160C312 96 256 48 256 48Z" fill="#4CAF50"/>
+  
+  <!-- Leaf Stem (Rectangle) -->
+  <rect x="240" y="272" width="32" height="120" rx="4" fill="#388E3C"/>
+  
+  <!-- Leaf Vein (Path) -->
+  <path d="M256 96L256 272" stroke="#2E7D32" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Highlight/Sheen (Ellipse) -->
+  <ellipse cx="256" cy="160" rx="40" ry="20" fill="white" fill-opacity="0.2"/>
+</svg>

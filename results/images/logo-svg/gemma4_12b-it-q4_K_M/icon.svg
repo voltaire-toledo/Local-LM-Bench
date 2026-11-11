@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background Circle -->
+  <rect width="512" height="512" rx="128" fill="#2D5A27"/>
+  
+  <!-- Leaf Shape 1: Main Body (Large Oval) -->
+  <ellipse cx="256" cy="256" rx="160" ry="220" fill="#4CAF50" transform="rotate(-15, 256, 256)"/>
+  
+  <!-- Leaf Shape 2: Inner Highlight (Smaller Oval) -->
+  <ellipse cx="240" cy="240" rx="120" ry="180" fill="#81C784" transform="rotate(-15, 240, 240)"/>
+  
+  <!-- Leaf Shape 3: Stem/Base (Rounded Path) -->
+  <path d="M256,400 C256,400 230,450 256,480 C282,450 256,400 256,400 Z" fill="#1B3A18"/>
+</svg>

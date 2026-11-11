@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#2C3E50" />
+  
+  <!-- Lighthouse Base -->
+  <path d="M180 450 L332 450 L310 200 L202 200 Z" fill="#7F8C8D" />
+  <rect x="190" y="350" width="120" height="100" fill="#95A5A6" />
+  
+  <!-- Lighthouse Lantern Room -->
+  <rect x="200" y="150" width="112" height="50" fill="#ECF0F1" />
+  <path d="M200 150 L200 130 L312 130 L312 150 Z" fill="#34495E" />
+  
+  <!-- Light Source -->
+  <circle cx="256" cy="140" r="15" fill="#F1C40F" />
+  
+  <!-- Rays -->
+  <g stroke="#F1C40F" stroke-width="4" stroke-linecap="round">
+    <line x1="256" y1="140" x2="450" y2="50" />
+    <line x1="256" y1="140" x2="480" y2="256" />
+    <line x1="256" y1="140" x2="450" y2="462" />
+    <line x1="256" y1="140" x2="256" y2="480" />
+    <line x1="256" y1="140" x2="56" y2="462" />
+    <line x1="256" y1="140" x2="32" y2="256" />
+    <line x1="256" y1="140" x2="56" y2="50" />
+  </g>
+  
+  <!-- Decorative Border -->
+  <circle cx="256" cy="256" r="230" fill="none" stroke="#F1C40F" stroke-width="8" stroke-dasharray="20 10" />
+</svg>

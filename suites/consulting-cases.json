@@ -1,0 +1,338 @@
+{
+ "suite": "consulting-cases",
+ "version": "1.0",
+ "category": "reasoning",
+ "objective": "Structured reasoning in unfamiliar industries: a clear breakdown, stated assumptions and risks, a recommendation, and correct numbers where the case is computable. Automatic scores are a structural proxy; depth still needs a human read.",
+ "defaults": {
+  "temperature": 0,
+  "seed": 1,
+  "num_ctx": 16384,
+  "num_predict": 1500,
+  "think": false
+ },
+ "tasks": [
+  {
+   "id": "case-cement-profit",
+   "type": "case",
+   "frameworks": [
+    [
+     "price"
+    ],
+    [
+     "volume"
+    ],
+    [
+     "cost"
+    ],
+    [
+     "fixed"
+    ],
+    [
+     "variable"
+    ],
+    [
+     "energy",
+     "fuel"
+    ],
+    [
+     "competit"
+    ],
+    [
+     "capacity"
+    ]
+   ],
+   "prompt": "You are advising the CEO of a regional cement producer whose profit fell 25 percent over two years while revenue stayed flat. You know nothing about cement. Give a structured approach: your hypotheses, how you would break the problem down, the first three analyses you would run, and what you would recommend if the answer turns out to be cost-driven. Be concise.",
+   "checks": [
+    {
+     "name": "structure",
+     "re": "(?m)^\\s*(\\d+[.)]|[-*]|#{1,4})\\s+\\S",
+     "min": 5
+    },
+    {
+     "name": "assumptions",
+     "re": "assum",
+     "min": 1
+    },
+    {
+     "name": "risks",
+     "re": "\\brisk",
+     "min": 1
+    },
+    {
+     "name": "recommendation",
+     "re": "recommend|next step|propose",
+     "min": 1
+    },
+    {
+     "name": "hypothesis",
+     "re": "hypothes",
+     "min": 1
+    }
+   ]
+  },
+  {
+   "id": "case-noshow",
+   "type": "case",
+   "frameworks": [
+    [
+     "reminder",
+     "notif"
+    ],
+    [
+     "overbook"
+    ],
+    [
+     "patient"
+    ],
+    [
+     "wait",
+     "lead time",
+     "scheduling"
+    ],
+    [
+     "transport"
+    ],
+    [
+     "cost"
+    ],
+    [
+     "pilot",
+     "test"
+    ],
+    [
+     "data"
+    ]
+   ],
+   "prompt": "A hospital outpatient clinic has a 22 percent appointment no-show rate and wants it under 10 percent. You are not a healthcare expert. Structure the problem, state assumptions, propose the interventions you would test first and how you would measure success. Be concise.",
+   "checks": [
+    {
+     "name": "structure",
+     "re": "(?m)^\\s*(\\d+[.)]|[-*]|#{1,4})\\s+\\S",
+     "min": 5
+    },
+    {
+     "name": "assumptions",
+     "re": "assum",
+     "min": 1
+    },
+    {
+     "name": "risks",
+     "re": "\\brisk",
+     "min": 1
+    },
+    {
+     "name": "recommendation",
+     "re": "recommend|next step|propose",
+     "min": 1
+    },
+    {
+     "name": "hypothesis",
+     "re": "hypothes",
+     "min": 1
+    }
+   ]
+  },
+  {
+   "id": "case-breakeven",
+   "type": "case",
+   "frameworks": [
+    [
+     "break-even",
+     "breakeven",
+     "payback"
+    ]
+   ],
+   "numeric": {
+    "pattern": "BREAKEVEN_MONTHS",
+    "low": 20.5,
+    "high": 22.5
+   },
+   "prompt": "A company spends 480,000 dollars a year running servers on premises. Moving to the cloud costs 300,000 dollars one-time and 310,000 dollars a year afterwards. Show your reasoning, then end with a line 'BREAKEVEN_MONTHS: <number>' giving the month in which cumulative savings cover the migration cost, and add one risk that could change the answer.",
+   "checks": [
+    {
+     "name": "structure",
+     "re": "(?m)^\\s*(\\d+[.)]|[-*]|#{1,4})\\s+\\S",
+     "min": 5
+    },
+    {
+     "name": "assumptions",
+     "re": "assum",
+     "min": 1
+    },
+    {
+     "name": "risks",
+     "re": "\\brisk",
+     "min": 1
+    },
+    {
+     "name": "recommendation",
+     "re": "recommend|next step|propose",
+     "min": 1
+    },
+    {
+     "name": "hypothesis",
+     "re": "hypothes",
+     "min": 1
+    }
+   ]
+  },
+  {
+   "id": "case-ltv",
+   "type": "case",
+   "frameworks": [
+    [
+     "ltv",
+     "lifetime value"
+    ],
+    [
+     "cac"
+    ],
+    [
+     "churn"
+    ]
+   ],
+   "numeric": {
+    "pattern": "LTV_CAC",
+    "low": 4.0,
+    "high": 4.4
+   },
+   "prompt": "A subscription business has 2,000 customers paying 50 dollars a month, monthly churn of 3 percent and a customer acquisition cost of 400 dollars. Ignore gross margin. Compute the customer lifetime value and the LTV to CAC ratio, say whether the unit economics are healthy, and end with a line 'LTV_CAC: <number>'.",
+   "checks": [
+    {
+     "name": "structure",
+     "re": "(?m)^\\s*(\\d+[.)]|[-*]|#{1,4})\\s+\\S",
+     "min": 5
+    },
+    {
+     "name": "assumptions",
+     "re": "assum",
+     "min": 1
+    },
+    {
+     "name": "risks",
+     "re": "\\brisk",
+     "min": 1
+    },
+    {
+     "name": "recommendation",
+     "re": "recommend|next step|propose",
+     "min": 1
+    },
+    {
+     "name": "hypothesis",
+     "re": "hypothes",
+     "min": 1
+    }
+   ]
+  },
+  {
+   "id": "case-estimate",
+   "type": "case",
+   "frameworks": [
+    [
+     "population"
+    ],
+    [
+     "per"
+    ],
+    [
+     "assum"
+    ]
+   ],
+   "numeric": {
+    "pattern": "ESTIMATE",
+    "low": 50,
+    "high": 1000
+   },
+   "prompt": "Estimate how many piano tuners work in Chicago. Show a short structured estimate with your assumptions, and end with a line 'ESTIMATE: <number>'.",
+   "checks": [
+    {
+     "name": "structure",
+     "re": "(?m)^\\s*(\\d+[.)]|[-*]|#{1,4})\\s+\\S",
+     "min": 5
+    },
+    {
+     "name": "assumptions",
+     "re": "assum",
+     "min": 1
+    },
+    {
+     "name": "risks",
+     "re": "\\brisk",
+     "min": 1
+    },
+    {
+     "name": "recommendation",
+     "re": "recommend|next step|propose",
+     "min": 1
+    },
+    {
+     "name": "hypothesis",
+     "re": "hypothes",
+     "min": 1
+    }
+   ]
+  },
+  {
+   "id": "case-market-entry",
+   "type": "case",
+   "frameworks": [
+    [
+     "market"
+    ],
+    [
+     "compet"
+    ],
+    [
+     "capabilit",
+     "advantage"
+    ],
+    [
+     "regulat"
+    ],
+    [
+     "customer"
+    ],
+    [
+     "entry",
+     "enter"
+    ],
+    [
+     "partner"
+    ],
+    [
+     "question"
+    ]
+   ],
+   "prompt": "A Canadian maker of industrial water filters is considering entering the Brazilian market. You know nothing about either. List the clarifying questions you would ask first, the framework you would use to structure the decision, the key assumptions you would need to test, and a go / no-go criterion. Be concise.",
+   "checks": [
+    {
+     "name": "structure",
+     "re": "(?m)^\\s*(\\d+[.)]|[-*]|#{1,4})\\s+\\S",
+     "min": 5
+    },
+    {
+     "name": "assumptions",
+     "re": "assum",
+     "min": 1
+    },
+    {
+     "name": "risks",
+     "re": "\\brisk",
+     "min": 1
+    },
+    {
+     "name": "recommendation",
+     "re": "recommend|next step|propose",
+     "min": 1
+    },
+    {
+     "name": "hypothesis",
+     "re": "hypothes",
+     "min": 1
+    }
+   ]
+  }
+ ],
+ "hash": "cf42d377fe00"
+}

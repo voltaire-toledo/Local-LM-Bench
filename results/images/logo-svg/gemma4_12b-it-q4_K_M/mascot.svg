@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#FFD700" />
+  
+  <!-- Ears -->
+  <path d="M150 180 L100 50 L220 140 Z" fill="#E67E22" />
+  <path d="M362 180 L412 50 L292 140 Z" fill="#E67E22" />
+  <path d="M160 170 L120 80 L200 140 Z" fill="#D35400" />
+  <path d="M352 170 L392 80 L312 140 Z" fill="#D35400" />
+  
+  <!-- Face Shape -->
+  <path d="M120 250 Q120 450 256 450 Q392 450 392 250 Q392 150 256 150 Q120 150 120 250" fill="#E67E22" />
+  
+  <!-- White Muzzle -->
+  <path d="M180 320 Q180 430 256 430 Q332 430 332 320 Q332 280 256 280 Q180 280 180 320" fill="white" />
+  
+  <!-- Eyes -->
+  <circle cx="210" cy="240" r="25" fill="#333" />
+  <circle cx="302" cy="240" r="25" fill="#333" />
+  <circle cx="218" cy="240" r="10" fill="white" />
+  <circle cx="308" cy="240" r="10" fill="white" />
+  
+  <!-- Nose -->
+  <path d="M240 330 L272 330 L256 360 Z" fill="#333" />
+  
+  <!-- Cheeks -->
+  <circle cx="170" cy="340" r="15" fill="#FF9999" opacity="0.6" />
+  <circle cx="342" cy="340" r="15" fill="#FF9999" opacity="0.6" />
+  
+  <!-- Tail (Simplified) -->
+  <path d="M380 380 Q500 380 480 150 Q420 100 350 250" fill="#D35400" />
+</svg>

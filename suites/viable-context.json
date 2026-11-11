@@ -1,0 +1,43 @@
+{
+ "suite": "viable-context",
+ "version": "1.1",
+ "category": "context",
+ "objective": "What context size is actually usable? At each size, three planted facts must be recalled exactly. Viable context is the largest size where all three are recalled, nothing is truncated, speed stays above the minimum and the reply arrives within the time limit. A fourth question (which code is numerically largest) is reported separately and does not gate the result. Each failure records its reason: recall, too slow, low tok/s or truncated.",
+ "defaults": {
+  "temperature": 0,
+  "seed": 1,
+  "num_ctx": 16384,
+  "num_predict": 1500,
+  "think": false,
+  "min_tps": 15,
+  "max_seconds": 180
+ },
+ "tasks": [
+  {
+   "id": "vc-8k",
+   "type": "viable_context",
+   "ctx": 8192
+  },
+  {
+   "id": "vc-16k",
+   "type": "viable_context",
+   "ctx": 16384
+  },
+  {
+   "id": "vc-32k",
+   "type": "viable_context",
+   "ctx": 32768
+  },
+  {
+   "id": "vc-64k",
+   "type": "viable_context",
+   "ctx": 65536
+  },
+  {
+   "id": "vc-128k",
+   "type": "viable_context",
+   "ctx": 131072
+  }
+ ],
+ "hash": "ca69e8807bb8"
+}

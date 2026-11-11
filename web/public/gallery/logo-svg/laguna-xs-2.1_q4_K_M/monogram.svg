@@ -1,0 +1,6 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="246" fill="#000"/>
+  <path d="M150 300 L150 212 L200 212 L200 240 L170 240 L170 300 Z" fill="#FFF"/>
+  <path d="M200 212 L200 150 L280 150 L280 212 Z" fill="#FFF"/>
+  <path d="M280 212 L280 300 L350 300 L350 240 L320 240 L320 270 L280 270 Z" fill="#FFF"/>
+</svg>

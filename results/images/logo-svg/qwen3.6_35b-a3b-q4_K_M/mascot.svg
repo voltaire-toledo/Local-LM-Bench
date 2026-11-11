@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#f0f4f8" rx="60"/>
+  
+  <!-- Body -->
+  <ellipse cx="256" cy="380" rx="140" ry="110" fill="#e67e22"/>
+  <ellipse cx="256" cy="390" rx="100" ry="70" fill="#f5b041"/>
+
+  <!-- Ears -->
+  <polygon points="140,180 80,60 200,140" fill="#e67e22"/>
+  <polygon points="372,180 432,60 312,140" fill="#e67e22"/>
+  
+  <!-- Inner Ears -->
+  <polygon points="145,160 95,80 180,140" fill="#f5b041"/>
+  <polygon points="367,160 417,80 332,140" fill="#f5b041"/>
+
+  <!-- Head Base -->
+  <ellipse cx="256" cy="240" rx="130" ry="110" fill="#e67e22"/>
+
+  <!-- White Cheeks/Muzzle Area -->
+  <path d="M 126 240 Q 256 380 386 240 Q 386 180 256 180 Q 126 180 126 240" fill="#ffffff"/>
+  
+  <!-- Snout -->
+  <ellipse cx="256" cy="300" rx="70" ry="50" fill="#ffffff"/>
+
+  <!-- Eyes -->
+  <circle cx="200" cy="210" r="18" fill="#2c3e50"/>
+  <circle cx="312" cy="210" r="18" fill="#2c3e50"/>
+  
+  <!-- Eye Highlights -->
+  <circle cx="206" cy="204" r="6" fill="#ffffff"/>
+  <circle cx="318" cy="204" r="6" fill="#ffffff"/>
+
+  <!-- Nose -->
+  <ellipse cx="256" cy="310" rx="20" ry="12" fill="#2c3e50"/>
+  <ellipse cx="256" cy="306" rx="8" ry="4" fill="#ffffff"/>
+
+  <!-- Smile -->
+  <path d="M 230 330 Q 256 350 282 330" fill="none" stroke="#2c3e50" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Tail (Curved behind) -->
+  <path d="M 380 420 Q 460 420 460 340 Q 460 280 400 280" fill="#e67e22"/>
+  <path d="M 400 280 Q 450 280 450 340 Q 450 390 400 390" fill="#ffffff"/>
+
+  <!-- Paws -->
+  <ellipse cx="190" cy="460" rx="30" ry="20" fill="#e67e22"/>
+  <ellipse cx="322" cy="460" rx="30" ry="20" fill="#e67e22"/>
+</svg>

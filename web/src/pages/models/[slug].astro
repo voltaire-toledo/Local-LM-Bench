@@ -81,6 +81,40 @@ const title = m.id;
   )}
   <p class="note">Hardware: {hw.label}. GPU power limit 110 W. Energy covers the GPU only.</p>
 
+  {m.viable && (
+    <>
+      <h2>Viable context</h2>
+      <p>
+        {m.viable.viable_ctx ? <b>{Math.round(m.viable.viable_ctx / 1024)}k tokens</b> : <b>under 8k tokens</b>} passed the planted-fact test at a usable speed.
+        {ctxk && <> The advertised window is {num(ctxk)}k.</>} The test stops at the first size that fails.
+      </p>
+      <div class="wrap">
+        <table>
+          <thead><tr><th>Context</th><th>Result</th><th>Codes recalled</th><th>Largest-code question</th><th>tok/s</th><th>Reply time</th><th>On CPU %</th><th>VRAM peak</th></tr></thead>
+          <tbody>
+            {m.viable.ladder.map((x) => (
+              <tr><td>{Math.round(x.ctx / 1024)}k</td><td>{x.viable ? 'viable' : x.error ? 'failed to run' : `not viable (${x.fail_reason ?? 'see test'})`}</td><td>{x.retrieval ?? '?'} of 3</td><td>{x.reasoning == null ? '?' : x.reasoning ? 'right' : 'wrong'}</td><td>{x.tps ?? '?'}</td><td>{x.wall_s ?? '?'} s</td><td>{x.cpu_pct ?? '?'}</td><td>{x.vram_peak_mib ? `${num(Math.round(x.vram_peak_mib))} MiB` : '?'}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  )}
+
+  {m.suites && (
+    <>
+      <h2>Beyond Python: languages, documents, reasoning</h2>
+      <ul>
+        <li>Other languages (execution-checked): {m.suites.languages != null ? `${Math.round(m.suites.languages * 100)}%` : 'not tested'}
+          {m.suites.by_language && ` (${Object.entries(m.suites.by_language).map(([k, v]) => `${k} ${v ? `${v[0]}/${v[1]}` : 'skipped'}`).join(', ')})`}</li>
+        <li>Categorizing tickets: {m.suites.categorize != null ? `${Math.round(m.suites.categorize * 100)}% correct` : 'not tested'}. Executive summaries (facts kept, nothing invented): {m.suites.summaries != null ? `${Math.round(m.suites.summaries * 100)}%` : 'not tested'}.</li>
+        <li>Consulting-style cases (structure and numbers, automatic proxy): {m.suites.cases != null ? `${Math.round(m.suites.cases * 100)}%` : 'not tested'}.</li>
+        <li>Planted-pattern insight finding: {m.suites.insight != null ? `${Math.round(m.suites.insight * 100)}%` : 'not tested'}.</li>
+      </ul>
+      {m.suites.empty_answers > 0 && <p class="note">{m.suites.empty_answers} answers came back empty, which usually means the model used its output budget thinking.</p>}
+    </>
+  )}
+
   {r && (
     <>
       <h2>What we determined</h2>

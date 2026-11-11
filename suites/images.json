@@ -1,0 +1,122 @@
+{
+ "suite": "images",
+ "version": "1.0",
+ "category": "images",
+ "objective": "Image generation for real jobs: transparent logo PNGs (green-key cutout, scored for spill and edge quality), SVG logos written by text models (scored for validity and cleanliness), a five-slide LinkedIn carousel (headline legibility read back by a vision model), and a folder icon derived from a generated logo (checked at small sizes). ICO conversion is out of scope.",
+ "defaults": {
+  "temperature": 0,
+  "seed": 1,
+  "num_ctx": 16384,
+  "num_predict": 1500,
+  "think": false,
+  "steps": {
+   "z-image": 8,
+   "flux2-klein": 4,
+   "sdxl": 25
+  }
+ },
+ "tasks": [
+  {
+   "id": "logo-png",
+   "type": "image_logo_png",
+   "briefs": [
+    {
+     "id": "wordmark",
+     "brief": "a wordmark logo reading 'NORTHWIND' in bold geometric letters"
+    },
+    {
+     "id": "monogram",
+     "brief": "a monogram logo of the letters 'LB' inside a circle"
+    },
+    {
+     "id": "emblem",
+     "brief": "an emblem logo of a lighthouse with simple rays"
+    },
+    {
+     "id": "mascot",
+     "brief": "a friendly fox mascot logo, flat shapes"
+    },
+    {
+     "id": "icon",
+     "brief": "a minimal app icon of a leaf made from three shapes"
+    }
+   ],
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "template": "A clean flat vector logo: {brief}. Bold simple shapes, no gradients, no shadow, centered, on a solid pure green (#00FF00) background."
+  },
+  {
+   "id": "logo-svg",
+   "type": "image_logo_svg",
+   "briefs": [
+    {
+     "id": "wordmark",
+     "brief": "a wordmark logo reading 'NORTHWIND' in bold geometric letters"
+    },
+    {
+     "id": "monogram",
+     "brief": "a monogram logo of the letters 'LB' inside a circle"
+    },
+    {
+     "id": "emblem",
+     "brief": "an emblem logo of a lighthouse with simple rays"
+    },
+    {
+     "id": "mascot",
+     "brief": "a friendly fox mascot logo, flat shapes"
+    },
+    {
+     "id": "icon",
+     "brief": "a minimal app icon of a leaf made from three shapes"
+    }
+   ],
+   "template": "Write an SVG logo: {brief}. Use only basic shapes and paths, a viewBox of 0 0 512 512, no external references, no raster images, no scripts, at most 60 elements. Output only one svg code block."
+  },
+  {
+   "id": "carousel",
+   "type": "image_carousel",
+   "slides": [
+    {
+     "id": "hook",
+     "headline": "Stop guessing"
+    },
+    {
+     "id": "problem",
+     "headline": "Benchmarks lie"
+    },
+    {
+     "id": "method",
+     "headline": "Test your own"
+    },
+    {
+     "id": "result",
+     "headline": "Same GPU, new answer"
+    },
+    {
+     "id": "cta",
+     "headline": "Run it yourself"
+    }
+   ],
+   "seeds": [
+    1
+   ],
+   "size": [
+    1024,
+    1280
+   ],
+   "template": "A LinkedIn carousel slide, flat modern design, consistent navy and orange palette, large bold white headline text that reads exactly '{headline}', simple supporting graphic, plenty of margin."
+  },
+  {
+   "id": "folder-icon",
+   "type": "image_folder_icon",
+   "seeds": [
+    1
+   ],
+   "template": "Turn this logo into a flat Windows folder icon: a rounded folder shape with the logo centered on its front, bold simple shapes, solid pure green (#00FF00) background."
+  }
+ ],
+ "hash": "2af2d89395b4"
+}

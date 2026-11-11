@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="none"/>
+  
+  <!-- NORTHWIND Wordmark -->
+  <g fill="#1A1A1A" font-family="Arial, sans-serif" font-weight="900" font-size="85">
+    <!-- N -->
+    <path d="M100 150 L100 360 L140 150 L180 360 L180 150" fill="none" stroke="#1A1A1A" stroke-width="25" stroke-linecap="round"/>
+    <!-- O -->
+    <rect x="200" y="150" width="80" height="210" rx="40" fill="none" stroke="#1A1A1A" stroke-width="25"/>
+    <!-- R -->
+    <path d="M295 150 V360 M295 150 H355 C380 150 380 210 355 210 H295 M315 210 L380 360" fill="none" stroke="#1A1A1A" stroke-width="25" stroke-linecap="round"/>
+    <!-- T -->
+    <path d="M395 150 H465 M430 150 V360" fill="none" stroke="#1A1A1A" stroke-width="25" stroke-linecap="round"/>
+    <!-- H -->
+    <path d="M480 150 V360 M512 150 V360 M480 255 H512" fill="none" stroke="#1A1A1A" stroke-width="25" stroke-linecap="round"/>
+    
+    <!-- Second Line / Continuation -->
+    <!-- W -->
+    <path d="M80 380 L110 480 L140 410 L170 480 L200 380" fill="none" stroke="#1A1A1A" stroke-width="25" stroke-linecap="round"/>
+    <!-- I -->
+    <rect x="220" y="380" width="25" height="100" fill="#1A1A1A"/>
+    <!-- N -->
+    <path d="M260 380 L260 480 L300 380 L340 480 L340 380" fill="none" stroke="#1A1A1A" stroke-width="25" stroke-linecap="round"/>
+    <!-- D -->
+    <path d="M360 380 V480 M360 380 H400 C440 380 440 480 400 480 H360" fill="none" stroke="#1A1A1A" stroke-width="25" stroke-linecap="round"/>
+  </g>
+</svg>

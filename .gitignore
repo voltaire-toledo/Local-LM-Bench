@@ -7,3 +7,16 @@ results/.tfcache/
 results/*.log
 .DS_Store
 Thumbs.db
+.local/
+results/logs/
+*.tmp
+*.part
+.venv/
+venv/
+env/
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+tmp/
+scratch/
