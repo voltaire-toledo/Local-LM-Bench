@@ -1,0 +1,42 @@
+started 2026-11-10T15:29:26
+=== gemma4:12b-it-qat 2026-11-10T15:29:26
+pulling 56380ca2ab89: 100% ▕██████████████████▏   42 B                         
+pulling c014a34eec1b: 100% ▕██████████████████▏  546 B                         
+success 
+=== gemma4:12b-it-q4_K_M 2026-11-10T15:31:27
+pulling 0d542e0c8804: 100% ▕██████████████████▏  10 KB                         
+pulling e5ca99f91896: 100% ▕██████████████████▏  242 B                         
+success 
+=== gemma4:12b-it-q8_0 2026-11-10T15:33:43
+pulling 56380ca2ab89: 100% ▕██████████████████▏   42 B                         
+pulling e8f5e422d14c: 100% ▕██████████████████▏  546 B                         
+success 
+=== gpt-oss:20b 2026-11-10T15:37:15
+pulling 8ecb5d4ad617: 100% ▕██████████████████▏  13 GB                         
+pulling e103573196b6: 100% ▕██████████████████▏  139 B                         
+success 
+=== gemma4:26b-a4b-it-qat 2026-11-10T15:41:11
+pulling 56380ca2ab89: 100% ▕██████████████████▏   42 B                         
+pulling bf53cc9c5c58: 100% ▕██████████████████▏  546 B                         
+success 
+=== nemotron-3.5-lightning:30b-a3b 2026-11-10T15:45:28
+pulling 70636fb8b15a: 100% ▕██████████████████▏   53 B                         
+pulling 7101a4a1d9e3: 100% ▕██████████████████▏  250 B                         
+success 
+=== qwen3.6:35b-a3b-q4_K_M 2026-11-10T15:52:22
+pulling f5ee307a2982: 100% ▕██████████████████▏  23 GB                         
+pulling 5d1c86a949f7: 100% ▕██████████████████▏  462 B                         
+success 
+=== laguna-xs-2.1:q4_K_M 2026-11-10T15:59:15
+pulling b507b9c2f6ca: 100% ▕██████████████████▏   13 B                         
+pulling ee91ca0724dc: 100% ▕██████████████████▏  484 B                         
+success 
+=== eriktonon/gemma4-uncensored 2026-11-10T16:04:47
+pulling 19b24a48244e: 100% ▕█████████████████ ▏ 7.4 GB/7.4 GB   72 MB/s      0s
+pulling 475d56d36b7e: 100% ▕██████████████████▏  118 B                         
+success 
+=== eriktonon/qwen3.6-moe-uncensored 2026-11-10T16:06:49
+pulling a2943f3b85b8: 100% ▕██████████████████▏  14 GB                         
+pulling 4bee2c77b87d: 100% ▕██████████████████▏  124 B                         
+success 
+done 2026-11-10T16:10:47

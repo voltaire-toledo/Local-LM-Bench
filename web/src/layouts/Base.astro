@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+const fm = Astro.props.frontmatter ?? {};
+const title = Astro.props.title ?? fm.title ?? 'Local LM Bench';
+const description = Astro.props.description ?? fm.description ?? 'Real-world benchmarks of open-weight language models running on a hand-me-down RTX 3060.';
+const prose = Astro.props.prose ?? Boolean(Astro.props.frontmatter);
+const full = title === 'Local LM Bench' ? title : `${title} | Local LM Bench`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{full}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={full} />
+    <meta property="og:description" content={description} />
+  </head>
+  <body>
+    <header class="top">
+      <a class="brand" href="/">Local LM Bench</a>
+      <nav>
+        <a href="/">Compare</a>
+        <a href="/tests/">Tests</a>
+        <a href="/hardware/">Hardware</a>
+        <a href="/learn/quantization/">Quantization</a>
+        <a href="/learn/kv-cache/">KV cache</a>
+        <a href="/learn/moe/">MoE</a>
+        <a href="/faq/">FAQ</a>
+        <a href="https://github.com/voltaire-toledo/Local-LM-Bench">GitHub</a>
+      </nav>
+    </header>
+    <main class={prose ? 'prose' : ''}>
+      <slot />
+    </main>
+    <footer>My own measurements on my own hardware. Small test sets: treat gaps of one task as noise.</footer>
+  </body>
+</html>

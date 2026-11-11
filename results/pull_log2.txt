@@ -1,0 +1,10 @@
+started 2026-11-10T17:42:40
+=== qwen3-coder:30b-a3b-q4_K_M 2026-11-10T17:42:40
+success 
+=== qwen2.5-coder:14b 2026-11-10T17:47:51
+success 
+=== granite4:7b-a1b-h 2026-11-10T17:50:19
+success 
+=== granite4:32b-a9b-h 2026-11-10T17:51:29
+success 
+done 2026-11-10T17:56:56

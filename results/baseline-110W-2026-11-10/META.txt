@@ -1,0 +1,6 @@
+label: baseline-110W
+captured: 2026-11-11T08:50:05
+gpu: NVIDIA GeForce RTX 3060, 110.00 W, 170.00 W, 610.88, 2130 MHz
+ollama: 0.40.16
+context: 16384 (benchmark), temperature 0, think off
+notes: GPU power cap 110 W (default 170 W). Quality scores here are power-independent; tok/s is cap-dependent. Do not overwrite; compare against the 150 W run.

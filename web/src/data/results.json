@@ -1,0 +1,2686 @@
+{
+ "schema": 2,
+ "generated": "2026-11-11",
+ "hardware": {
+  "win-rtx3060-12g": {
+   "label": "Windows PC, RTX 3060 12 GB, 128 GB RAM",
+   "kind": "discrete-gpu",
+   "memory_gb": 12,
+   "system_ram_gb": 128,
+   "cpu": "Intel Core i7-13700K",
+   "os": "Windows 11",
+   "runtime": "Ollama 0.40.16 (llama.cpp)",
+   "driver": "NVIDIA 610.88",
+   "bandwidth_gbs": 360,
+   "power_default_w": 170
+  }
+ },
+ "speed_label": "110W",
+ "models": [
+  {
+   "id": "eriktonon/gemma4-uncensored:latest",
+   "slug": "eriktonon-gemma4-uncensored-latest",
+   "report": {
+    "verdict": "non-viable",
+    "headline": "No benefit: the base model already answered every benign prompt, and this scored lower.",
+    "preferred_over": [],
+    "recommended_for": [],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "2/3 code tasks; Terraform used a nonexistent argument."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught 1 of 3 invented items; 0 refusals, same as the base."
+     },
+     "workflows": {
+      "level": "measured",
+      "text": "31 tok/s vs 61 for the base."
+     }
+    },
+    "caveats": [
+     "Only 5 borderline prompts were tried; a different prompt set could show a difference."
+    ]
+   },
+   "specs": {
+    "architecture": "gemma4",
+    "family": "gemma4",
+    "parameters": "11.9B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 7.6,
+    "digest": "bc49eac50c17",
+    "modified": "2026-11-10T16:06:49.7094818-05:00",
+    "capabilities": [
+     "tools",
+     "completion",
+     "vision",
+     "audio"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 48,
+    "attention_layers": 48,
+    "attention_heads": 16,
+    "kv_heads": [
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1
+    ],
+    "head_dim": 512,
+    "embedding_length": 3840,
+    "sliding_window": 1024,
+    "experts_total": null,
+    "experts_active": null,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 656.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": null,
+    "default_params": {
+     "top_p": [
+      "0.92"
+     ],
+     "num_ctx": [
+      "65536"
+     ],
+     "repeat_penalty": [
+      "1.12"
+     ],
+     "stop": [
+      "\"<|turn>\"",
+      "\"<turn|>\""
+     ],
+     "temperature": [
+      "0.6"
+     ],
+     "top_k": [
+      "40"
+     ]
+    },
+    "has_system_prompt_in_modelfile": true
+   },
+   "sources": {
+    "ollama": "https://ollama.com/eriktonon/gemma4-uncensored",
+    "hf_official": null,
+    "hf_gguf": [],
+    "note": "Community Ollama upload; no Hugging Face repo found for this author. Base: Gemma 4."
+   },
+   "family": "gemma4",
+   "params": "11.9B",
+   "quant": "Q4_K_M",
+   "size_gb": 7.6,
+   "digest": "bc49eac50c17",
+   "quality": {
+    "code": [
+     2,
+     3
+    ],
+    "fake_caught": [
+     1,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 30.9,
+     "tps_source": "short-test",
+     "split": {
+      "cpu": 0,
+      "gpu": 100
+     },
+     "sweep": null
+    }
+   }
+  },
+  {
+   "id": "eriktonon/qwen3.6-moe-uncensored:latest",
+   "slug": "eriktonon-qwen3-6-moe-uncensored-latest",
+   "report": {
+    "verdict": "non-viable",
+    "headline": "No benefit over its base, at a lower-precision quantization.",
+    "preferred_over": [],
+    "recommended_for": [],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "2/3 code tasks; Terraform used a nonexistent argument."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "8/9; looped on the no-tool task where its base passed."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught 1 of 3 invented items (base: 3 of 3)."
+     },
+     "workflows": {
+      "level": "measured",
+      "text": "IQ3_XS (14 GB): faster, but weaker than qwen3.6:35b-a3b."
+     }
+    },
+    "caveats": [
+     "Not compared at the same quantization as its base."
+    ]
+   },
+   "specs": {
+    "architecture": "qwen35moe",
+    "family": "qwen35moe",
+    "parameters": "34.7B",
+    "quantization": "IQ3_XS",
+    "format": "gguf",
+    "size_gb": 14.5,
+    "digest": "37049fb08216",
+    "modified": "2026-11-10T16:10:47.6702435-05:00",
+    "capabilities": [
+     "tools",
+     "thinking",
+     "completion"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 40,
+    "attention_layers": 40,
+    "attention_heads": 16,
+    "kv_heads": 2,
+    "head_dim": 256,
+    "embedding_length": 2048,
+    "sliding_window": null,
+    "experts_total": 256,
+    "experts_active": 8,
+    "ssm_state": 128,
+    "kv_kb_per_token_f16_upper_bound": 80.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": null,
+    "default_params": {
+     "num_ctx": [
+      "65536"
+     ],
+     "repeat_penalty": [
+      "1.12"
+     ],
+     "stop": [
+      "\"<|im_start|>\"",
+      "\"<|im_end|>\""
+     ],
+     "temperature": [
+      "0.6"
+     ],
+     "top_k": [
+      "40"
+     ],
+     "top_p": [
+      "0.92"
+     ]
+    },
+    "has_system_prompt_in_modelfile": true
+   },
+   "sources": {
+    "ollama": "https://ollama.com/eriktonon/qwen3.6-moe-uncensored",
+    "hf_official": null,
+    "hf_gguf": [],
+    "note": "Community Ollama upload; no Hugging Face repo found for this author. Base: Qwen 3.6 35B-A3B."
+   },
+   "family": "qwen35moe",
+   "params": "34.7B",
+   "quant": "IQ3_XS",
+   "size_gb": 14.5,
+   "digest": "37049fb08216",
+   "quality": {
+    "code": [
+     2,
+     3
+    ],
+    "fake_caught": [
+     1,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     8,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 56.3,
+     "tps_source": "short-test",
+     "split": {
+      "cpu": 29,
+      "gpu": 71
+     },
+     "sweep": null
+    }
+   }
+  },
+  {
+   "id": "gemma4:12b-it-q4_K_M",
+   "slug": "gemma4-12b-it-q4-k-m",
+   "report": {
+    "verdict": "recommended",
+    "headline": "Best daily driver on 12 GB: fully on GPU, fast, strong on code and tools.",
+    "preferred_over": [
+     "gemma4:12b-it-q8_0",
+     "gemma4:12b-it-qat",
+     "qwen2.5-coder:14b",
+     "hir0rameel/qwen-claude:latest"
+    ],
+    "recommended_for": [
+     "Day-to-day coding and scripting",
+     "Small tool-using agents",
+     "Drafting and quick Q&A"
+    ],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "Passed all 3 code tasks including valid Terraform. Good for PowerShell/Python/Terraform helpers (PowerShell, TS and Go not yet tested)."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9 tool-calling tasks, no malformed calls, recovered from a missing file, declined correctly when it had no email tool."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "No summarization, pattern-finding or consulting-case tests run yet. Vision input is supported but untested."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught 2 of 3 invented items; did not refuse benign security or medical questions."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "Cache is small (about 1.7 GB at 64k), so long agent sessions should fit in VRAM; not yet measured."
+     }
+    },
+    "caveats": [
+     "Small test set: one task is worth 33 points."
+    ]
+   },
+   "specs": {
+    "architecture": "gemma4",
+    "family": "gemma4",
+    "parameters": "11.9B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 8.0,
+    "digest": "6114515d63c1",
+    "modified": "2026-11-10T15:33:43.1244693-05:00",
+    "capabilities": [
+     "completion",
+     "vision",
+     "audio",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 48,
+    "attention_layers": 48,
+    "attention_heads": 16,
+    "kv_heads": [
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1
+    ],
+    "head_dim": 512,
+    "embedding_length": 3840,
+    "sliding_window": 1024,
+    "experts_total": null,
+    "experts_active": null,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 656.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "draft_num_predict": [
+      "3"
+     ],
+     "temperature": [
+      "1"
+     ],
+     "top_k": [
+      "64"
+     ],
+     "top_p": [
+      "0.95"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/gemma4",
+    "hf_official": "google/gemma-4-12B-it",
+    "hf_gguf": [
+     "unsloth/gemma-4-12b-it-GGUF"
+    ],
+    "note": "No official 12B GGUF found in search; google publishes QAT GGUF for E4B (google/gemma-4-E4B-it-qat-q4_0-gguf)."
+   },
+   "family": "gemma4",
+   "params": "11.9B",
+   "quant": "Q4_K_M",
+   "size_gb": 8.0,
+   "digest": "6114515d63c1",
+   "quality": {
+    "code": [
+     3,
+     3
+    ],
+    "fake_caught": [
+     2,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 43.7,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 0,
+      "gpu": 100
+     },
+     "sweep": {
+      "16384": {
+       "tps": 43.7,
+       "power_w": 99.8,
+       "j_per_token": 2.4,
+       "cpu_pct": 0,
+       "vram_peak_mib": 9740.0,
+       "ttft_cold_s": 13.6,
+       "power_capped_s": 21.0
+      },
+      "32768": {
+       "tps": 44.8,
+       "power_w": 101.1,
+       "j_per_token": 2.3,
+       "cpu_pct": 0,
+       "vram_peak_mib": 9640.0,
+       "ttft_cold_s": 9.1,
+       "power_capped_s": 20.8
+      },
+      "65536": {
+       "tps": 42.8,
+       "power_w": 99.7,
+       "j_per_token": 2.4,
+       "cpu_pct": 0,
+       "vram_peak_mib": 10216.0,
+       "ttft_cold_s": 9.8,
+       "power_capped_s": 21.1
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "gemma4:12b-it-q8_0",
+   "slug": "gemma4-12b-it-q8-0",
+   "report": {
+    "verdict": "non-viable",
+    "headline": "Same scores as the 4-bit but 5x slower because it spills out of VRAM.",
+    "preferred_over": [],
+    "recommended_for": [],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "2/3 code tasks (Terraform invalid)."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught 3 of 3 invented items, but that is one task better than the 4-bit and may be noise."
+     },
+     "workflows": {
+      "level": "measured",
+      "text": "11 tok/s with 29% on CPU: not usable for interactive work."
+     }
+    },
+    "caveats": [
+     "Higher precision did not show a clear quality gain on these tests."
+    ]
+   },
+   "specs": {
+    "architecture": "gemma4",
+    "family": "gemma4",
+    "parameters": "11.9B",
+    "quantization": "Q8_0",
+    "format": "gguf",
+    "size_gb": 12.8,
+    "digest": "41c402fdddc2",
+    "modified": "2026-11-10T15:37:15.5128172-05:00",
+    "capabilities": [
+     "completion",
+     "vision",
+     "audio",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 48,
+    "attention_layers": 48,
+    "attention_heads": 16,
+    "kv_heads": [
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1
+    ],
+    "head_dim": 512,
+    "embedding_length": 3840,
+    "sliding_window": 1024,
+    "experts_total": null,
+    "experts_active": null,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 656.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "top_p": [
+      "0.95"
+     ],
+     "temperature": [
+      "1"
+     ],
+     "top_k": [
+      "64"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/gemma4",
+    "hf_official": "google/gemma-4-12B-it",
+    "hf_gguf": [
+     "unsloth/gemma-4-12b-it-GGUF"
+    ]
+   },
+   "family": "gemma4",
+   "params": "11.9B",
+   "quant": "Q8_0",
+   "size_gb": 12.8,
+   "digest": "41c402fdddc2",
+   "quality": {
+    "code": [
+     2,
+     3
+    ],
+    "fake_caught": [
+     3,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 11.4,
+     "tps_source": "short-test",
+     "split": {
+      "cpu": 29,
+      "gpu": 71
+     },
+     "sweep": null
+    }
+   }
+  },
+  {
+   "id": "gemma4:12b-it-qat",
+   "slug": "gemma4-12b-it-qat",
+   "report": {
+    "verdict": "non-viable",
+    "headline": "Redundant: same scores as the 4-bit build, but slower.",
+    "preferred_over": [],
+    "recommended_for": [],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "3/3 code tasks."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught 2 of 3 invented items."
+     },
+     "workflows": {
+      "level": "measured",
+      "text": "39 tok/s vs 61 for the q4_K_M, with the same score."
+     }
+    },
+    "caveats": [
+     "Smaller file (7.2 GB) is its only advantage."
+    ]
+   },
+   "specs": {
+    "architecture": "gemma4",
+    "family": "gemma4",
+    "parameters": "11.9B",
+    "quantization": "Q4_0",
+    "format": "gguf",
+    "size_gb": 7.2,
+    "digest": "38044be4f923",
+    "modified": "2026-11-10T15:31:27.1278432-05:00",
+    "capabilities": [
+     "completion",
+     "vision",
+     "audio",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 48,
+    "attention_layers": 48,
+    "attention_heads": 16,
+    "kv_heads": [
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1,
+     8,
+     8,
+     8,
+     8,
+     8,
+     1
+    ],
+    "head_dim": 512,
+    "embedding_length": 3840,
+    "sliding_window": 1024,
+    "experts_total": null,
+    "experts_active": null,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 656.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "temperature": [
+      "1"
+     ],
+     "top_k": [
+      "64"
+     ],
+     "top_p": [
+      "0.95"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/gemma4",
+    "hf_official": "google/gemma-4-12B-it",
+    "hf_gguf": [],
+    "note": "12B QAT GGUF repo not found in search."
+   },
+   "family": "gemma4",
+   "params": "11.9B",
+   "quant": "Q4_0",
+   "size_gb": 7.2,
+   "digest": "38044be4f923",
+   "quality": {
+    "code": [
+     3,
+     3
+    ],
+    "fake_caught": [
+     2,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 38.9,
+     "tps_source": "short-test",
+     "split": {
+      "cpu": 0,
+      "gpu": 100
+     },
+     "sweep": null
+    }
+   }
+  },
+  {
+   "id": "gemma4:26b-a4b-it-qat",
+   "slug": "gemma4-26b-a4b-it-qat",
+   "report": {
+    "verdict": "viable",
+    "headline": "Capable all-rounder, but the 12B does nearly the same faster and smaller.",
+    "preferred_over": [],
+    "recommended_for": [
+     "Tasks where the 12B falls short",
+     "Long context (sliding-window cache, about 1.8 GB at 64k)"
+    ],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "3/3 code tasks."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9 tool-calling tasks."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not tested."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught 2 of 3 invented items."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "42% runs from RAM; about 47 tok/s measured at 16k."
+     }
+    },
+    "caveats": [
+     "No measured advantage over gemma4:12b-it-q4_K_M yet."
+    ]
+   },
+   "specs": {
+    "architecture": "gemma4",
+    "family": "gemma4",
+    "parameters": "25.2B",
+    "quantization": "Q4_0",
+    "format": "gguf",
+    "size_gb": 15.6,
+    "digest": "2dd70431afed",
+    "modified": "2026-11-10T15:45:28.6143982-05:00",
+    "capabilities": [
+     "completion",
+     "vision",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 30,
+    "attention_layers": 30,
+    "attention_heads": 16,
+    "kv_heads": [
+     8,
+     8,
+     8,
+     8,
+     8,
+     2,
+     8,
+     8,
+     8,
+     8,
+     8,
+     2,
+     8,
+     8,
+     8,
+     8,
+     8,
+     2,
+     8,
+     8,
+     8,
+     8,
+     8,
+     2,
+     8,
+     8,
+     8,
+     8,
+     8,
+     2
+    ],
+    "head_dim": 512,
+    "embedding_length": 2816,
+    "sliding_window": 1024,
+    "experts_total": 128,
+    "experts_active": 8,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 420.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "temperature": [
+      "1"
+     ],
+     "top_k": [
+      "64"
+     ],
+     "top_p": [
+      "0.95"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/gemma4",
+    "hf_official": "google/gemma-4-26B-A4B-it",
+    "hf_gguf": [
+     "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+   },
+   "family": "gemma4",
+   "params": "25.2B",
+   "quant": "Q4_0",
+   "size_gb": 15.6,
+   "digest": "2dd70431afed",
+   "quality": {
+    "code": [
+     3,
+     3
+    ],
+    "fake_caught": [
+     2,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 47.3,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 42,
+      "gpu": 58
+     },
+     "sweep": {
+      "16384": {
+       "tps": 47.3,
+       "power_w": 89.9,
+       "j_per_token": 2.0,
+       "cpu_pct": 42,
+       "vram_peak_mib": 10874.0,
+       "ttft_cold_s": 25.4,
+       "power_capped_s": 0.7
+      },
+      "32768": {
+       "tps": 45.5,
+       "power_w": 88.5,
+       "j_per_token": 2.0,
+       "cpu_pct": 45,
+       "vram_peak_mib": 10804.0,
+       "ttft_cold_s": 20.2,
+       "power_capped_s": 0.6
+      },
+      "65536": {
+       "tps": 44.4,
+       "power_w": 85.7,
+       "j_per_token": 2.0,
+       "cpu_pct": 48,
+       "vram_peak_mib": 10934.0,
+       "ttft_cold_s": 20.5,
+       "power_capped_s": 0.5
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "gpt-oss:20b",
+   "slug": "gpt-oss-20b",
+   "report": {
+    "verdict": "hold",
+    "headline": "Inconclusive: 10 of 39 answers came back empty under my settings.",
+    "preferred_over": [],
+    "recommended_for": [
+     "Retest once with reasoning enabled and a larger output limit"
+    ],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "2/3 code tasks (Terraform failed at init, possibly harness related)."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "8/9, but looped for 8 steps on the empty-search task without answering."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not tested."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Scored 1 of 3 on invented items, but its reasoning used up my token limit so several answers were empty; the score is not trustworthy."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "13.8 GB, 28% on CPU, about 47 tok/s at 16k."
+     }
+    },
+    "caveats": [
+     "The thinking toggle I used does not apply to this model."
+    ]
+   },
+   "specs": {
+    "architecture": "gpt-oss",
+    "family": "gpt-oss",
+    "parameters": "20.9B",
+    "quantization": "MXFP4",
+    "format": "gguf",
+    "size_gb": 13.8,
+    "digest": "f38aa0c53da5",
+    "modified": "2026-11-10T15:41:11.7361754-05:00",
+    "capabilities": [
+     "completion",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 131072,
+    "layers": 24,
+    "attention_layers": 24,
+    "attention_heads": 64,
+    "kv_heads": 8,
+    "head_dim": 64,
+    "embedding_length": 2880,
+    "sliding_window": 128,
+    "experts_total": 32,
+    "experts_active": 4,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 48.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "temperature": [
+      "1"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/gpt-oss",
+    "hf_official": "openai/gpt-oss-20b",
+    "hf_gguf": [
+     "ggml-org/gpt-oss-20b-GGUF",
+     "unsloth/gpt-oss-20b-GGUF",
+     "lmstudio-community/gpt-oss-20b-GGUF"
+    ]
+   },
+   "family": "gpt-oss",
+   "params": "20.9B",
+   "quant": "MXFP4",
+   "size_gb": 13.8,
+   "digest": "f38aa0c53da5",
+   "quality": {
+    "code": [
+     2,
+     3
+    ],
+    "fake_caught": [
+     1,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     1,
+     5
+    ],
+    "tools": [
+     8,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 47.2,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 28,
+      "gpu": 72
+     },
+     "sweep": {
+      "16384": {
+       "tps": 47.2,
+       "power_w": 101.7,
+       "j_per_token": 2.2,
+       "cpu_pct": 28,
+       "vram_peak_mib": 10702.0,
+       "ttft_cold_s": 17.2,
+       "power_capped_s": 1.2
+      },
+      "32768": {
+       "tps": 45.6,
+       "power_w": 102.3,
+       "j_per_token": 2.3,
+       "cpu_pct": 30,
+       "vram_peak_mib": 10810.0,
+       "ttft_cold_s": 15.1,
+       "power_capped_s": 0.9
+      },
+      "65536": {
+       "tps": 40.5,
+       "power_w": 96.5,
+       "j_per_token": 2.4,
+       "cpu_pct": 36,
+       "vram_peak_mib": 10802.0,
+       "ttft_cold_s": 14.4,
+       "power_capped_s": 0.8
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "granite4:32b-a9b-h",
+   "slug": "granite4-32b-a9b-h",
+   "report": {
+    "verdict": "viable",
+    "headline": "Provisional: perfect on tool calling, untested elsewhere; huge context at tiny cache cost.",
+    "preferred_over": [],
+    "recommended_for": [
+     "Long-document ingestion (to be verified)",
+     "Tool-calling agents"
+    ],
+    "areas": {
+     "apps": {
+      "level": "untested",
+      "text": "Code suite not run."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9 tool-calling tasks."
+     },
+     "analysis": {
+      "level": "inferred",
+      "text": "1M context and about 16 KB/token cache suggest suitability for summarizing large inputs; not tested."
+     },
+     "critical": {
+      "level": "untested",
+      "text": "Factuality suite not run."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "19.5 GB, so part runs from RAM."
+     }
+    },
+    "caveats": [
+     "Score is partial: only tool calling has been measured."
+    ]
+   },
+   "specs": {
+    "architecture": "granitehybrid",
+    "family": "granitehybrid",
+    "parameters": "32.2B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 19.5,
+    "digest": "2f8a7367d441",
+    "modified": "2026-11-10T17:56:56.6573831-05:00",
+    "capabilities": [
+     "completion",
+     "tools"
+    ],
+    "context_length_advertised": 1048576,
+    "layers": 40,
+    "attention_layers": 4,
+    "attention_heads": 32,
+    "kv_heads": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0
+    ],
+    "head_dim": 128,
+    "embedding_length": 4096,
+    "sliding_window": null,
+    "experts_total": 72,
+    "experts_active": 10,
+    "ssm_state": 128,
+    "kv_kb_per_token_f16_upper_bound": 16.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": null,
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/granite4",
+    "hf_official": "ibm-granite/granite-4.0-h-small",
+    "hf_gguf": [
+     "ibm-granite/granite-4.0-h-small-GGUF"
+    ],
+    "note": "Mapping to 'h-small' inferred from matching size on Ollama (19 GB)."
+   },
+   "family": "granitehybrid",
+   "params": "32.2B",
+   "quant": "Q4_K_M",
+   "size_gb": 19.5,
+   "digest": "2f8a7367d441",
+   "quality": {
+    "code": null,
+    "fake_caught": null,
+    "fake_caught_grounded": null,
+    "refused": null,
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 20.6,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 48,
+      "gpu": 52
+     },
+     "sweep": {
+      "16384": {
+       "tps": 20.6,
+       "power_w": 54.6,
+       "j_per_token": 2.7,
+       "cpu_pct": 48,
+       "vram_peak_mib": 10778.0,
+       "ttft_cold_s": 23.6,
+       "power_capped_s": 1.6
+      },
+      "32768": {
+       "tps": 20.2,
+       "power_w": 53.2,
+       "j_per_token": 2.7,
+       "cpu_pct": 49,
+       "vram_peak_mib": 10768.0,
+       "ttft_cold_s": 20.4,
+       "power_capped_s": 1.5
+      },
+      "65536": {
+       "tps": 19.4,
+       "power_w": 51.7,
+       "j_per_token": 2.7,
+       "cpu_pct": 50,
+       "vram_peak_mib": 10836.0,
+       "ttft_cold_s": 18.8,
+       "power_capped_s": 1.2
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "granite4:7b-a1b-h",
+   "slug": "granite4-7b-a1b-h",
+   "report": {
+    "verdict": "non-viable",
+    "headline": "Cheap but unreliable in agent loops; no advantage over the keepers.",
+    "preferred_over": [],
+    "recommended_for": [],
+    "areas": {
+     "apps": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "7/9; hit the step limit and failed the missing-file and fix-and-run tasks."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "critical": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "4.2 GB, fast, but weaker than alternatives at the same size."
+     }
+    },
+    "caveats": []
+   },
+   "specs": {
+    "architecture": "granitehybrid",
+    "family": "granitehybrid",
+    "parameters": "6.9B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 4.2,
+    "digest": "566b725534ea",
+    "modified": "2026-11-10T17:51:29.8317847-05:00",
+    "capabilities": [
+     "completion",
+     "tools"
+    ],
+    "context_length_advertised": 1048576,
+    "layers": 40,
+    "attention_layers": 4,
+    "attention_heads": 12,
+    "kv_heads": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     0
+    ],
+    "head_dim": 128,
+    "embedding_length": 1536,
+    "sliding_window": null,
+    "experts_total": 64,
+    "experts_active": 6,
+    "ssm_state": 128,
+    "kv_kb_per_token_f16_upper_bound": 8.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": null,
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/granite4",
+    "hf_official": "ibm-granite/granite-4.0-h-tiny",
+    "hf_gguf": [
+     "ibm-granite/granite-4.0-h-tiny-GGUF"
+    ],
+    "note": "Mapping to 'h-tiny' inferred from matching size on Ollama (4.2 GB)."
+   },
+   "family": "granitehybrid",
+   "params": "6.9B",
+   "quant": "Q4_K_M",
+   "size_gb": 4.2,
+   "digest": "566b725534ea",
+   "quality": {
+    "code": null,
+    "fake_caught": null,
+    "fake_caught_grounded": null,
+    "refused": null,
+    "tools": [
+     7,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": null,
+     "tps_source": null,
+     "split": null,
+     "sweep": null
+    }
+   }
+  },
+  {
+   "id": "hir0rameel/qwen-claude:latest",
+   "slug": "hir0rameel-qwen-claude-latest",
+   "report": {
+    "verdict": "non-viable",
+    "headline": "Community build that refuses benign prompts and trails the others.",
+    "preferred_over": [],
+    "recommended_for": [],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "2/3 code tasks."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "7/9."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Refused 2 of 5 benign prompts and caught 1 of 3 invented items."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "Fast (56 tok/s) but outclassed by qwen3.5:9b at similar size."
+     }
+    },
+    "caveats": []
+   },
+   "specs": {
+    "architecture": "qwen3",
+    "family": "qwen3",
+    "parameters": "8.2B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 5.2,
+    "digest": "87381b6b55a9",
+    "modified": "2026-02-10T14:00:17.9159725-05:00",
+    "capabilities": [
+     "completion",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 40960,
+    "layers": 36,
+    "attention_layers": 36,
+    "attention_heads": 32,
+    "kv_heads": 8,
+    "head_dim": 128,
+    "embedding_length": 4096,
+    "sliding_window": null,
+    "experts_total": null,
+    "experts_active": null,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 144.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "stop": [
+      "\"<|im_start|>\"",
+      "\"<|im_end|>\""
+     ],
+     "temperature": [
+      "0.6"
+     ],
+     "top_k": [
+      "20"
+     ],
+     "top_p": [
+      "0.95"
+     ],
+     "repeat_penalty": [
+      "1"
+     ]
+    },
+    "has_system_prompt_in_modelfile": true
+   },
+   "sources": {
+    "ollama": "https://ollama.com/hir0rameel/qwen-claude",
+    "hf_official": null,
+    "hf_gguf": [],
+    "note": "Community Ollama upload; no Hugging Face repo found for this author."
+   },
+   "family": "qwen3",
+   "params": "8.2B",
+   "quant": "Q4_K_M",
+   "size_gb": 5.2,
+   "digest": "87381b6b55a9",
+   "quality": {
+    "code": [
+     2,
+     3
+    ],
+    "fake_caught": [
+     1,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     2,
+     5
+    ],
+    "tools": [
+     7,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 55.8,
+     "tps_source": "short-test",
+     "split": {
+      "cpu": 0,
+      "gpu": 100
+     },
+     "sweep": null
+    }
+   }
+  },
+  {
+   "id": "laguna-xs-2.1:q4_K_M",
+   "slug": "laguna-xs-2-1-q4-k-m",
+   "report": {
+    "verdict": "recommended",
+    "headline": "Top coder and agent model; runs as fast as the 12B despite spilling to RAM.",
+    "preferred_over": [
+     "nemotron-3.5-lightning:30b-a3b",
+     "qwen3-coder:30b-a3b-q4_K_M"
+    ],
+    "recommended_for": [
+     "Coding and refactoring",
+     "Agentic repo tasks",
+     "Terraform generation"
+    ],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "3/3 code tasks, only the Terraform pass alongside the Gemma builds; designed for agentic coding."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9 tool-calling tasks."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not tested."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught 2 of 3 invented items; 0 refusals."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "256K context advertised, but cache per token is the largest of the keepers (about 40 KB/token, layer split assumed); verify at 32k and 64k."
+     }
+    },
+    "caveats": [
+     "20 GB model: about half runs on CPU (52%), about 54 tok/s at 16k held up in testing.",
+     "Cache estimate is the least certain."
+    ]
+   },
+   "specs": {
+    "architecture": "laguna",
+    "family": "laguna",
+    "parameters": "33.4B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 20.3,
+    "digest": "0175be1e57f4",
+    "modified": "2026-11-10T16:04:47.3451885-05:00",
+    "capabilities": [
+     "completion",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 40,
+    "attention_layers": 40,
+    "attention_heads": [
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64,
+     48,
+     64,
+     64,
+     64
+    ],
+    "kv_heads": 8,
+    "head_dim": 128,
+    "embedding_length": 2048,
+    "sliding_window": 512,
+    "experts_total": 256,
+    "experts_active": 8,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 160.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "OpenMDW License Agreement, version 1.1 (OpenMDW-1.1)",
+    "default_params": null,
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/laguna-xs-2.1",
+    "hf_official": "poolside/Laguna-XS-2.1",
+    "hf_gguf": [
+     "poolside/Laguna-XS-2.1-GGUF",
+     "mudler/Laguna-XS-2.1-APEX-GGUF"
+    ]
+   },
+   "family": "laguna",
+   "params": "33.4B",
+   "quant": "Q4_K_M",
+   "size_gb": 20.3,
+   "digest": "0175be1e57f4",
+   "quality": {
+    "code": [
+     3,
+     3
+    ],
+    "fake_caught": [
+     2,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 54.0,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 52,
+      "gpu": 48
+     },
+     "sweep": {
+      "16384": {
+       "tps": 54.0,
+       "power_w": 82.0,
+       "j_per_token": 1.6,
+       "cpu_pct": 52,
+       "vram_peak_mib": 10788.0,
+       "ttft_cold_s": 24.7,
+       "power_capped_s": 0.6
+      },
+      "32768": {
+       "tps": 52.9,
+       "power_w": 81.0,
+       "j_per_token": 1.6,
+       "cpu_pct": 56,
+       "vram_peak_mib": 10658.0,
+       "ttft_cold_s": 19.0,
+       "power_capped_s": 0.5
+      },
+      "65536": {
+       "tps": 50.6,
+       "power_w": 80.5,
+       "j_per_token": 1.6,
+       "cpu_pct": 61,
+       "vram_peak_mib": 10814.0,
+       "ttft_cold_s": 18.1,
+       "power_capped_s": 0.4
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "nemotron-3.5-lightning:30b-a3b",
+   "slug": "nemotron-3-5-lightning-30b-a3b",
+   "report": {
+    "verdict": "hold",
+    "headline": "Keep for one long-context test only; otherwise middling.",
+    "preferred_over": [],
+    "recommended_for": [
+     "Very long context experiments (1M advertised, about 0.9 GB cache at 128k)"
+    ],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "2/3 code tasks; Terraform missed a required argument."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9 tool-calling tasks."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not tested; long-context strength is the reason to keep it."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught only 1 of 3 invented items."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "25 GB, 62% on CPU, about 32 tok/s at 16k."
+     }
+    },
+    "caveats": [
+     "Drop if the long-context test does not stand out."
+    ]
+   },
+   "specs": {
+    "architecture": "nemotron_h_moe",
+    "family": "nemotron_h_moe",
+    "parameters": "32.9B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 25.4,
+    "digest": "e6905fffe2e2",
+    "modified": "2026-11-10T15:52:22.2005503-05:00",
+    "capabilities": [
+     "completion",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 1048576,
+    "layers": 53,
+    "attention_layers": 7,
+    "attention_heads": 32,
+    "kv_heads": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2
+    ],
+    "head_dim": 128,
+    "embedding_length": 2688,
+    "sliding_window": null,
+    "experts_total": 128,
+    "experts_active": 6,
+    "ssm_state": 128,
+    "kv_kb_per_token_f16_upper_bound": 7.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "NVIDIA Open Model License Agreement",
+    "default_params": {
+     "temperature": [
+      "1"
+     ],
+     "top_p": [
+      "0.95"
+     ],
+     "draft_num_predict": [
+      "2"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/nemotron-3.5-lightning",
+    "hf_official": "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+    "hf_gguf": [
+     "ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF"
+    ]
+   },
+   "family": "nemotron_h_moe",
+   "params": "32.9B",
+   "quant": "Q4_K_M",
+   "size_gb": 25.4,
+   "digest": "e6905fffe2e2",
+   "quality": {
+    "code": [
+     2,
+     3
+    ],
+    "fake_caught": [
+     1,
+     3
+    ],
+    "fake_caught_grounded": [
+     2,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 32.1,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 62,
+      "gpu": 38
+     },
+     "sweep": {
+      "16384": {
+       "tps": 32.1,
+       "power_w": 37.4,
+       "j_per_token": 1.2,
+       "cpu_pct": 62,
+       "vram_peak_mib": 10386.0,
+       "ttft_cold_s": 35.1,
+       "power_capped_s": 6.1
+      },
+      "32768": {
+       "tps": 32.1,
+       "power_w": 37.6,
+       "j_per_token": 1.2,
+       "cpu_pct": 62,
+       "vram_peak_mib": 10530.0,
+       "ttft_cold_s": 24.3,
+       "power_capped_s": 6.2
+      },
+      "65536": {
+       "tps": 30.5,
+       "power_w": 37.5,
+       "j_per_token": 1.3,
+       "cpu_pct": 62,
+       "vram_peak_mib": 10818.0,
+       "ttft_cold_s": 23.1,
+       "power_capped_s": 9.2
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "qwen2.5-coder:14b",
+   "slug": "qwen2-5-coder-14b",
+   "report": {
+    "verdict": "non-viable",
+    "headline": "Calls tools as plain text, so structured tool calling fails; older with 32K context.",
+    "preferred_over": [],
+    "recommended_for": [],
+    "areas": {
+     "apps": {
+      "level": "untested",
+      "text": "Code suite not run."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "1/9: correct calls, printed as JSON text instead of structured calls."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "critical": {
+      "level": "untested",
+      "text": "Not run."
+     },
+     "workflows": {
+      "level": "measured",
+      "text": "Not usable with structured tool harnesses."
+     }
+    },
+    "caveats": [
+     "A text-parsing harness might work with it, but newer coder models do not need that."
+    ]
+   },
+   "specs": {
+    "architecture": "qwen2",
+    "family": "qwen2",
+    "parameters": "14.8B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 9.0,
+    "digest": "9ec8897f747e",
+    "modified": "2026-11-10T17:50:19.2581322-05:00",
+    "capabilities": [
+     "completion",
+     "tools",
+     "insert"
+    ],
+    "context_length_advertised": 32768,
+    "layers": 48,
+    "attention_layers": 48,
+    "attention_heads": 40,
+    "kv_heads": 8,
+    "head_dim": 128,
+    "embedding_length": 5120,
+    "sliding_window": null,
+    "experts_total": null,
+    "experts_active": null,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 192.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": null,
+    "has_system_prompt_in_modelfile": true
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/qwen2.5-coder",
+    "hf_official": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "hf_gguf": [
+     "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF",
+     "bartowski/Qwen2.5-Coder-14B-Instruct-GGUF"
+    ]
+   },
+   "family": "qwen2",
+   "params": "14.8B",
+   "quant": "Q4_K_M",
+   "size_gb": 9.0,
+   "digest": "9ec8897f747e",
+   "quality": {
+    "code": null,
+    "fake_caught": null,
+    "fake_caught_grounded": null,
+    "refused": null,
+    "tools": [
+     1,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": null,
+     "tps_source": null,
+     "split": null,
+     "sweep": null
+    }
+   }
+  },
+  {
+   "id": "qwen3-coder:30b-a3b-q4_K_M",
+   "slug": "qwen3-coder-30b-a3b-q4-k-m",
+   "report": {
+    "verdict": "hold",
+    "headline": "Code quality unmeasured; tool calls came out as text and its cache is large.",
+    "preferred_over": [],
+    "recommended_for": [
+     "Run the code suite once, then decide"
+    ],
+    "areas": {
+     "apps": {
+      "level": "untested",
+      "text": "Code suite not run."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "7/9: two failures were calls printed as XML-style text, which a harness may or may not parse."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not tested."
+     },
+     "critical": {
+      "level": "untested",
+      "text": "Factuality suite not run."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "Full attention in all layers: about 3 GB cache at 32k, 12.9 GB at 128k, so long context will not fit."
+     }
+    },
+    "caveats": [
+     "Tool-call format issue may be a runtime/template mismatch, not the model."
+    ]
+   },
+   "specs": {
+    "architecture": "qwen3moe",
+    "family": "qwen3moe",
+    "parameters": "30.5B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 18.6,
+    "digest": "06c1097efce0",
+    "modified": "2026-11-10T17:47:51.7398258-05:00",
+    "capabilities": [
+     "completion",
+     "tools"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 48,
+    "attention_layers": 48,
+    "attention_heads": 32,
+    "kv_heads": 4,
+    "head_dim": 128,
+    "embedding_length": 2048,
+    "sliding_window": null,
+    "experts_total": 128,
+    "experts_active": 8,
+    "ssm_state": null,
+    "kv_kb_per_token_f16_upper_bound": 96.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "top_p": [
+      "0.8"
+     ],
+     "repeat_penalty": [
+      "1.05"
+     ],
+     "stop": [
+      "\"<|im_start|>\"",
+      "\"<|im_end|>\"",
+      "\"<|endoftext|>\""
+     ],
+     "temperature": [
+      "0.7"
+     ],
+     "top_k": [
+      "20"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/qwen3-coder",
+    "hf_official": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+    "hf_gguf": [
+     "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+     "lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+    ]
+   },
+   "family": "qwen3moe",
+   "params": "30.5B",
+   "quant": "Q4_K_M",
+   "size_gb": 18.6,
+   "digest": "06c1097efce0",
+   "quality": {
+    "code": null,
+    "fake_caught": null,
+    "fake_caught_grounded": null,
+    "refused": null,
+    "tools": [
+     7,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 39.0,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 48,
+      "gpu": 52
+     },
+     "sweep": {
+      "16384": {
+       "tps": 39.0,
+       "power_w": 44.8,
+       "j_per_token": 1.2,
+       "cpu_pct": 48,
+       "vram_peak_mib": 10812.0,
+       "ttft_cold_s": 21.7,
+       "power_capped_s": 0.6
+      },
+      "32768": {
+       "tps": 31.6,
+       "power_w": 36.9,
+       "j_per_token": 1.2,
+       "cpu_pct": 52,
+       "vram_peak_mib": 10646.0,
+       "ttft_cold_s": 18.2,
+       "power_capped_s": 0.6
+      },
+      "65536": {
+       "tps": 26.2,
+       "power_w": 35.0,
+       "j_per_token": 1.4,
+       "cpu_pct": 58,
+       "vram_peak_mib": 10686.0,
+       "ttft_cold_s": 19.0,
+       "power_capped_s": 6.9
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "qwen3.5:9b",
+   "slug": "qwen3-5-9b",
+   "report": {
+    "verdict": "preferred",
+    "headline": "Small, fast fact-checker that stays entirely on the GPU.",
+    "preferred_over": [
+     "hir0rameel/qwen-claude:latest"
+    ],
+    "recommended_for": [
+     "Quick fact checks",
+     "Light drafting",
+     "Low-power, always-loaded assistant"
+    ],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "2/3 code tasks; Terraform had a dependency cycle."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "8/9 tool-calling tasks; gave up instead of looking for a renamed config file."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not tested."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught all 3 invented items in every variant."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "Cache is larger per token than the other hybrids (about 4 GB at 128k); fine at 32k."
+     }
+    },
+    "caveats": []
+   },
+   "specs": {
+    "architecture": "qwen35",
+    "family": "qwen35",
+    "parameters": "9.7B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 6.6,
+    "digest": "6488c96fa5fa",
+    "modified": "2026-03-29T15:47:51.7365975-04:00",
+    "capabilities": [
+     "completion",
+     "vision",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 32,
+    "attention_layers": 8,
+    "attention_heads": 16,
+    "kv_heads": [
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     4,
+     0,
+     0,
+     0,
+     4
+    ],
+    "head_dim": 256,
+    "embedding_length": 4096,
+    "sliding_window": null,
+    "experts_total": null,
+    "experts_active": null,
+    "ssm_state": 128,
+    "kv_kb_per_token_f16_upper_bound": 32.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "temperature": [
+      "1"
+     ],
+     "top_k": [
+      "20"
+     ],
+     "top_p": [
+      "0.95"
+     ],
+     "presence_penalty": [
+      "1.5"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/qwen3.5",
+    "hf_official": "Qwen/Qwen3.5-9B",
+    "hf_gguf": [
+     "unsloth/Qwen3.5-9B-GGUF",
+     "lmstudio-community/Qwen3.5-9B-GGUF"
+    ]
+   },
+   "family": "qwen35",
+   "params": "9.7B",
+   "quant": "Q4_K_M",
+   "size_gb": 6.6,
+   "digest": "6488c96fa5fa",
+   "quality": {
+    "code": [
+     2,
+     3
+    ],
+    "fake_caught": [
+     3,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     0,
+     5
+    ],
+    "tools": [
+     8,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 43.6,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 0,
+      "gpu": 100
+     },
+     "sweep": {
+      "16384": {
+       "tps": 43.6,
+       "power_w": 100.6,
+       "j_per_token": 2.4,
+       "cpu_pct": 0,
+       "vram_peak_mib": 7364.0,
+       "ttft_cold_s": 5.2,
+       "power_capped_s": 18.7
+      },
+      "32768": {
+       "tps": 42.4,
+       "power_w": 101.4,
+       "j_per_token": 2.5,
+       "cpu_pct": 0,
+       "vram_peak_mib": 7908.0,
+       "ttft_cold_s": 5.7,
+       "power_capped_s": 17.7
+      },
+      "65536": {
+       "tps": 42.6,
+       "power_w": 102.3,
+       "j_per_token": 2.4,
+       "cpu_pct": 0,
+       "vram_peak_mib": 8822.0,
+       "ttft_cold_s": 5.5,
+       "power_capped_s": 19.2
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "qwen3.6:35b-a3b-q4_K_M",
+   "slug": "qwen3-6-35b-a3b-q4-k-m",
+   "report": {
+    "verdict": "recommended",
+    "headline": "Pick when accuracy matters more than speed or size.",
+    "preferred_over": [
+     "gpt-oss:20b",
+     "nemotron-3.5-lightning:30b-a3b"
+    ],
+    "recommended_for": [
+     "Fact-sensitive answers (cloud, Azure, docs)",
+     "Research and review drafts",
+     "Tool-using agents"
+    ],
+    "areas": {
+     "apps": {
+      "level": "measured",
+      "text": "2/3 code tasks; its Terraform invented an argument (network_security_group_id), so validate generated HCL."
+     },
+     "agentic": {
+      "level": "measured",
+      "text": "9/9 tool-calling tasks."
+     },
+     "analysis": {
+      "level": "untested",
+      "text": "Not tested; large MoE with hybrid attention, so a good candidate for the insight tests."
+     },
+     "critical": {
+      "level": "measured",
+      "text": "Caught all 3 invented items in every prompt variant. Refused 1 of 5 benign prompts."
+     },
+     "workflows": {
+      "level": "inferred",
+      "text": "Tiny attention cache (about 1.3 GB at 64k), so long context is cheap; 24 GB of weights means about 58% runs from RAM (about 44 tok/s measured at 16k)."
+     }
+    },
+    "caveats": [
+     "Larger model, so slower loads (about 10 s)."
+    ]
+   },
+   "specs": {
+    "architecture": "qwen35moe",
+    "family": "qwen35moe",
+    "parameters": "36.0B",
+    "quantization": "Q4_K_M",
+    "format": "gguf",
+    "size_gb": 23.9,
+    "digest": "07d35212591f",
+    "modified": "2026-11-10T15:59:15.0952918-05:00",
+    "capabilities": [
+     "completion",
+     "vision",
+     "tools",
+     "thinking"
+    ],
+    "context_length_advertised": 262144,
+    "layers": 40,
+    "attention_layers": 10,
+    "attention_heads": 16,
+    "kv_heads": [
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2
+    ],
+    "head_dim": 256,
+    "embedding_length": 2048,
+    "sliding_window": null,
+    "experts_total": 256,
+    "experts_active": 8,
+    "ssm_state": 128,
+    "kv_kb_per_token_f16_upper_bound": 20.0,
+    "kv_note": "Upper bound assuming every attention layer caches the full context; sliding-window layers need far less.",
+    "license_first_line": "Apache License",
+    "default_params": {
+     "temperature": [
+      "1"
+     ],
+     "top_k": [
+      "20"
+     ],
+     "top_p": [
+      "0.95"
+     ],
+     "min_p": [
+      "0"
+     ],
+     "presence_penalty": [
+      "1.5"
+     ],
+     "repeat_penalty": [
+      "1"
+     ]
+    },
+    "has_system_prompt_in_modelfile": false
+   },
+   "sources": {
+    "ollama": "https://ollama.com/library/qwen3.6",
+    "hf_official": "Qwen/Qwen3.6-35B-A3B",
+    "hf_gguf": [
+     "unsloth/Qwen3.6-35B-A3B-GGUF"
+    ],
+    "note": "No official Qwen GGUF repo found; Qwen publishes FP8 (Qwen/Qwen3.6-35B-A3B-FP8)."
+   },
+   "family": "qwen35moe",
+   "params": "36.0B",
+   "quant": "Q4_K_M",
+   "size_gb": 23.9,
+   "digest": "07d35212591f",
+   "quality": {
+    "code": [
+     2,
+     3
+    ],
+    "fake_caught": [
+     3,
+     3
+    ],
+    "fake_caught_grounded": [
+     3,
+     3
+    ],
+    "refused": [
+     1,
+     5
+    ],
+    "tools": [
+     9,
+     9
+    ]
+   },
+   "perf": {
+    "win-rtx3060-12g": {
+     "tps": 44.1,
+     "tps_source": "sweep",
+     "split": {
+      "cpu": 58,
+      "gpu": 42
+     },
+     "sweep": {
+      "16384": {
+       "tps": 44.1,
+       "power_w": 70.3,
+       "j_per_token": 1.6,
+       "cpu_pct": 58,
+       "vram_peak_mib": 11034.0,
+       "ttft_cold_s": 32.7,
+       "power_capped_s": 0.4
+      },
+      "32768": {
+       "tps": 45.5,
+       "power_w": 71.8,
+       "j_per_token": 1.6,
+       "cpu_pct": 58,
+       "vram_peak_mib": 11062.0,
+       "ttft_cold_s": 23.2,
+       "power_capped_s": 0.4
+      },
+      "65536": {
+       "tps": 42.0,
+       "power_w": 60.5,
+       "j_per_token": 1.5,
+       "cpu_pct": 60,
+       "vram_peak_mib": 11046.0,
+       "ttft_cold_s": 22.9,
+       "power_capped_s": 0.4
+      }
+     }
+    }
+   }
+  }
+ ]
+}

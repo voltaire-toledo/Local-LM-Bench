@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+import data from '../../data/results.json';
+
+export function getStaticPaths() {
+  return data.models.map((m) => ({ params: { slug: m.slug }, props: { m } }));
+}
+
+const { m } = Astro.props;
+const r = m.report;
+const s = m.specs ?? {};
+const src = m.sources ?? {};
+const q = m.quality;
+const hwId = Object.keys(m.perf)[0];
+const hw = data.hardware[hwId];
+const p = m.perf[hwId];
+const sweep = p.sweep ?? {};
+const fmt = (a) => (a ? `${a[0]} of ${a[1]}` : 'not tested');
+const num = (n) => (n == null ? 'unknown' : n.toLocaleString('en-US'));
+const AREAS = [
+  ['apps', 'Real-world applications'],
+  ['agentic', 'Agentic tasks'],
+  ['analysis', 'Analysis and insight surfacing'],
+  ['critical', 'Critical evaluation'],
+  ['workflows', 'Workflows'],
+];
+const EV = { measured: 'measured', inferred: 'inferred, not tested', untested: 'not tested' };
+const QUANT = {
+  Q4_K_M: 'A 4-bit K-quant, medium mix. Weights are stored in small blocks that each carry their own scale, and the most sensitive tensors keep a little more precision. The usual best balance of size and quality for local use.',
+  Q8_0: 'Plain 8-bit with a scale per block. Close to lossless, but about 60 percent bigger than a 4-bit build, which is what pushes it out of VRAM on a 12 GB card.',
+  Q4_0: 'The older, simpler 4-bit format. Builds labelled QAT were trained with 4-bit in mind, so they hold their quality better than a naive 4-bit conversion.',
+  MXFP4: 'A 4-bit floating-point format with a shared exponent per small block, used natively by gpt-oss. Not a conversion of a higher-precision model.',
+  IQ3_XS: 'A roughly 3-bit importance-matrix quantization. Much smaller than 4-bit, at a clear cost in precision.',
+};
+const kv = s.kv_kb_per_token_f16_upper_bound;
+const ctxk = s.context_length_advertised ? Math.round(s.context_length_advertised / 1024) : null;
+const title = m.id;
+---
+<Base title={title} description={r ? r.headline : `Measurements and specs for ${m.id}`} prose>
+  <p class="note"><a href="/">All models</a></p>
+  <h1>{m.id}</h1>
+  {r && <p><span class={`v ${r.verdict}`}>{r.verdict}</span> {r.headline}</p>}
+
+  <div class="kv">
+    <div>Parameters<b>{m.params ?? 'unknown'}</b></div>
+    <div>Quantization<b>{m.quant ?? 'unknown'}</b></div>
+    <div>Size on disk<b>{m.size_gb ? `${m.size_gb} GB` : 'unknown'}</b></div>
+    <div>Advertised context<b>{ctxk ? `${num(ctxk)}k tokens` : 'unknown'}</b></div>
+    <div>Architecture<b>{s.architecture ?? 'unknown'}</b></div>
+    <div>Layers (with attention)<b>{s.layers ?? '?'} ({s.attention_layers ?? '?'})</b></div>
+    <div>Experts (active of total)<b>{s.experts_total ? `${s.experts_active} of ${s.experts_total}` : 'dense'}</b></div>
+    <div>Sliding window<b>{s.sliding_window ? `${num(s.sliding_window)} tokens` : 'none'}</b></div>
+    <div>Capabilities<b>{(s.capabilities ?? []).join(', ') || 'unknown'}</b></div>
+    <div>License (first line)<b>{s.license_first_line ?? 'see source'}</b></div>
+  </div>
+  {kv && (
+    <p class="note">
+      Cache worst case: {kv} KB per token at 16-bit, assuming every attention layer remembers the whole conversation.
+      {s.sliding_window && ' This model uses sliding windows, so its real cache is much smaller. '}
+      <a href="/learn/kv-cache/">How the cache works</a>.
+    </p>
+  )}
+  {s.has_system_prompt_in_modelfile && <p class="note">This build ships with its own built-in system prompt, so a "no system prompt" test is not fully blank.</p>}
+
+  <h2>Measured results</h2>
+  <p>
+    Code {fmt(q.code)}. Invented items caught {fmt(q.fake_caught)}. Tool calling {fmt(q.tools)}. Benign prompts refused {fmt(q.refused)}.
+    Small test sets, so one task is worth a large step. <a href="/tests/">What the tests are</a>.
+  </p>
+  {Object.keys(sweep).length > 0 && (
+    <div class="wrap">
+      <table>
+        <thead><tr><th>Context</th><th>tok/s</th><th>On CPU %</th><th>VRAM peak</th><th>GPU watts</th><th>J per token</th></tr></thead>
+        <tbody>
+          {Object.entries(sweep).map(([c, v]) => (
+            <tr><td>{Math.round(Number(c) / 1024)}k</td><td>{v.tps}</td><td>{v.cpu_pct ?? '?'}</td><td>{num(Math.round(v.vram_peak_mib))} MiB</td><td>{v.power_w}</td><td>{v.j_per_token}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+  <p class="note">Hardware: {hw.label}. GPU power limit 110 W. Energy covers the GPU only.</p>
+
+  {r && (
+    <>
+      <h2>What we determined</h2>
+      {r.preferred_over?.length > 0 && <p><span class="k">Preferred over:</span> {r.preferred_over.join('; ')}</p>}
+      {r.recommended_for?.length > 0 && <p><span class="k">Recommended for:</span> {r.recommended_for.join('; ')}</p>}
+      {AREAS.map(([k, label]) => r.areas?.[k] && (
+        <div>
+          <h3>{label}<span class="ev">{EV[r.areas[k].level]}</span></h3>
+          <p>{r.areas[k].text}</p>
+        </div>
+      ))}
+      {r.caveats?.length > 0 && <p class="note">Caveats: {r.caveats.join(' ')}</p>}
+    </>
+  )}
+
+  {QUANT[m.quant] && (
+    <>
+      <h2>What {m.quant} means</h2>
+      <p>{QUANT[m.quant]} <a href="/learn/quantization/">More on quantization</a>.</p>
+    </>
+  )}
+
+  <h2>Where to download it</h2>
+  <p class="links">
+    {src.ollama && <a href={src.ollama}>Ollama</a>}
+    {src.hf_official && <a href={`https://huggingface.co/${src.hf_official}`}>Hugging Face (official)</a>}
+    {(src.hf_gguf ?? []).map((g) => <a href={`https://huggingface.co/${g}`}>{g}</a>)}
+  </p>
+  {src.note && <p class="note">{src.note}</p>}
+  {!src.hf_official && <p class="note">No Hugging Face repo found. This looks like an Ollama-only community upload, so review it before relying on it.</p>}
+</Base>

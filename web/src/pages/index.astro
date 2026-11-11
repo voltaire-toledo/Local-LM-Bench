@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import Compare from '../components/Compare.astro';
+import data from '../data/results.json';
+---
+<Base title="Local LM Bench">
+  <h1>Local LM Bench</h1>
+  <p class="sub">
+    My own benchmark measurements for open-weight models running on a hand-me-down RTX 3060. Pick the hardware, say what matters to you,
+    and compare. Generated {data.generated}.
+  </p>
+  <Compare data={data} />
+</Base>

@@ -1,0 +1,62 @@
+---
+const { data } = Astro.props;
+---
+<div class="card">
+  <div class="row">
+    <div class="ctl"><label for="hw">Hardware</label><select id="hw"></select></div>
+    <div class="ctl"><label>Accuracy (no invented facts) <output id="o_f"></output></label><input id="w_f" type="range" min="0" max="10" value="8" /></div>
+    <div class="ctl"><label>Coding <output id="o_c"></output></label><input id="w_c" type="range" min="0" max="10" value="6" /></div>
+    <div class="ctl"><label>Tool calling <output id="o_t"></output></label><input id="w_t" type="range" min="0" max="10" value="6" /></div>
+    <div class="ctl"><label>Speed <output id="o_s"></output></label><input id="w_s" type="range" min="0" max="10" value="2" /></div>
+    <div class="ctl"><label><input type="checkbox" id="showbad" /> Show non-viable models</label></div>
+  </div>
+  <p class="note" id="hwnote" style="margin:10px 0 0"></p>
+</div>
+<h2>Ranking</h2>
+<div class="card wrap"><table id="tbl"></table></div>
+<p class="note">Click a row to add it to the side-by-side view (up to 3). A dash means not tested. An asterisk on the weighted score means the model lacks a test you weighted, so its score is partial and it sorts below fully tested models. Speed is generation tok/s with a 3k-token prompt at 16k context; models retired before the speed sweep show an earlier, shorter test and are not comparable.</p>
+<h2>Side by side</h2>
+<div class="grid" id="cmp"></div>
+<h2>Model report</h2>
+<div id="rep"></div>
+<script define:vars={{ D: data }}>
+const $=s=>document.querySelector(s);const hwSel=$('#hw');let repId=null,sel=[],sortKey='score',asc=false;
+Object.entries(D.hardware).forEach(([k,v])=>hwSel.add(new Option(v.label,k)));
+const frac=a=>a&&a[1]?a[0]/a[1]:null;const fmt=a=>a?a[0]+'/'+a[1]:'–';
+function rows(){const hw=hwSel.value,W={f:+$('#w_f').value,c:+$('#w_c').value,t:+$('#w_t').value,s:+$('#w_s').value};
+ ['f','c','t','s'].forEach(k=>$('#o_'+k).textContent=W[k]);
+ const H=D.hardware[hw],perf=D.models.map(m=>m.perf[hw]).filter(Boolean),maxT=Math.max(...perf.map(p=>p.tps||0),1);
+ $('#hwnote').textContent=H.os+' | '+H.runtime+' | '+H.driver+' | '+H.memory_gb+' GB GPU memory';
+ return D.models.filter(m=>m.perf[hw]&&($('#showbad').checked||!(m.report&&m.report.verdict==='non-viable'))).map(m=>{const q=m.quality,p=m.perf[hw];
+  const parts=[['f',frac(q.fake_caught)],['c',frac(q.code)],['t',frac(q.tools)],['s',p.tps?p.tps/maxT:null]];
+  let num=0,den=0;parts.forEach(([k,v])=>{if(v!==null&&W[k]>0){num+=W[k]*v;den+=W[k]}});
+  const partial=parts.some(([k,v])=>W[k]>0&&v===null);
+  return {m,q,p,partial,score:den?Math.round(100*num/den):null,fakeF:frac(q.fake_caught),codeF:frac(q.code),toolF:frac(q.tools),tps:p.tps,gpu:p.split?p.split.gpu:null,size:m.size_gb}});}
+function render(){let r=rows();const k=sortKey;r.sort((a,b)=>{if(k=='score'&&a.partial!=b.partial)return a.partial?1:-1;const x=a[k],y=b[k];if(x==null)return 1;if(y==null)return -1;return asc?x-y:y-x});
+ const cols=[['score','Weighted'],['codeF','Code'],['fakeF','Fake items'],['toolF','Tools'],['tps','tok/s'],['gpu','On GPU %'],['size','GB']];
+ let h='<tr><th>Model</th><th style="text-align:left">Verdict</th>'+cols.map(([c,l])=>`<th class="s${k==c&&asc?' a':''}" data-k="${c}">${l}</th>`).join('')+'</tr>';
+ r.forEach(x=>{h+=`<tr data-id="${x.m.id}" class="${sel.includes(x.m.id)?'sel':''}"><td>${x.m.id} <span class="chip">${x.m.quant||''}</span></td><td style="text-align:left">${vb(x)}</td>
+ <td class="${x.partial?'mut':''}" title="${x.partial?'Not tested on every area you weighted; score covers only the tests it has':''}"><span class="bar" style="width:${x.score||0}px;opacity:${x.partial?.4:1}"></span>${x.score??'–'}${x.partial?'*':''}</td><td>${fmt(x.q.code)}</td><td>${fmt(x.q.fake_caught)}</td><td>${fmt(x.q.tools)}</td>
+ <td>${x.tps??'–'}</td><td class="${x.gpu!=null&&x.gpu<100?'bad':''}">${x.gpu??'–'}</td><td>${x.size??'–'}</td></tr>`});
+ $('#tbl').innerHTML=h;$('#tbl').querySelectorAll('th.s').forEach(t=>t.onclick=()=>{const c=t.dataset.k;asc=sortKey==c?!asc:false;sortKey=c;render()});
+ $('#tbl').querySelectorAll('tr[data-id]').forEach(t=>t.onclick=()=>{if(String(getSelection()))return;const id=t.dataset.id;sel=sel.includes(id)?sel.filter(s=>s!=id):[...sel.slice(-2),id];render()});
+ $('#tbl').querySelectorAll('button[data-rep]').forEach(b=>b.onclick=e=>{e.stopPropagation();repId=b.dataset.rep;render();$('#rep').scrollIntoView({behavior:'smooth'})});
+ const by=Object.fromEntries(r.map(x=>[x.m.id,x]));
+ $('#cmp').innerHTML=sel.length?sel.map(id=>{const x=by[id];if(!x)return'';const b=(l,v,t)=>`<div class="m"><span>${l}</span><span>${t}</span></div><div class="t"><i style="width:${Math.round((v||0)*100)}%"></i></div>`;
+  return `<div class="card"><h3 style="margin:0 0 8px">${id}</h3>${b('Code',x.codeF,fmt(x.q.code))}${b('Fake items caught',x.fakeF,fmt(x.q.fake_caught))}${b('Tool calling',x.toolF,fmt(x.q.tools))}${b('Refusals on benign prompts',x.q.refused?x.q.refused[0]/x.q.refused[1]:0,fmt(x.q.refused))}${b('Speed',x.tps/Math.max(...r.map(y=>y.tps||0),1),(x.tps??'–')+' tok/s')}<div class="m"><span>${x.m.params||''} ${x.m.quant||''}</span><span>${x.size??'–'} GB, ${x.gpu??'?'}% on GPU</span></div></div>`}).join(''):'<p class="note">Select up to three models in the table.</p>';
+ $('#rep').innerHTML=reportHTML(by[repId]||null);}
+const vd=x=>(x.m.report&&x.m.report.verdict)||'untriaged';
+const vb=x=>`<span class="v ${vd(x)}">${vd(x)}</span><button data-rep="${x.m.id}">Report</button>`;
+const EV={measured:'measured',inferred:'inferred, not tested',untested:'not tested'};
+const AREAS=[['apps','Real-world applications'],['agentic','Agentic tasks'],['analysis','Analysis and insight surfacing'],['critical','Critical evaluation'],['workflows','Workflows']];
+const li=(l,a)=>a&&a.length?`<p><span class="k">${l}:</span> ${a.join('; ')}</p>`:'';
+function reportHTML(x){if(!x)return'<p class="note">Click Report on a row to see what we determined about that model.</p>';const r=x.m.report;
+ const nums=`<p class="note">Measured at 16k context: code ${fmt(x.q.code)}, invented items caught ${fmt(x.q.fake_caught)}, tool calling ${fmt(x.q.tools)}, benign prompts refused ${fmt(x.q.refused)}, ${x.tps??'–'} tok/s, ${x.gpu??'?'}% on GPU, ${x.size??'?'} GB.</p>`;
+ const more=`<p><a href="/models/${x.m.slug}/">Full model page: specs, sources and downloads</a></p>`;
+ if(!r)return`<div class="card rep"><h3>${x.m.id}</h3><p>No verdict recorded yet.</p>${nums}${more}</div>`;
+ return`<div class="card rep"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${x.m.id}</h3><span class="v ${r.verdict}">${r.verdict}</span></div>
+ <p>${r.headline}</p>${li('Preferred over',r.preferred_over)}${li('Recommended for',r.recommended_for)}${nums}
+ <div class="grid" style="margin-top:10px">${AREAS.map(([k,l])=>{const a=r.areas[k];return a?`<div><div class="k">${l}<span class="ev">${EV[a.level]}</span></div><p>${a.text}</p></div>`:''}).join('')}</div>
+ ${li('Caveats',r.caveats)}${r.verdict==='non-viable'?'<p class="note">Retired from future test runs to save time and power.</p>':r.verdict==='hold'?'<p class="note">On hold: one targeted retest, then keep or retire.</p>':''}${more}</div>`}
+document.querySelectorAll('input[type=range],select,#showbad').forEach(e=>e.oninput=render);render();
+</script>
