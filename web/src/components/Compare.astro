@@ -69,7 +69,7 @@ function reportHTML(x){if(!x)return'<p class="note">Click Report on a row to see
  if(!r)return`<div class="card rep"><h3>${x.m.id}</h3><p>No verdict recorded yet.</p>${nums}${more}</div>`;
  return`<div class="card rep"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${x.m.id}</h3><span class="v ${r.verdict}">${r.verdict}</span></div>
  <p>${r.headline}</p>${li('Preferred over',r.preferred_over)}${li('Recommended for',r.recommended_for)}${nums}
- <div class="grid" style="margin-top:10px">${AREAS.map(([k,l])=>{const a=r.areas[k];return a?`<div><div class="k">${l}<span class="ev">${EV[a.level]}</span></div><p>${a.text}</p></div>`:''}).join('')}</div>
+ <div class="grid" style="margin-top:10px">${AREAS.map(([k,l])=>{const a=r.areas[k];return a?`<div><div class="k">${l}<span class="ev">${EV[a.level]}</span></div><p>${a.text} ${a.measured||''}</p></div>`:''}).join('')}</div>
  ${li('Caveats',r.caveats)}${r.verdict==='non-viable'?'<p class="note">Retired from future test runs to save time and power.</p>':r.verdict==='hold'?'<p class="note">On hold: one targeted retest, then keep or retire.</p>':''}${more}</div>`}
 document.querySelectorAll('input[type=range],select,#showbad').forEach(e=>e.oninput=render);render();
 </script>

@@ -14,10 +14,15 @@ pct = lambda v: "not tested" if v is None else f"{round(v * 100)}%"
 TAG = "[data] "
 
 
+import re
+
+STALE = re.compile(r"^(Not tested|Not run|Code suite not run|Factuality suite not run)\b[^.]*\.?$", re.I)
+
+
 def put(area, text):
-    old = area.get("text", "")
-    base = " ".join(s for s in old.split(TAG)[:1]).strip()
-    area["text"] = (base + (" " if base else "") + TAG + text).strip()
+    base = area.get("text", "").split(TAG)[0].strip()  # drop sentences an earlier version appended
+    area["text"] = "" if STALE.match(base) else base
+    area["measured"] = text
     area["level"] = "measured"
 
 

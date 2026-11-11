@@ -123,7 +123,7 @@ const title = m.id;
       {AREAS.map(([k, label]) => r.areas?.[k] && (
         <div>
           <h3>{label}<span class="ev">{EV[r.areas[k].level]}</span></h3>
-          <p>{r.areas[k].text}</p>
+          <p>{r.areas[k].text} {r.areas[k].measured}</p>
         </div>
       ))}
       {r.caveats?.length > 0 && <p class="note">Caveats: {r.caveats.join(' ')}</p>}

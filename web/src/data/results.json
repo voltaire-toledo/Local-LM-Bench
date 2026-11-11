@@ -359,7 +359,7 @@
     "tasks": 26
    },
    "viable": {
-    "viable_ctx": 16384,
+    "viable_ctx": 65536,
     "ladder": [
      {
       "ctx": 8192,
@@ -390,6 +390,51 @@
       "vram_peak_mib": 9279.0,
       "power_w": 88.6,
       "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 65.3,
+      "wall_s": 38.2,
+      "prefill_s": 29.8,
+      "cpu_pct": 0,
+      "vram_peak_mib": 9179.0,
+      "power_w": 90.6,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 55.6,
+      "wall_s": 78.2,
+      "prefill_s": 72.3,
+      "cpu_pct": 0,
+      "vram_peak_mib": 9755.0,
+      "power_w": 102.7,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": false,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": "too slow",
+      "tps": 48.3,
+      "wall_s": 200.1,
+      "prefill_s": 194.4,
+      "cpu_pct": 0,
+      "vram_peak_mib": 10907.0,
+      "power_w": 105.7,
+      "error": null
      }
     ]
    },
@@ -410,23 +455,26 @@
     "areas": {
      "apps": {
       "level": "measured",
-      "text": "Passed all 3 code tasks including valid Terraform. Good for PowerShell/Python/Terraform helpers (PowerShell, TS and Go not yet tested)."
+      "text": "Passed all 3 code tasks including valid Terraform. Good for PowerShell/Python/Terraform helpers (PowerShell, TS and Go not yet tested).",
+      "measured": "Other languages (run for real): Go 2/3, PowerShell 1/3, AutoHotkey 2/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "9/9 tool-calling tasks, no malformed calls, recovered from a missing file, declined correctly when it had no email tool."
      },
      "analysis": {
-      "level": "untested",
-      "text": "No summarization, pattern-finding or consulting-case tests run yet. Vision input is supported but untested."
+      "level": "measured",
+      "text": "No summarization, pattern-finding or consulting-case tests run yet. Vision input is supported but untested.",
+      "measured": "Ticket categorizing 100%, executive summaries 87%, consulting cases 63% (structure proxy), planted-pattern insight 67%."
      },
      "critical": {
       "level": "measured",
       "text": "Caught 2 of 3 invented items; did not refuse benign security or medical questions."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "Cache is small (about 1.7 GB at 64k), so long agent sessions should fit in VRAM; not yet measured."
+      "level": "measured",
+      "text": "Cache is small (about 1.7 GB at 64k), so long agent sessions should fit in VRAM; not yet measured.",
+      "measured": "Viable context 64k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). Next size (128k) failed: too slow. At 16k: 43.7 tok/s with 0% on the CPU."
      }
     },
     "caveats": [
@@ -1068,23 +1116,26 @@
     "areas": {
      "apps": {
       "level": "measured",
-      "text": "3/3 code tasks."
+      "text": "3/3 code tasks.",
+      "measured": "Other languages (run for real): Go 3/3, PowerShell 2/3, AutoHotkey 2/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "9/9 tool-calling tasks."
      },
      "analysis": {
-      "level": "untested",
-      "text": "Not tested."
+      "level": "measured",
+      "text": "",
+      "measured": "Ticket categorizing 100%, executive summaries 83%, consulting cases 63% (structure proxy), planted-pattern insight 58%."
      },
      "critical": {
       "level": "measured",
       "text": "Caught 2 of 3 invented items."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "42% runs from RAM; about 47 tok/s measured at 16k."
+      "level": "measured",
+      "text": "42% runs from RAM; about 47 tok/s measured at 16k.",
+      "measured": "Viable context 64k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). Next size (128k) failed: too slow. At 16k: 47.3 tok/s with 42% on the CPU."
      }
     },
     "caveats": [
@@ -1355,23 +1406,26 @@
     "areas": {
      "apps": {
       "level": "measured",
-      "text": "2/3 code tasks (Terraform failed at init, possibly harness related)."
+      "text": "2/3 code tasks (Terraform failed at init, possibly harness related).",
+      "measured": "Other languages (run for real): Go 3/3, PowerShell 3/3, AutoHotkey 2/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "8/9, but looped for 8 steps on the empty-search task without answering."
      },
      "analysis": {
-      "level": "untested",
-      "text": "Not tested."
+      "level": "measured",
+      "text": "",
+      "measured": "Ticket categorizing 92%, executive summaries 63%, consulting cases 65% (structure proxy), planted-pattern insight 8%. It claimed patterns that were not in the data (including the decoy), which is what the test is built to catch."
      },
      "critical": {
       "level": "measured",
       "text": "Scored 1 of 3 on invented items, but its reasoning used up my token limit so several answers were empty; the score is not trustworthy."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "13.8 GB, 28% on CPU, about 47 tok/s at 16k."
+      "level": "measured",
+      "text": "13.8 GB, 28% on CPU, about 47 tok/s at 16k.",
+      "measured": "Viable context 128k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). At 16k: 47.2 tok/s with 28% on the CPU."
      }
     },
     "caveats": [
@@ -1517,7 +1571,7 @@
     "tasks": 26
    },
    "viable": {
-    "viable_ctx": 8192,
+    "viable_ctx": 65536,
     "ladder": [
      {
       "ctx": 8192,
@@ -1533,6 +1587,66 @@
       "vram_peak_mib": 10335.0,
       "power_w": 59.8,
       "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 3,
+      "retrieval": 3,
+      "reasoning": 0,
+      "fail_reason": null,
+      "tps": 21.4,
+      "wall_s": 33.2,
+      "prefill_s": 19.2,
+      "cpu_pct": 48,
+      "vram_peak_mib": 10331.0,
+      "power_w": 74.0,
+      "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 3,
+      "retrieval": 3,
+      "reasoning": 0,
+      "fail_reason": null,
+      "tps": 19.7,
+      "wall_s": 48.8,
+      "prefill_s": 38.4,
+      "cpu_pct": 49,
+      "vram_peak_mib": 10321.0,
+      "power_w": 91.3,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 3,
+      "retrieval": 3,
+      "reasoning": 0,
+      "fail_reason": null,
+      "tps": 20.2,
+      "wall_s": 90.8,
+      "prefill_s": 79.6,
+      "cpu_pct": 50,
+      "vram_peak_mib": 10389.0,
+      "power_w": 97.8,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": false,
+      "score": 1,
+      "retrieval": 1,
+      "reasoning": 0,
+      "fail_reason": "recall",
+      "tps": 18.5,
+      "wall_s": 181.8,
+      "prefill_s": 170.7,
+      "cpu_pct": 53,
+      "vram_peak_mib": 10329.0,
+      "power_w": 102.2,
+      "error": null
      }
     ]
    },
@@ -1546,24 +1660,27 @@
     ],
     "areas": {
      "apps": {
-      "level": "untested",
-      "text": "Code suite not run."
+      "level": "measured",
+      "text": "",
+      "measured": "Other languages (run for real): Go 3/3, PowerShell 2/3, AutoHotkey 1/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "9/9 tool-calling tasks."
      },
      "analysis": {
-      "level": "inferred",
-      "text": "1M context and about 16 KB/token cache suggest suitability for summarizing large inputs; not tested."
+      "level": "measured",
+      "text": "1M context and about 16 KB/token cache suggest suitability for summarizing large inputs; not tested.",
+      "measured": "Ticket categorizing 96%, executive summaries 83%, consulting cases 61% (structure proxy), planted-pattern insight 8%. It claimed patterns that were not in the data (including the decoy), which is what the test is built to catch."
      },
      "critical": {
       "level": "untested",
       "text": "Factuality suite not run."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "19.5 GB, so part runs from RAM."
+      "level": "measured",
+      "text": "19.5 GB, so part runs from RAM.",
+      "measured": "Viable context 64k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). Next size (128k) failed: recall. At 16k: 20.6 tok/s with 48% on the CPU."
      }
     },
     "caveats": [
@@ -2240,23 +2357,26 @@
     "areas": {
      "apps": {
       "level": "measured",
-      "text": "3/3 code tasks, only the Terraform pass alongside the Gemma builds; designed for agentic coding."
+      "text": "3/3 code tasks, only the Terraform pass alongside the Gemma builds; designed for agentic coding.",
+      "measured": "Other languages (run for real): Go 3/3, PowerShell 3/3, AutoHotkey 2/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "9/9 tool-calling tasks."
      },
      "analysis": {
-      "level": "untested",
-      "text": "Not tested."
+      "level": "measured",
+      "text": "",
+      "measured": "Ticket categorizing 100%, executive summaries 90%, consulting cases 65% (structure proxy), planted-pattern insight 0%. It claimed patterns that were not in the data (including the decoy), which is what the test is built to catch."
      },
      "critical": {
       "level": "measured",
       "text": "Caught 2 of 3 invented items; 0 refusals."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "256K context advertised, but cache per token is the largest of the keepers (about 40 KB/token, layer split assumed); verify at 32k and 64k."
+      "level": "measured",
+      "text": "256K context advertised, but cache per token is the largest of the keepers (about 40 KB/token, layer split assumed); verify at 32k and 64k.",
+      "measured": "Viable context 32k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). Next size (64k) failed: recall. At 16k: 54.0 tok/s with 52% on the CPU."
      }
     },
     "caveats": [
@@ -2439,7 +2559,7 @@
     "tasks": 26
    },
    "viable": {
-    "viable_ctx": 8192,
+    "viable_ctx": 65536,
     "ladder": [
      {
       "ctx": 8192,
@@ -2455,6 +2575,66 @@
       "vram_peak_mib": 9867.0,
       "power_w": 48.3,
       "error": null
+     },
+     {
+      "ctx": 16384,
+      "viable": true,
+      "score": 3,
+      "retrieval": 3,
+      "reasoning": 0,
+      "fail_reason": null,
+      "tps": 52.6,
+      "wall_s": 46.3,
+      "prefill_s": 27.9,
+      "cpu_pct": 62,
+      "vram_peak_mib": 9939.0,
+      "power_w": 59.8,
+      "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 54.0,
+      "wall_s": 68.4,
+      "prefill_s": 56.1,
+      "cpu_pct": 62,
+      "vram_peak_mib": 10083.0,
+      "power_w": 75.6,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 50.7,
+      "wall_s": 128.3,
+      "prefill_s": 115.7,
+      "cpu_pct": 62,
+      "vram_peak_mib": 10371.0,
+      "power_w": 81.1,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": false,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": "too slow",
+      "tps": 44.7,
+      "wall_s": 265.3,
+      "prefill_s": 252.5,
+      "cpu_pct": 65,
+      "vram_peak_mib": 10115.0,
+      "power_w": 85.1,
+      "error": null
      }
     ]
    },
@@ -2468,23 +2648,26 @@
     "areas": {
      "apps": {
       "level": "measured",
-      "text": "2/3 code tasks; Terraform missed a required argument."
+      "text": "2/3 code tasks; Terraform missed a required argument.",
+      "measured": "Other languages (run for real): Go 2/3, PowerShell 2/3, AutoHotkey 1/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "9/9 tool-calling tasks."
      },
      "analysis": {
-      "level": "untested",
-      "text": "Not tested; long-context strength is the reason to keep it."
+      "level": "measured",
+      "text": "",
+      "measured": "Ticket categorizing 92%, executive summaries 80%, consulting cases 70% (structure proxy), planted-pattern insight 0%. It claimed patterns that were not in the data (including the decoy), which is what the test is built to catch."
      },
      "critical": {
       "level": "measured",
       "text": "Caught only 1 of 3 invented items."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "25 GB, 62% on CPU, about 32 tok/s at 16k."
+      "level": "measured",
+      "text": "25 GB, 62% on CPU, about 32 tok/s at 16k.",
+      "measured": "Viable context 64k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). Next size (128k) failed: too slow. At 16k: 32.1 tok/s with 62% on the CPU."
      }
     },
     "caveats": [
@@ -2787,7 +2970,7 @@
     "tasks": 26
    },
    "viable": {
-    "viable_ctx": 16384,
+    "viable_ctx": 65536,
     "ladder": [
      {
       "ctx": 8192,
@@ -2818,6 +3001,51 @@
       "vram_peak_mib": 10365.0,
       "power_w": 81.0,
       "error": null
+     },
+     {
+      "ctx": 32768,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 29.2,
+      "wall_s": 56.6,
+      "prefill_s": 40.8,
+      "cpu_pct": 52,
+      "vram_peak_mib": 10199.0,
+      "power_w": 84.1,
+      "error": null
+     },
+     {
+      "ctx": 65536,
+      "viable": true,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": null,
+      "tps": 21.1,
+      "wall_s": 128.4,
+      "prefill_s": 116.7,
+      "cpu_pct": 58,
+      "vram_peak_mib": 10239.0,
+      "power_w": 100.2,
+      "error": null
+     },
+     {
+      "ctx": 131072,
+      "viable": false,
+      "score": 4,
+      "retrieval": 3,
+      "reasoning": 1,
+      "fail_reason": "too slow",
+      "tps": 0.7,
+      "wall_s": 466.4,
+      "prefill_s": 384.5,
+      "cpu_pct": 67,
+      "vram_peak_mib": 10393.0,
+      "power_w": 90.4,
+      "error": null
      }
     ]
    },
@@ -2830,24 +3058,27 @@
     ],
     "areas": {
      "apps": {
-      "level": "untested",
-      "text": "Code suite not run."
+      "level": "measured",
+      "text": "",
+      "measured": "Other languages (run for real): Go 3/3, PowerShell 3/3, AutoHotkey 2/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "7/9: two failures were calls printed as XML-style text, which a harness may or may not parse."
      },
      "analysis": {
-      "level": "untested",
-      "text": "Not tested."
+      "level": "measured",
+      "text": "",
+      "measured": "Ticket categorizing 96%, executive summaries 80%, consulting cases 58% (structure proxy), planted-pattern insight 8%. It claimed patterns that were not in the data (including the decoy), which is what the test is built to catch."
      },
      "critical": {
       "level": "untested",
       "text": "Factuality suite not run."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "Full attention in all layers: about 3 GB cache at 32k, 12.9 GB at 128k, so long context will not fit."
+      "level": "measured",
+      "text": "Full attention in all layers: about 3 GB cache at 32k, 12.9 GB at 128k, so long context will not fit.",
+      "measured": "Viable context 64k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). Next size (128k) failed: too slow. At 16k: 39.0 tok/s with 48% on the CPU."
      }
     },
     "caveats": [
@@ -3086,23 +3317,26 @@
     "areas": {
      "apps": {
       "level": "measured",
-      "text": "2/3 code tasks; Terraform had a dependency cycle."
+      "text": "2/3 code tasks; Terraform had a dependency cycle.",
+      "measured": "Other languages (run for real): Go 3/3, PowerShell 2/3, AutoHotkey 1/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "8/9 tool-calling tasks; gave up instead of looking for a renamed config file."
      },
      "analysis": {
-      "level": "untested",
-      "text": "Not tested."
+      "level": "measured",
+      "text": "",
+      "measured": "Ticket categorizing 100%, executive summaries 83%, consulting cases 68% (structure proxy), planted-pattern insight 33%. It claimed patterns that were not in the data (including the decoy), which is what the test is built to catch."
      },
      "critical": {
       "level": "measured",
       "text": "Caught all 3 invented items in every variant."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "Cache is larger per token than the other hybrids (about 4 GB at 128k); fine at 32k."
+      "level": "measured",
+      "text": "Cache is larger per token than the other hybrids (about 4 GB at 128k); fine at 32k.",
+      "measured": "Viable context 128k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). At 16k: 43.6 tok/s with 0% on the CPU."
      }
     },
     "caveats": []
@@ -3382,23 +3616,26 @@
     "areas": {
      "apps": {
       "level": "measured",
-      "text": "2/3 code tasks; its Terraform invented an argument (network_security_group_id), so validate generated HCL."
+      "text": "2/3 code tasks; its Terraform invented an argument (network_security_group_id), so validate generated HCL.",
+      "measured": "Other languages (run for real): Go 2/3, PowerShell 2/3, AutoHotkey 2/3; Rust skipped (no toolchain)."
      },
      "agentic": {
       "level": "measured",
       "text": "9/9 tool-calling tasks."
      },
      "analysis": {
-      "level": "untested",
-      "text": "Not tested; large MoE with hybrid attention, so a good candidate for the insight tests."
+      "level": "measured",
+      "text": "",
+      "measured": "Ticket categorizing 96%, executive summaries 80%, consulting cases 68% (structure proxy), planted-pattern insight 25%. It claimed patterns that were not in the data (including the decoy), which is what the test is built to catch."
      },
      "critical": {
       "level": "measured",
       "text": "Caught all 3 invented items in every prompt variant. Refused 1 of 5 benign prompts."
      },
      "workflows": {
-      "level": "inferred",
-      "text": "Tiny attention cache (about 1.3 GB at 64k), so long context is cheap; 24 GB of weights means about 58% runs from RAM (about 44 tok/s measured at 16k)."
+      "level": "measured",
+      "text": "Tiny attention cache (about 1.3 GB at 64k), so long context is cheap; 24 GB of weights means about 58% runs from RAM (about 44 tok/s measured at 16k).",
+      "measured": "Viable context 64k (all three planted codes recalled, at least 15 tok/s, reply within 180 s). Next size (128k) failed: too slow. At 16k: 44.1 tok/s with 58% on the CPU."
      }
     },
     "caveats": [
