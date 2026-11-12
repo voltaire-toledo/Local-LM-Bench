@@ -38,7 +38,7 @@ def ask(model, prompt, ctx, timeout):
     oss = model.startswith("gpt-oss")
     body = {"model": model, "messages": [{"role": "user", "content": prompt}], "stream": False, "think": "low" if oss else False,
             "options": {"num_ctx": ctx, "temperature": 0, "seed": 1, "num_predict": 800 if oss else 120}}
-    req = urllib.request.Request("http://localhost:11434/api/chat", json.dumps(body).encode(), {"Content-Type": "application/json"})
+    req = urllib.request.Request(be.API + "/api/chat", json.dumps(body).encode(), {"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.load(r)
 

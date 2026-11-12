@@ -20,7 +20,7 @@ PROMPT = FILLER + "\n\nIn about 200 words, explain the main risks of this plan a
 def chat(model, ctx):
     body = {"model": model, "messages": [{"role": "user", "content": PROMPT}], "stream": False, "think": False,
             "options": {"num_ctx": ctx, "temperature": 0, "seed": 1, "num_predict": 300}}
-    req = urllib.request.Request("http://localhost:11434/api/chat", json.dumps(body).encode(), {"Content-Type": "application/json"})
+    req = urllib.request.Request(be.API + "/api/chat", json.dumps(body).encode(), {"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=1800) as r:
         return json.load(r)
 

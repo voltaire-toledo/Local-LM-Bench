@@ -11,6 +11,9 @@
  },
  "caution_publishers": "Abliterated/uncensored/'heretic' builds (huihui-ai, HauhauCS, DavidAU, eriktonon and similar) are unvetted community edits; review before relying on them.",
  "models": {
+    "qwen3.5:9b-mlx-4bit": {"hf_mlx": "mlx-community/Qwen3.5-9B-4bit", "revision": "8b2b98c00a6b4d291155e4890773ca8f769aee53", "runtime": "mlx-lm", "note": "SHA-256 of all LFS files verified against Hugging Face metadata on 2026-11-12."},
+    "gemma4:12b-it-mlx-4bit": {"hf_mlx": "mlx-community/gemma-4-12B-it-4bit", "revision": "73bcf09092aa277861d5a191b989b666f7f32e8f", "runtime": "mlx-lm", "note": "SHA-256 of all LFS files verified against Hugging Face metadata on 2026-11-12."},
+    "gpt-oss:20b-mlx-mxfp4": {"hf_mlx": "mlx-community/gpt-oss-20b-MXFP4-Q8", "revision": "773a7da77e569019bb0fd17a554b263738d669a3", "runtime": "mlx-lm", "note": "SHA-256 of all LFS files verified against Hugging Face metadata on 2026-11-12."},
   "gemma4:12b-it-q4_K_M": {"ollama": "https://ollama.com/library/gemma4", "hf_official": "google/gemma-4-12B-it", "hf_gguf": ["unsloth/gemma-4-12b-it-GGUF"], "note": "No official 12B GGUF found in search; google publishes QAT GGUF for E4B (google/gemma-4-E4B-it-qat-q4_0-gguf)."},
   "gemma4:12b-it-q8_0": {"ollama": "https://ollama.com/library/gemma4", "hf_official": "google/gemma-4-12B-it", "hf_gguf": ["unsloth/gemma-4-12b-it-GGUF"]},
   "gemma4:12b-it-qat": {"ollama": "https://ollama.com/library/gemma4", "hf_official": "google/gemma-4-12B-it", "hf_gguf": [], "note": "12B QAT GGUF repo not found in search."},
