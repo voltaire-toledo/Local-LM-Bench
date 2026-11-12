@@ -101,6 +101,28 @@ const title = m.id;
     </>
   )}
 
+  {(Object.keys(m.perf).length > 1 || m.format === 'mlx') && (
+    <>
+      <h2>Same build on other machines</h2>
+      <p>{m.format === 'mlx' ? 'MLX build: a different file from the GGUF build, so its quality scores are its own.' : 'Quality scores carry over (same file, same digest); only speed and viable context change.'}</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Machine</th><th>Runtime</th><th>tok/s at 16k</th><th>tok/s at 64k</th><th>Viable context</th><th>First failure</th></tr></thead>
+          <tbody>
+            {Object.entries(m.perf).map(([id, q]: [string, any]) => {
+              const v = q.viable ?? (id === hwId ? m.viable : null);
+              const fail = v?.ladder?.find((x: any) => !x.viable);
+              return (
+                <tr><td>{data.hardware[id]?.label ?? id}</td><td>{q.runtime === 'mlx-lm' ? 'mlx-lm (MLX)' : data.hardware[id]?.runtime ?? '?'}</td><td>{q.sweep?.['16384']?.tps ?? q.tps ?? '?'}</td><td>{q.sweep?.['65536']?.tps ?? '?'}</td>
+                  <td>{v ? `${Math.round(v.viable_ctx / 1024)}k` : '?'}</td><td>{fail ? `${Math.round(fail.ctx / 1024)}k: ${fail.fail_reason}` : v ? 'none up to the largest size' : '?'}</td></tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </>
+  )}
+
   {m.suites && (
     <>
       <h2>Beyond Python: languages, documents, reasoning</h2>

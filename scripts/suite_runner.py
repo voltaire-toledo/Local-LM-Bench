@@ -21,7 +21,7 @@ def chat(model, prompt, d, timeout=900):
     oss = model.startswith("gpt-oss")  # reasoning cannot be switched off; use low effort and a larger output budget
     body = {"model": model, "messages": [{"role": "user", "content": prompt}], "stream": False, "think": "low" if oss else d.get("think", False),
             "options": {"num_ctx": d["num_ctx"], "temperature": d["temperature"], "seed": d["seed"], "num_predict": d["num_predict"] * (3 if oss else 1)}}
-    req = urllib.request.Request("http://localhost:11434/api/chat", json.dumps(body).encode(), {"Content-Type": "application/json"})
+    req = urllib.request.Request(bench_env.API + "/api/chat", json.dumps(body).encode(), {"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.load(r)
 

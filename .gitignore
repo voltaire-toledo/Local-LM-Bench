@@ -20,3 +20,6 @@ env/
 .terraform.lock.hcl
 tmp/
 scratch/
+
+# local secrets
+.env

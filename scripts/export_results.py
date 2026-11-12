@@ -1,4 +1,4 @@
-"""Build the site's data file: web/src/data/results.json (schema v2).
+"""Build the site's data file: web/src/data/results.json (schema v3: runtime and format per row and per machine).
 
 Inputs (never modified): results/runs.rescored.jsonl (or runs.jsonl), results/toolruns.jsonl,
 results/speed/<label>/speed_runs.jsonl, models/specs.json, models/verdicts.json, models/sources.json.
@@ -13,7 +13,10 @@ HW = {
     "win-rtx3060-12g": {"label": "Windows PC, RTX 3060 12 GB, 128 GB RAM", "kind": "discrete-gpu", "memory_gb": 12, "system_ram_gb": 128,
                         "cpu": "Intel Core i7-13700K", "os": "Windows 11", "runtime": "Ollama 0.40.16 (llama.cpp)", "driver": "NVIDIA 610.88",
                         "bandwidth_gbs": 360, "power_default_w": 170},
+    "mac-m4-pro-24g": {"label": "MacBook Pro, Apple M4 Pro, 24 GB unified", "kind": "unified-memory", "memory_gb": 24, "system_ram_gb": 24,
+                       "cpu": "Apple M4 Pro", "os": "macOS 27.2", "runtime": "Ollama 0.40.15 (llama.cpp, Metal)", "bandwidth_gbs": 273, "power_default_w": None},
 }
+SPEED_LABELS = [("win-rtx3060-12g", "110W"), ("mac-m4-pro-24g", "mac-m4-pro-24g"), ("mac-m4-pro-24g", "mac-m4-pro-24g-mlx")]
 HW_ID = "win-rtx3060-12g"
 SPEED_LABEL = "110W"
 
@@ -79,9 +82,9 @@ def extras():
                     "insight": ratio(sel("planted-patterns")), "empty_answers": sum(1 for r in rows if r.get("empty")), "tasks": len(rows)}
     v_out = {}
     byv = defaultdict(dict)
-    for r in latest(jl(ROOT / "results" / "viable.jsonl"), lambda r: (r["model"], r["ctx"])).values():
-        byv[r["model"]][r["ctx"]] = r
-    for m, d in byv.items():
+    for r in latest(jl(ROOT / "results" / "viable.jsonl"), lambda r: ((r.get("env") or {}).get("hw", HW_ID), r["model"], r["ctx"])).values():
+        byv[((r.get("env") or {}).get("hw", HW_ID), r["model"])][r["ctx"]] = r
+    for (hw, m), d in byv.items():
         ladder, best = [], 0
         for c in sorted(d):
             r = d[c]
@@ -91,7 +94,7 @@ def extras():
             if not x["viable"]:
                 break
             best = x["ctx"]
-        v_out[m] = {"viable_ctx": best, "ladder": ladder}
+        v_out[(hw, m)] = {"viable_ctx": best, "ladder": ladder}
     imgs = latest(jl(ROOT / "results" / "images.jsonl"), lambda r: (r["kind"], r["model"], r["name"]))
     im = defaultdict(lambda: defaultdict(list))
     for (kind, model, name), r in imgs.items():
@@ -125,11 +128,12 @@ def main():
     specs = js(ROOT / "models" / "specs.json").get("models", {})
     verdicts, sources = js(ROOT / "models" / "verdicts.json"), js(ROOT / "models" / "sources.json")
     sweep = defaultdict(list)
-    for r in jl(ROOT / "results" / "speed" / SPEED_LABEL / "speed_runs.jsonl"):
-        if "error" not in r:
-            sweep[(r["model"], r["ctx"])].append(r)
-    models = sorted({k[0] for k in runs} | {k[0] for k in tool} | set(specs))
-    out = {"schema": 2, "generated": time.strftime("%Y-%m-%d"), "hardware": HW, "speed_label": SPEED_LABEL, "models": []}
+    for hw, lab in SPEED_LABELS:
+        for r in jl(ROOT / "results" / "speed" / lab / "speed_runs.jsonl"):
+            if "error" not in r:
+                sweep[(hw, r["model"], r["ctx"])].append(r)
+    models = sorted({k[0] for k in runs} | {k[0] for k in tool} | set(specs) | set(SUITE_AGG))
+    out = {"schema": 3, "generated": time.strftime("%Y-%m-%d"), "hardware": HW, "speed_label": SPEED_LABEL, "speed_labels": [list(x) for x in SPEED_LABELS], "models": []}
     for m in models:
         mr = [r for k, r in runs.items() if k[0] == m]
         base = [r for r in mr if r["variant"] == "none"]
@@ -140,20 +144,22 @@ def main():
         refus = [r for r in base if r["suite"] == "refusal"]
         old_tps = [r["gen_tps"] for r in base if r.get("gen_tps")]
         old_split = next((s for s in (split_from_ps(m, r.get("ps")) for r in base) if s), None)
-        sw = {}
-        for (mm, c), rows in sweep.items():
+        sws = defaultdict(dict)
+        for (hw, mm, c), rows in sweep.items():
             if mm != m:
                 continue
+            sw = sws[hw]
             warm = [x for x in rows if not x["cold"]] or rows
             av = lambda k: round(sum(x.get(k) or 0 for x in warm) / len(warm), 1)
             sw[str(c)] = {"tps": av("gen_tps"), "power_w": av("power_avg_w"), "j_per_token": av("j_per_token"), "cpu_pct": (rows[-1].get("split") or {}).get("cpu"),
                           "vram_peak_mib": max(x.get("vram_peak_mib") or 0 for x in rows), "ttft_cold_s": next((x["ttft_s"] for x in rows if x["cold"]), None),
                           "power_capped_s": round(sum(x.get("throttle_us", {}).get("SW Power Capping", 0) for x in rows) / 1e6, 1)}
+        sw = sws.get(HW_ID, {})
         s16 = sw.get("16384")
         sp = specs.get(m, {})
         src = sources.get("models", {}).get(m)
         out["models"].append({
-            "id": m, "slug": slug(m), "suites": SUITE_AGG.get(m), "viable": VIABLE_AGG.get(m), "report": verdicts.get(m), "specs": sp or None, "sources": src,
+            "id": m, "slug": slug(m), "suites": SUITE_AGG.get(m), "viable": VIABLE_AGG.get((HW_ID, m)), "report": verdicts.get(m), "specs": sp or None, "sources": src,
             "family": sp.get("family"), "params": sp.get("parameters"), "quant": sp.get("quantization"), "size_gb": sp.get("size_gb"), "digest": sp.get("digest"),
             "quality": {
                 "code": cnt(code, lambda r: r["result"].get("pass")),
@@ -165,6 +171,17 @@ def main():
                              "tps_source": "sweep" if s16 else ("short-test" if old_tps else None),
                              "split": ({"cpu": s16["cpu_pct"], "gpu": 100 - s16["cpu_pct"]} if s16 and s16["cpu_pct"] is not None else old_split),
                              "sweep": sw or None}}})
+        row = out["models"][-1]
+        mlx = "-mlx-" in m
+        row["runtime"], row["format"] = ("mlx-lm", "mlx") if mlx else ("ollama", "gguf")
+        if mlx and not row["perf"][HW_ID]["tps"]:  # MLX builds run only on the Mac
+            del row["perf"][HW_ID]
+        for hw in HW:
+            if hw == HW_ID or not (sws.get(hw) or VIABLE_AGG.get((hw, m))):
+                continue
+            o = sws.get(hw, {}).get("16384")
+            out["models"][-1]["perf"][hw] = {"tps": o["tps"] if o else None, "tps_source": "sweep" if o else None, "runtime": "mlx-lm" if "-mlx-" in m else "ollama", "format": "mlx" if "-mlx-" in m else "gguf",
+                                             "sweep": sws.get(hw) or None, "viable": VIABLE_AGG.get((hw, m))}
     out["images"] = IMAGES
     d = ROOT / "web" / "src" / "data"
     d.mkdir(parents=True, exist_ok=True)
