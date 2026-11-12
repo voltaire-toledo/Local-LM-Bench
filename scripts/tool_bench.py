@@ -78,7 +78,10 @@ def exec_tool(wd, name, args):
             for seg in cmd.split("|"):
                 if seg.strip().split(" ")[0] not in ("grep", "wc", "sort", "uniq", "head", "tail", "cat", "ls"):
                     return "ERROR: command not allowed"
-            r = subprocess.run(["wsl.exe", "--cd", str(wd), "-e", "bash", "-c", cmd], capture_output=True, timeout=30, text=True)
+            if sys.platform == "win32":
+                r = subprocess.run(["wsl.exe", "--cd", str(wd), "-e", "bash", "-c", cmd], capture_output=True, timeout=30, text=True)
+            else:  # macOS or Linux: run the same allowlisted command in the sandbox folder
+                r = subprocess.run(["bash", "-c", cmd], cwd=str(wd), capture_output=True, timeout=30, text=True)
             return (r.stdout + r.stderr)[-1500:] or "(no output)"
     except KeyError as e:
         return f"ERROR: missing argument {e}"

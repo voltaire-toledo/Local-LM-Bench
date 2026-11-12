@@ -1,9 +1,36 @@
 """Shared environment/power capture for all benchmark scripts."""
-import hashlib, json, re, subprocess, time, urllib.request
+import hashlib, json, re, subprocess, sys, time, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-HW_ID = "win-rtx3060-12g"
+IS_MAC = sys.platform == "darwin"
+
+
+def _sysctl(name):
+    try:
+        return subprocess.run(["sysctl", "-n", name], capture_output=True, text=True, timeout=10).stdout.strip()
+    except Exception:
+        return ""
+
+
+def mac_profile():
+    """Chip and unified memory of this Mac (empty dict elsewhere)."""
+    if not IS_MAC:
+        return {}
+    chip = _sysctl("machdep.cpu.brand_string")
+    mem = _sysctl("hw.memsize")
+    return {"chip": chip, "mem_gb": round(int(mem) / 2**30) if mem.isdigit() else None, "cores": _sysctl("hw.ncpu")}
+
+
+def _hw_id():
+    if not IS_MAC:
+        return "win-rtx3060-12g"
+    p = mac_profile()
+    chip = re.sub(r"[^a-z0-9]+", "-", p.get("chip", "").lower().replace("apple", "")).strip("-") or "unknown"
+    return f"mac-{chip}-{p.get('mem_gb')}g"
+
+
+HW_ID = _hw_id()  # quality is keyed by model+quant; speed by this id (machine) and power setting
 HARNESS_VERSION = "2"  # bump when checkers or runners change
 _digests = {}
 
@@ -72,8 +99,15 @@ def prompts_hash():
 
 
 def ollama_ram_mb():
+    if IS_MAC:
+        try:
+            out = subprocess.run(["ps", "-axo", "rss=,comm="], capture_output=True, text=True, timeout=20).stdout
+            kb = sum(int(l.split(None, 1)[0]) for l in out.splitlines() if "ollama" in l.lower() and l.split(None, 1)[0].isdigit())
+            return round(kb / 1024) if kb else None
+        except Exception:
+            return None
     try:
-        out = subprocess.run(["powershell", "-NoProfile", "-Command", "(Get-Process ollama* -ErrorAction SilentlyContinue | Measure-Object WorkingSet64 -Sum).Sum"], capture_output=True, text=True, timeout=20).stdout.strip()
+        out =subprocess.run(["powershell", "-NoProfile", "-Command", "(Get-Process ollama* -ErrorAction SilentlyContinue | Measure-Object WorkingSet64 -Sum).Sum"], capture_output=True, text=True, timeout=20).stdout.strip()
         return round(int(out) / 1048576) if out else None
     except Exception:
         return None
@@ -102,8 +136,11 @@ def ps_split(model):
 def static_env(model=None):
     g = gpu_now()
     d = digest(model) if model else (None, None, None)
-    return {"hw": HW_ID, "power_limit_w": g.get("power_limit_w"), "ollama": ollama_version(), "harness": HARNESS_VERSION,
-            "prompts_hash": prompts_hash(), "digest": d[0], "quant": d[1], "params": d[2], "ts": time.strftime("%Y-%m-%dT%H:%M:%S")}
+    env = {"hw": HW_ID, "power_limit_w": g.get("power_limit_w"), "ollama": ollama_version(), "harness": HARNESS_VERSION,
+           "prompts_hash": prompts_hash(), "digest": d[0], "quant": d[1], "params": d[2], "ts": time.strftime("%Y-%m-%dT%H:%M:%S")}
+    if IS_MAC:
+        env["mac"] = mac_profile()  # Macs have no software power limit; power fields stay empty unless measured separately
+    return env
 
 
 class PowerSampler:

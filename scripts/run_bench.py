@@ -120,7 +120,7 @@ def main():
                             "prompt_tps": round(r["prompt_eval_count"] / (r["prompt_eval_duration"] / 1e9), 1) if r.get("prompt_eval_duration") else None,
                             "load_s": round(r.get("load_duration", 0) / 1e9, 1), "tokens": r.get("eval_count"),
                             "prompt_tokens": r.get("prompt_eval_count"), "ps": ps[0].strip() if ps else "",
-                            "vram_mib": int(subprocess.run(["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"], capture_output=True, text=True).stdout.strip() or 0),
+                            "vram_mib": int(bench_env.gpu_now().get("vram_mib") or 0),  # 0 where there is no NVIDIA GPU (Mac)
                             "result": check(p["check"], text) if p.get("check") else {}, "response": text[:20000],
                             "done_reason": r.get("done_reason"), "total_s": round(r.get("total_duration", 0) / 1e9, 1),
                             "thinking_chars": len(r.get("message", {}).get("thinking", "") or ""),

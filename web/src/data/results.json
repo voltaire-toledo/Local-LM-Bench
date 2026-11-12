@@ -2526,6 +2526,24 @@
        "vram_peak_mib": 10814.0,
        "ttft_cold_s": 18.1,
        "power_capped_s": 0.4
+      },
+      "131072": {
+       "tps": 41.8,
+       "power_w": 46.0,
+       "j_per_token": 1.1,
+       "cpu_pct": 75,
+       "vram_peak_mib": 10267.0,
+       "ttft_cold_s": 18.9,
+       "power_capped_s": 0.2
+      },
+      "262144": {
+       "tps": 19.2,
+       "power_w": 31.1,
+       "j_per_token": 1.6,
+       "cpu_pct": 85,
+       "vram_peak_mib": 9503.0,
+       "ttft_cold_s": 16.3,
+       "power_capped_s": 27.8
       }
      }
     }

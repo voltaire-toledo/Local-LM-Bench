@@ -61,7 +61,7 @@ def main():
         if name in state["done"]:
             continue
         g = be.gpu_now()
-        if g.get("power_limit_w") != a.expect_watts:
+        if not be.IS_MAC and g.get("power_limit_w") != a.expect_watts:  # Macs have no nvidia-smi power limit
             say(f"ABORT: power limit is {g.get('power_limit_w')} W, expected {a.expect_watts} W (results would be mixed)")
             sys.exit(2)
         say(f"begin {name}")

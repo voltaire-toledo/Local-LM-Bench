@@ -44,6 +44,8 @@ def run_code(task, text):
     with tempfile.TemporaryDirectory(prefix="suite_") as d:
         d = Path(d)
         try:
+            if lang in ("go", "powershell") and not shutil.which("go" if lang == "go" else "pwsh"):
+                return None, 1, f"skipped: {'go' if lang == 'go' else 'pwsh'} not installed"
             if lang == "go":
                 (d / "solution.go").write_text(code, encoding="utf-8"); (d / "harness.go").write_text(task["harness"], encoding="utf-8")
                 sh(["go", "mod", "init", "t"], d, 30, {"GOTOOLCHAIN": "local"})
