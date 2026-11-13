@@ -1,9 +1,13 @@
 """Shared environment/power capture for all benchmark scripts."""
-import hashlib, json, re, subprocess, sys, time, urllib.request
+import hashlib, json, os, re, subprocess, sys, time, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 IS_MAC = sys.platform == "darwin"
+# Runtime switch (schema v3): BENCH_RUNTIME=mlx-lm points every runner at scripts/mlx_shim.py, an Ollama-compatible subset.
+RUNTIME = os.environ.get("BENCH_RUNTIME", "ollama")
+FORMAT = {"ollama": "gguf", "mlx-lm": "mlx"}.get(RUNTIME, "unknown")
+API = os.environ.get("BENCH_API", "http://localhost:11435" if RUNTIME == "mlx-lm" else "http://localhost:11434")
 
 
 def _sysctl(name):
@@ -76,7 +80,7 @@ def throttle_counters():
 
 def ollama_version():
     try:
-        with urllib.request.urlopen("http://localhost:11434/api/version", timeout=5) as r:
+        with urllib.request.urlopen(API + "/api/version", timeout=5) as r:
             return json.load(r)["version"]
     except Exception:
         return None
@@ -85,7 +89,7 @@ def ollama_version():
 def digest(model):
     if not _digests:
         try:
-            with urllib.request.urlopen("http://localhost:11434/api/tags", timeout=5) as r:
+            with urllib.request.urlopen(API + "/api/tags", timeout=5) as r:
                 for m in json.load(r)["models"]:
                     _digests[m["name"]] = (m["digest"][:12], m.get("details", {}).get("quantization_level"), m.get("details", {}).get("parameter_size"))
         except Exception:
@@ -114,7 +118,13 @@ def ollama_ram_mb():
 
 
 def ps_split(model):
-    """CPU/GPU split from `ollama ps`, matching the exact model name only."""
+    """CPU/GPU split from `ollama ps`, matching the exact model name only. MLX: always GPU; size is peak unified memory."""
+    if RUNTIME == "mlx-lm":
+        try:
+            with urllib.request.urlopen(API + "/api/ps", timeout=5) as r:
+                return {"cpu": 0, "gpu": 100, "size_gb": json.load(r).get("peak_gb")}
+        except Exception:
+            return None
     try:
         out = subprocess.run(["ollama", "ps"], capture_output=True, text=True, timeout=20).stdout
     except Exception:
@@ -137,7 +147,8 @@ def static_env(model=None):
     g = gpu_now()
     d = digest(model) if model else (None, None, None)
     env = {"hw": HW_ID, "power_limit_w": g.get("power_limit_w"), "ollama": ollama_version(), "harness": HARNESS_VERSION,
-           "prompts_hash": prompts_hash(), "digest": d[0], "quant": d[1], "params": d[2], "ts": time.strftime("%Y-%m-%dT%H:%M:%S")}
+           "prompts_hash": prompts_hash(), "digest": d[0], "quant": d[1], "params": d[2], "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+           "runtime": RUNTIME, "format": FORMAT}  # schema v3 (TASK-3)
     if IS_MAC:
         env["mac"] = mac_profile()  # Macs have no software power limit; power fields stay empty unless measured separately
     return env
