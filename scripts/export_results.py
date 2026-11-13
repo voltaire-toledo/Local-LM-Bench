@@ -17,6 +17,7 @@ HW = {
                        "cpu": "Apple M4 Pro", "os": "macOS 27.2", "runtime": "Ollama 0.40.15 (llama.cpp, Metal)", "bandwidth_gbs": 273, "power_default_w": None},
 }
 SPEED_LABELS = [("win-rtx3060-12g", "110W"), ("mac-m4-pro-24g", "mac-m4-pro-24g"), ("mac-m4-pro-24g", "mac-m4-pro-24g-mlx")]
+POWER_LABELS = [("mac-m4-pro-24g", "mac-m4-pro-24g-power")]  # powermetrics joins (scripts/mac_power_join.py); GPU watts, chip watts separate
 HW_ID = "win-rtx3060-12g"
 SPEED_LABEL = "110W"
 
@@ -132,6 +133,11 @@ def main():
         for r in jl(ROOT / "results" / "speed" / lab / "speed_runs.jsonl"):
             if "error" not in r:
                 sweep[(hw, r["model"], r["ctx"])].append(r)
+    power = defaultdict(list)
+    for hw, lab in POWER_LABELS:
+        for r in jl(ROOT / "results" / "speed" / lab / "power_join.jsonl"):
+            if not r["cold"]:
+                power[(hw, r["model"], r["ctx"])].append(r)
     models = sorted({k[0] for k in runs} | {k[0] for k in tool} | set(specs) | set(SUITE_AGG))
     out = {"schema": 3, "generated": time.strftime("%Y-%m-%d"), "hardware": HW, "speed_label": SPEED_LABEL, "speed_labels": [list(x) for x in SPEED_LABELS], "models": []}
     for m in models:
@@ -142,7 +148,7 @@ def main():
         fake = [r for r in base if r["suite"] == "factuality" and r["id"] != "F1-known-fact"]
         gfake = [r for r in mr if r["variant"] == "grounded" and r["suite"] == "factuality" and r["id"] != "F1-known-fact"]
         refus = [r for r in base if r["suite"] == "refusal"]
-        old_tps = [r["gen_tps"] for r in base if r.get("gen_tps")]
+        old_tps = [r["gen_tps"] for r in base if r.get("gen_tps") and (r.get("env") or {}).get("hw", HW_ID) == HW_ID]  # short-test speed from this machine only
         old_split = next((s for s in (split_from_ps(m, r.get("ps")) for r in base) if s), None)
         sws = defaultdict(dict)
         for (hw, mm, c), rows in sweep.items():
@@ -150,10 +156,17 @@ def main():
                 continue
             sw = sws[hw]
             warm = [x for x in rows if not x["cold"]] or rows
-            av = lambda k: round(sum(x.get(k) or 0 for x in warm) / len(warm), 1)
+            av = lambda k: round(sum(v) / len(v), 1) if (v := [x[k] for x in warm if x.get(k) is not None]) else None  # None = not measured
             sw[str(c)] = {"tps": av("gen_tps"), "power_w": av("power_avg_w"), "j_per_token": av("j_per_token"), "cpu_pct": (rows[-1].get("split") or {}).get("cpu"),
                           "vram_peak_mib": max(x.get("vram_peak_mib") or 0 for x in rows), "ttft_cold_s": next((x["ttft_s"] for x in rows if x["cold"]), None),
                           "power_capped_s": round(sum(x.get("throttle_us", {}).get("SW Power Capping", 0) for x in rows) / 1e6, 1)}
+        for (hw, mm, c), rows in power.items():
+            if mm != m:
+                continue
+            av = lambda f: round(sum(f(x) for x in rows) / len(rows), 2)
+            e = sws[hw].setdefault(str(c), {"tps": av(lambda x: x["gen_tps"])})
+            e.update({"power_w": av(lambda x: x["power_avg_w"]["gpu_w"]), "j_per_token": av(lambda x: x["j_per_token"]["gpu_w"]),
+                      "power_chip_w": av(lambda x: x["power_avg_w"]["all_w"]), "j_per_token_chip": av(lambda x: x["j_per_token"]["all_w"])})
         sw = sws.get(HW_ID, {})
         s16 = sw.get("16384")
         sp = specs.get(m, {})

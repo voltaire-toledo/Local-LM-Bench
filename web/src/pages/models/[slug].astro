@@ -79,7 +79,7 @@ const title = m.id;
       </table>
     </div>
   )}
-  <p class="note">Hardware: {hw.label}. GPU power limit 110 W. Energy covers the GPU only.</p>
+  <p class="note">Hardware: {hw.label}. {hwId === 'win-rtx3060-12g' ? 'GPU power limit 110 W. ' : ''}Energy covers the GPU only.</p>
 
   {m.viable && (
     <>
@@ -107,19 +107,21 @@ const title = m.id;
       <p>{m.format === 'mlx' ? 'MLX build: a different file from the GGUF build, so its quality scores are its own.' : 'Quality scores carry over (same file, same digest); only speed and viable context change.'}</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Machine</th><th>Runtime</th><th>tok/s at 16k</th><th>tok/s at 64k</th><th>Viable context</th><th>First failure</th></tr></thead>
+          <thead><tr><th>Machine</th><th>Runtime</th><th>tok/s at 16k</th><th>tok/s at 64k</th><th>GPU watts at 16k</th><th>J per token (GPU)</th><th>Viable context</th><th>First failure</th></tr></thead>
           <tbody>
             {Object.entries(m.perf).map(([id, q]: [string, any]) => {
               const v = q.viable ?? (id === hwId ? m.viable : null);
               const fail = v?.ladder?.find((x: any) => !x.viable);
               return (
                 <tr><td>{data.hardware[id]?.label ?? id}</td><td>{q.runtime === 'mlx-lm' ? 'mlx-lm (MLX)' : data.hardware[id]?.runtime ?? '?'}</td><td>{q.sweep?.['16384']?.tps ?? q.tps ?? '?'}</td><td>{q.sweep?.['65536']?.tps ?? '?'}</td>
+                  <td>{q.sweep?.['16384']?.power_w ?? 'not measured'}</td><td>{q.sweep?.['16384']?.j_per_token ?? 'not measured'}</td>
                   <td>{v ? `${Math.round(v.viable_ctx / 1024)}k` : '?'}</td><td>{fail ? `${Math.round(fail.ctx / 1024)}k: ${fail.fail_reason}` : v ? 'none up to the largest size' : '?'}</td></tr>
               );
             })}
           </tbody>
         </table>
       </div>
+      <p class="note">PC watts are the GPU board (nvidia-smi); Mac watts are the GPU part of the chip (powermetrics), so the CPU and memory are not counted on either. J per token is average power times the whole request time, divided by generated tokens.</p>
     </>
   )}
 
