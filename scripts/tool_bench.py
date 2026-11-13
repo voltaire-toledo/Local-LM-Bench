@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import bench_env  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-HOST = "http://localhost:11434"
+HOST = bench_env.API  # BENCH_RUNTIME=mlx-lm switches to scripts/mlx_shim.py
 MAX_STEPS = 8
 
 TOOLS = [
