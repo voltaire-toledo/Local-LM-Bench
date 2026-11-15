@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/results.json';
+
+const MAC = 'mac-m4-pro-24g';
+const PC = 'win-rtx3060-12g';
+const hw = data.hardware[MAC];
+const k = (c) => (c == null ? '–' : `${Math.round(c / 1024)}k`);
+const fmt = (a) => (a ? `${a[0]}/${a[1]}` : '–');
+const rows = data.models
+  .filter((m) => m.perf[MAC])
+  .map((m) => {
+    const p = m.perf[MAC];
+    const pcV = m.perf[PC]?.viable ?? m.viable;
+    const fail = p.viable?.ladder?.find((x) => !x.viable);
+    return {
+      m, mlx: m.format === 'mlx',
+      tps16: p.sweep?.['16384']?.tps ?? p.tps, tps64: p.sweep?.['65536']?.tps,
+      jpt: p.sweep?.['16384']?.j_per_token,
+      ctx: p.viable?.viable_ctx, pcCtx: m.format === 'mlx' ? null : pcV?.viable_ctx,
+      fail: fail ? `${k(fail.ctx)}: ${fail.fail_reason}` : null,
+    };
+  })
+  .sort((a, b) => (a.m.id.split(':')[0] + a.mlx).localeCompare(b.m.id.split(':')[0] + b.mlx));
+---
+<Base title="Apple silicon" description="What runs well on a 24 GB MacBook Pro: viable context, speed, GGUF versus MLX, and what it feels like to use." prose>
+  <h1>What runs well on a 24 GB MacBook Pro</h1>
+  <p>
+    {hw.label}, {hw.bandwidth_gbs} GB/s memory bandwidth, {hw.os}. The same tests as the PC, with the same model files where possible,
+    plus MLX builds of three of them. Quality scores travel with the model file; speed, context and the experience belong to the machine.
+  </p>
+
+  <h2>The short answer</h2>
+  <ul>
+    <li><b>Models up to about 14 GB run well</b> and leave the Mac usable: Gemma 4 12B, Qwen 3.5 9B and gpt-oss 20B.</li>
+    <li><b>Usable context is about half the PC's.</b> 32k for Gemma and Qwen, 64k for gpt-oss, against 64k to 128k on the PC. Every failure was speed, not recall.</li>
+    <li><b>MLX is faster for Qwen and gpt-oss</b> (about 30 percent), the same for Gemma, and a little less careful with facts unless told to say when it is unsure.</li>
+    <li><b>A 20 GB model fits only by force</b>, and then the whole Mac slows down. The PC runs the same model and stays usable.</li>
+  </ul>
+
+  <h2>Every model measured on the Mac</h2>
+  <div class="wrap">
+    <table>
+      <thead><tr><th>Model</th><th>Format</th><th>tok/s at 16k</th><th>tok/s at 64k</th><th>Viable context (Mac)</th><th>Viable context (PC)</th><th>First failure</th><th>Code</th><th>Tools</th><th>Fake items caught</th><th>J per token (GPU)</th></tr></thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <td><a href={`/models/${r.m.slug}/`}>{r.m.id}</a></td><td>{r.mlx ? 'MLX' : 'GGUF'}</td>
+            <td>{r.tps16 ?? '–'}</td><td>{r.tps64 ?? '–'}</td><td><b>{k(r.ctx)}</b></td><td>{r.mlx ? 'n/a' : k(r.pcCtx)}</td>
+            <td>{r.fail ?? 'none'}</td><td>{fmt(r.m.quality.code)}</td><td>{fmt(r.m.quality.tools)}</td><td>{fmt(r.m.quality.fake_caught)}</td>
+            <td>{r.jpt ?? 'not measured'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    GGUF rows use the same files as the PC, so their quality columns are the PC's scores. MLX rows are different files and were scored on the Mac.
+    Viable context is the largest size where the model recalled all planted facts at 15 tok/s or more, within 180 seconds. Laguna was tested only up to 32k.
+  </p>
+
+  <h2>What it is like to use</h2>
+  <p>
+    The PC's graphics card has its own 12 GB, and the rest of the machine has 128 GB to itself. When a model is too big, it spills into system
+    memory and only the model slows down. On the Mac, the GPU, macOS and every app share the same 24 GB. That makes small models fast, because nothing
+    is copied between memories, but there is no reserve: whatever the model takes, the rest of the Mac does without.
+  </p>
+  <p>
+    Laguna XS 2.1 (20 GB) shows the difference. It does not load until the GPU memory limit is raised from about 16 GB to 20 GB
+    (<code>sudo sysctl iogpu.wired_limit_mb=20480</code>, reset at reboot). It then passed at 8k and 16k, and failed at 32k at 5 tok/s.
+    It still recalled every planted fact; it was simply too slow. While it ran, swap filled and the whole Mac lagged. On the PC the same model
+    reached 32k and the machine stayed in normal daily use throughout.
+  </p>
+
+  <h2>Which model for which job on 24 GB</h2>
+  <ul>
+    <li><b>Long documents and agent work: gpt-oss 20B.</b> The fastest here, viable to 64k, the cheapest per token. Weak at spotting invented facts unless the system prompt asks it to say when it is unsure.</li>
+    <li><b>General work and careful answers: Qwen 3.5 9B.</b> Small enough to leave plenty of room for other apps. The GGUF build caught all three invented facts unprompted; the faster MLX build caught one, but passed every tool task.</li>
+    <li><b>Gemma 4 12B</b> is the slowest of the three here and gains nothing from MLX, whose build also looped on two tool tasks. Prefer the GGUF build.</li>
+    <li><b>Anything over about 14 GB:</b> not on this machine if you also want to work on it. Use a bigger Mac, a PC with a separate GPU, or split the job into smaller steps.</li>
+  </ul>
+
+  <h2>How it was measured</h2>
+  <ul>
+    <li>Runtimes: {hw.runtime} for GGUF files, and mlx-lm through a small Ollama-compatible bridge for MLX, so every test ran unchanged.</li>
+    <li>Same prompts, temperature 0, fixed seed, thinking off, the same 16k quality context and 16k to 64k speed runs as the PC.</li>
+    <li>GPU power from macOS <code>powermetrics</code>, sampled every half second. It covers the GPU part of the chip only, like the PC figure, which covers the graphics card only. MLX power was not measured.</li>
+    <li>Every record carries the machine, runtime and file format, so Mac and PC numbers are never mixed in one comparison. See <a href="/hardware/">Hardware</a>.</li>
+  </ul>
+</Base>

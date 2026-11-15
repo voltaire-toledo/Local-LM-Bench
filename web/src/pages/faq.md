@@ -15,11 +15,15 @@ The model has not been run on every test you weighted, so its score covers only 
 
 ## Why Ollama?
 
-One runtime, one set of model files and one API makes models comparable. Tool-calling results depend on the runtime as well as the model, so they belong to the pair. Other runtimes (LM Studio, llama.cpp directly, MLX on a Mac) will be measured as their own rows.
+One runtime, one set of model files and one API makes models comparable. Tool-calling results depend on the runtime as well as the model, so they belong to the pair. Other runtimes are measured as their own rows: MLX on the Mac is, and LM Studio or llama.cpp directly could be.
 
 ## Why only 16k context?
 
 Because the point is to keep the model and its context inside 12 GB of VRAM. The speed runs also test 32k and 64k.
+
+## Do the PC results apply to a Mac?
+
+The quality scores do, when it is the same model file. Speed and usable context do not: on a 24 GB MacBook Pro, usable context was about half the PC's, and models over about 14 GB slow down the whole machine. See [Apple silicon](/mac/).
 
 ## Why do some models look worse than I expected?
 
