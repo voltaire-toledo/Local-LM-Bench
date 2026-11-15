@@ -1,0 +1,128 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// Each activity: what it is, an everyday example, what it spends (read / think / write), smallest sensible window, where we test it.
+const A = [
+  { id: 'recall', name: 'Recall', art: 'recall',
+    what: 'Find one specific thing in what it was given. Ctrl+F with understanding.',
+    ex: '"What was the PO number in the email from Dana?" with 40 emails pasted in.',
+    read: 3, think: 1, write: 1, min: '8k for a short document; recall is what breaks first when the window is too small.',
+    test: ['Viable context', '/tests/'] },
+  { id: 'answer', name: 'Answer questions', art: 'answer',
+    what: 'Read something, then answer questions about it in its own words, without inventing what is not there.',
+    ex: '"Based on this policy, can a contractor expense a hotel upgrade?"',
+    read: 2, think: 1, write: 1, min: '8k for a few pages.',
+    test: ['Accuracy (invented facts)', '/tests/#accuracy'] },
+  { id: 'summarize', name: 'Summarize', art: 'summarize',
+    what: 'Squeeze a lot into a little and keep the facts that matter, without adding any.',
+    ex: 'A one-hour meeting transcript down to 120 words for an executive.',
+    read: 3, think: 1, write: 1, min: '16k for a 30-minute meeting, 32k for an hour.',
+    test: ['Documents', '/tests/#documents'] },
+  { id: 'classify', name: 'Categorize', art: 'classify',
+    what: 'Put each item in the right bucket, consistently, from a fixed list.',
+    ex: '24 support tickets into six labels: billing, outage, access, bug, feature, other.',
+    read: 2, think: 1, write: 1, min: '8k for a batch of a few dozen short items.',
+    test: ['Documents', '/tests/#documents'] },
+  { id: 'code', name: 'Write code', art: 'code',
+    what: 'Turn a description into working code that runs the first time, in the right language and version.',
+    ex: '"Write a PowerShell function that merges overlapping time ranges."',
+    read: 1, think: 2, write: 3, min: '8k for a function, 32k when it has to fit into existing files.',
+    test: ['Coding and other languages', '/tests/#coding'] },
+  { id: 'debug', name: 'Debug', art: 'debug',
+    what: 'Read existing code, figure out why it is wrong, and change only what needs changing.',
+    ex: '"This script skips the last row of every file. Why?"',
+    read: 3, think: 3, write: 1, min: '16k for one module, 64k or more when the bug crosses files.',
+    test: ['Coding', '/tests/#coding'] },
+  { id: 'tools', name: 'Use tools', art: 'tools',
+    what: 'Decide which tool to call, with exact arguments, read the result, and keep going until done. Or decide not to call one.',
+    ex: '"Find last week\'s failed backups and open a ticket for each." (search, read logs, create ticket, repeat)',
+    read: 2, think: 2, write: 2, min: '16k for a few steps. Every result piles onto the desk, so long jobs need 32k or more.',
+    test: ['Tool calling', '/tests/#tools'] },
+  { id: 'reason', name: 'Reason through a problem', art: 'reason',
+    what: 'Work through steps that depend on each other: estimates, logic puzzles, break-even math, trade-offs.',
+    ex: '"How many piano tuners work in Chicago?" or "At what volume does this plant break even?"',
+    read: 1, think: 3, write: 2, min: '16k with thinking on; thinking alone can take 5k to 15k tokens.',
+    test: ['Case reasoning', '/tests/#cases'] },
+  { id: 'insight', name: 'Find insights', art: 'insight',
+    what: 'Look across a lot of data and notice what nobody told it to look for, without being fooled by noise.',
+    ex: '"Here are 52 weeks of operations data by region. What is going on?"',
+    read: 3, think: 3, write: 2, min: '32k: it has to hold the data and compare across all of it.',
+    test: ['Insight finding', '/tests/#insight'] },
+];
+
+const G = 'fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+const C = 'fill="none" stroke="var(--acc)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"';
+const lines = (x, y, n, w = 70, gap = 11) => Array.from({ length: n }, (_, i) => `<path ${G} d="M${x} ${y + i * gap}h${w - (i % 3) * 12}"/>`).join('');
+const ART = {
+  recall: `<svg viewBox="0 0 132 110">${lines(20, 20, 7)}<path class="a-hit" d="M20 64h46" stroke="var(--warn)" stroke-width="6" opacity=".3"/><g class="a-scan"><circle cx="96" cy="26" r="13" ${C}/><path ${C} d="M105 35l12 12"/></g></svg>`,
+  answer: `<svg viewBox="0 0 132 110"><rect x="10" y="16" width="44" height="58" rx="4" ${G}/>${lines(17, 28, 4, 30, 10)}<g class="a-pop1"><path ${G} d="M66 18h52a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H80l-10 8v-8h-4a6 6 0 0 1-6-6V24a6 6 0 0 1 6-6z"/><text x="92" y="38" text-anchor="middle" font-size="16" fill="var(--ink2)">?</text></g><g class="a-pop2"><path ${C} d="M66 60h52a6 6 0 0 1 6 6v16a6 6 0 0 1-6 6H80l-10 8v-8h-4a6 6 0 0 1-6-6V66a6 6 0 0 1 6-6z"/><path ${C} d="M76 74h36"/></g></svg>`,
+  summarize: `<svg viewBox="0 0 132 110"><g class="a-squeeze">${lines(12, 12, 9, 40, 10)}</g><path ${G} d="M60 55h18M72 49l6 6-6 6"/><rect x="88" y="40" width="34" height="30" rx="4" ${C}/><path ${C} d="M95 50h20M95 59h14"/></svg>`,
+  classify: `<svg viewBox="0 0 132 110"><rect class="a-drop" x="60" y="10" width="12" height="9" rx="2" fill="var(--acc)"/><rect class="a-drop2" x="60" y="10" width="12" height="9" rx="2" fill="var(--warn)"/><rect class="a-drop3" x="60" y="10" width="12" height="9" rx="2" fill="var(--ok)"/><path ${G} d="M14 74v22h28V74M52 74v22h28V74M90 74v22h28V74"/></svg>`,
+  code: `<svg viewBox="0 0 132 110"><rect x="10" y="14" width="112" height="82" rx="6" ${G}/><path ${C} d="M24 40l-8 8 8 8M44 40l8 8-8 8"/><svg x="60" y="36" width="60" height="24"><rect class="a-type" x="0" y="0" height="24" fill="var(--card)" width="60"/></svg><text x="60" y="53" font-family="monospace" font-size="13" fill="var(--ink2)">ok()</text><rect class="a-cursor" x="96" y="40" width="2" height="16" fill="var(--acc)"/>${lines(20, 74, 2, 70, 10)}</svg>`,
+  debug: `<svg viewBox="0 0 132 110">${lines(14, 18, 7, 74, 12)}<g class="a-bug"><ellipse cx="104" cy="50" rx="9" ry="12" fill="var(--bad)"/><path d="M95 44l-7-4M95 56l-7 4M113 44l7-4M113 56l7 4" stroke="var(--bad)" stroke-width="2"/></g><path class="a-fix" ${C} d="M95 50l7 7 13-15"/></svg>`,
+  tools: `<svg viewBox="0 0 132 110"><g class="a-spin"><circle cx="40" cy="55" r="16" ${G}/><path ${G} d="M40 33v6M40 71v6M18 55h6M56 55h6M25 40l4 4M51 66l4 4M25 70l4-4M51 44l4-4"/></g><path ${C} d="M64 55h22"/><path ${C} d="M80 49l6 6-6 6"/><rect x="92" y="40" width="30" height="30" rx="5" ${G}/><circle class="a-pulse" cx="107" cy="55" r="5" fill="var(--ok)"/><path ${G} d="M107 76v14H40V75"/><path ${G} d="M44 84l-4-9-4 9"/></svg>`,
+  reason: `<svg viewBox="0 0 132 110"><path ${G} d="M20 30h30v12a6 6 0 1 0 0 12v14H20z"/><path ${G} d="M84 30h28v38H84V54a6 6 0 1 1 0-12z"/><g class="a-p1"><path ${C} d="M56 30h22v12a6 6 0 1 0 0 12v14H56V54a6 6 0 1 1 0-12z"/></g><circle cx="38" cy="88" r="3" fill="var(--ink2)"/><circle cx="66" cy="88" r="3" fill="var(--ink2)"/><circle cx="94" cy="88" r="3" fill="var(--acc)"/></svg>`,
+  insight: `<svg viewBox="0 0 132 110"><path ${G} d="M14 14v80h106"/><path class="a-line" ${C} d="M20 80l16-8 14 4 14-10 14 2 12-30 14 2 14-4"/><circle class="a-ring" cx="90" cy="38" r="11" fill="none" stroke="var(--warn)" stroke-width="2.4"/></svg>`,
+};
+const dots = (n) => '●'.repeat(n) + '○'.repeat(3 - n);
+---
+<Base title="Cognitive activities" description="The kinds of mental work you hand a model, what each one costs in context, and how this site tests them." prose>
+  <h1>Cognitive activities: what are you actually asking it to do?</h1>
+  <p>
+    "Can this model do my job?" is too big a question. Every job is a mix of a few kinds of mental work, and they stress a model in
+    different ways. Some need it to <b>read</b> a lot, some to <b>think</b> a lot, some to <b>write</b> a lot. That mix decides how big a{" "}
+    <a href="/learn/context/">context window</a> you need and which scores on the <a href="/">compare page</a> matter for you.
+  </p>
+  <p class="note">The dots show what each activity spends from the context budget: ● a little, ●● a fair amount, ●●● a lot.</p>
+
+  {A.map((a) => (
+    <section class="act card" id={a.id}>
+      <div class="art" set:html={ART[a.art]} />
+      <div>
+        <h2>{a.name}</h2>
+        <p>{a.what}</p>
+        <p><span class="k">Real example:</span> {a.ex}</p>
+        <p class="spend"><span>Reads <b>{dots(a.read)}</b></span><span>Thinks <b>{dots(a.think)}</b></span><span>Writes <b>{dots(a.write)}</b></span></p>
+        <p><span class="k">Window:</span> {a.min}</p>
+        <p class="note">Tested here as <a href={a.test[1]}>{a.test[0]}</a>.</p>
+      </div>
+    </section>
+  ))}
+
+  <h2>Putting it together</h2>
+  <p>
+    Real work chains these. "Read the incident report, find the root cause, fix the script, and open a ticket" is recall, debug, code
+    and tools in one go, and the desk has to hold all of it at once. Two ways to make that fit on a small machine: give the model a
+    bigger viable window, or split the chain into steps and pass notes between them (a file is a perfectly good memory). The second is
+    slower to set up and usually works better.
+  </p>
+
+  <style>
+    .act{display:grid;grid-template-columns:132px 1fr;gap:18px;align-items:start;margin:16px 0}
+    .act h2{margin:0 0 4px}.act p{margin:6px 0}
+    .art svg{width:132px;height:110px;display:block}
+    .spend{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:14px}.spend b{color:var(--acc);letter-spacing:2px}
+    @media (max-width:560px){.act{grid-template-columns:1fr}.art svg{width:110px;height:92px}}
+    .a-scan{animation:scan 2.6s ease-in-out infinite}
+    @keyframes scan{0%,100%{transform:translateY(0)}50%{transform:translateY(46px)}}
+    .a-hit{animation:hit 2.6s ease-in-out infinite}@keyframes hit{0%,40%,100%{opacity:.15}50%,70%{opacity:1}}
+    .a-pop1{animation:pop 3s ease-out infinite}.a-pop2{animation:pop 3s ease-out infinite;animation-delay:1.2s}
+    @keyframes pop{0%{opacity:0;transform:translateY(6px)}20%,80%{opacity:1;transform:none}100%{opacity:0}}
+    .a-squeeze{animation:squeeze 3s ease-in-out infinite;transform-origin:30px 55px}@keyframes squeeze{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.25)}}
+    .a-drop{animation:drop 2.4s ease-in infinite}.a-drop2{animation:drop2 2.4s ease-in infinite;animation-delay:.8s}.a-drop3{animation:drop3 2.4s ease-in infinite;animation-delay:1.6s}
+    @keyframes drop{0%{transform:translate(0,0);opacity:1}80%{transform:translate(-36px,58px);opacity:1}100%{transform:translate(-36px,58px);opacity:0}}
+    @keyframes drop2{0%{transform:translate(0,0);opacity:1}80%{transform:translate(0,58px);opacity:1}100%{transform:translate(0,58px);opacity:0}}
+    @keyframes drop3{0%{transform:translate(0,0);opacity:1}80%{transform:translate(36px,58px);opacity:1}100%{transform:translate(36px,58px);opacity:0}}
+    .a-type{animation:type 3s steps(6) infinite}@keyframes type{0%{transform:translateX(0)}70%,100%{transform:translateX(60px)}}
+    .a-cursor{animation:blink 1s step-end infinite}@keyframes blink{50%{opacity:0}}
+    .a-bug{animation:bug 3s ease-in-out infinite}@keyframes bug{0%,45%{opacity:1}60%,100%{opacity:0}}
+    .a-fix{animation:fix 3s ease-in-out infinite}@keyframes fix{0%,50%{opacity:0}65%,100%{opacity:1}}
+    .a-spin{animation:spin 4s linear infinite;transform-box:fill-box;transform-origin:center}@keyframes spin{to{transform:rotate(360deg)}}
+    .a-pulse{animation:pulse 2s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
+    .a-p1{animation:pz 3.2s ease-in-out infinite}@keyframes pz{0%,30%{transform:translate(-14px,-10px)}60%,100%{transform:none}}
+    .a-line{stroke-dasharray:140;animation:draw 3.2s ease-out infinite}@keyframes draw{from{stroke-dashoffset:140}60%,to{stroke-dashoffset:0}}
+    .a-ring{animation:ring 3.2s ease-out infinite;transform-box:fill-box;transform-origin:center}@keyframes ring{0%,55%{opacity:0;transform:scale(.4)}75%,100%{opacity:1;transform:scale(1)}}
+    @media (prefers-reduced-motion:reduce){.art *{animation:none!important}}
+  </style>
+</Base>
+

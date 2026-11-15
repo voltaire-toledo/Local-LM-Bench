@@ -15,30 +15,88 @@ The window is filled with varied, seeded filler at 8k, 16k, 32k, 64k and 128k to
 
 Note the "too slow" cases: a model can answer correctly at 128k and still fail the test because the reply takes four minutes. Whether that matters depends on the job.
 
+<a id="coding"></a>
 ## Code
 
 | Test | What it asks | Scored by |
 |---|---|---|
 | Python and Terraform | Interval merge, a bug fix, and a Terraform hub network with an NSG that allows only 443 | Running assertions; `terraform validate` against the real provider |
-| Go, PowerShell, AutoHotkey v2 (and Rust) | The same three jobs in each: merge intervals, parse key=value text, fix a seeded bug | The generated code is compiled or run against a test harness in a throwaway folder; code with unsafe patterns is blocked, not run |
+| <a id="languages"></a>Go, PowerShell, AutoHotkey v2 (and Rust) | The same three jobs in each: merge intervals, parse key=value text, fix a seeded bug | The generated code is compiled or run against a test harness in a throwaway folder; code with unsafe patterns is blocked, not run |
 
 **Why it matters:** this is most of the daily work, and most of the code on this machine is not Python. **How it bites:** invented Terraform arguments, v1/v2 AutoHotkey confusion, PowerShell's array unrolling and Rust's borrow checker. Rust is skipped until a toolchain is installed.
 
+**Try it.** All scripts use the `llm.py` helper from [Parameters and the API](/learn/parameters/#the-helper). Python standard library only.
+
+```python
+# coding.py - ask for code, then check it at least parses. Run the code itself only in a sandbox (container, VM, throwaway folder).
+import ast, re
+from llm import chat
+
+task = "Write a Python function merge(intervals) that merges overlapping [start, end] pairs and returns them sorted. Code only."
+reply = chat(task, temperature=0, num_predict=600)["message"]["content"]
+code = (re.findall(r"```(?:python)?\n(.*?)```", reply, re.S) or [reply])[0]
+try:
+    ast.parse(code)
+    print("parses: yes, defines:", [n.name for n in ast.walk(ast.parse(code)) if isinstance(n, ast.FunctionDef)])
+except SyntaxError as e:
+    print("parses: no ->", e)
+print(code)
+```
+
+On the Mac, `qwen3.5:9b` wrote a correct-looking `merge` that parses. Parsing is the cheap check; the benchmark goes further and runs the
+code against tests in a throwaway folder. For other languages, change the task to "Write a PowerShell function Merge-Intervals..." and
+check it with the matching tool (`go vet`, `Invoke-ScriptAnalyzer`). **Never run model-written code on your real machine without
+reading it**; use a container or VM.
+
+<a id="documents"></a>
 ## Documents
 
 - **Categorizing:** 24 support tickets into six labels, scored against known answers.
 - **Summarizing:** three documents (an incident report, a policy memo and a meeting transcript), each in at most 120 words. Scored by how many of ten key facts survive, with penalties for claims the document never made and for running long.
 
+**Try it.** Categorizing with a forced answer format is in [format: answers your code can parse](/learn/parameters/#format). For
+summaries, paste any document into `chat("Summarize in at most 120 words for an executive:\n" + text)` and check two things by hand:
+did the key numbers survive, and did anything appear that the document never said?
+
 ## Reasoning
 
-- **Consulting-style cases:** six cases in industries the model has no special knowledge of (cement, a hospital clinic, a market entry, a break-even, an LTV/CAC check and a piano-tuner estimate). The automatic score checks structure (a breakdown, assumptions, risks, a recommendation, a stated hypothesis), the use of relevant frameworks, and the number where the case is computable. It is a proxy for quality, not a substitute for reading the answer.
-- **Planted-pattern insight:** a table of weekly operations data with three planted patterns (a lagged effect, a step change in one region, a threshold effect) and a decoy column. The model returns findings as JSON. Scored by planted patterns found, minus a penalty for claiming the decoy.
+- <a id="cases"></a>**Consulting-style cases:** six cases in industries the model has no special knowledge of (cement, a hospital clinic, a market entry, a break-even, an LTV/CAC check and a piano-tuner estimate). The automatic score checks structure (a breakdown, assumptions, risks, a recommendation, a stated hypothesis), the use of relevant frameworks, and the number where the case is computable. It is a proxy for quality, not a substitute for reading the answer.
+- <a id="insight"></a>**Planted-pattern insight:** a table of weekly operations data with three planted patterns (a lagged effect, a step change in one region, a threshold effect) and a decoy column. The model returns findings as JSON. Scored by planted patterns found, minus a penalty for claiming the decoy.
 
+**Try it (cases).** Reasoning is where thinking on or off matters most; see [Thinking: on or off](/learn/parameters/#think) and swap in a
+case such as "Estimate how many piano tuners work in Chicago. Show your assumptions."
+
+**Try it (insight).** One planted pattern (south returns jump from week 12) and one decoy (random banner colors). All scripts use the `llm.py` helper from [Parameters and the API](/learn/parameters/#the-helper). Python standard library only.
+
+```python
+# insight.py - can it spot a pattern nobody pointed at? One planted step change, one decoy column.
+import json, random
+from llm import chat
+
+random.seed(1)
+rows = ["week,region,orders,returns,promo_banner_color"]
+for w in range(1, 21):
+    for region in ("north", "south"):
+        orders = random.randint(90, 110)
+        returns = random.randint(4, 7) + (9 if region == "south" and w >= 12 else 0)  # planted: south returns jump from week 12
+        rows.append(f"{w},{region},{orders},{returns},{random.choice(['red', 'blue', 'green'])}")  # decoy: random colors
+q = "Here is weekly data:\n" + "\n".join(rows) + "\n\nList the notable patterns as JSON: [{\"finding\": ..., \"evidence\": ...}]. Only real patterns."
+print(chat(q, temperature=0, num_predict=500)["message"]["content"])
+```
+
+What `qwen3.5:9b` did on the Mac: it spotted the south returns spike from week 12 and correctly said the banner color meant nothing. It
+also overstated the pattern as "every week" (it starts at week 12) and "found" a stability difference in orders that is pure noise.
+That mix, one real finding wrapped in confident filler, is exactly what this test scores.
+
+<a id="accuracy"></a>
 ## Factuality, refusals and tools
 
 - **Factuality:** one known fact and three invented things (an `az` command, a Terraform module, a paper), run plain, with a "say when unsure" prompt and with an expert-user prompt. Scored by a keyword check for an honest "cannot find it".
 - **Refusals:** five borderline but legitimate prompts. A measurement, not a score.
-- **Tool calling:** nine small tasks against sandboxed tools (right tool, exact arguments, no call when none is needed, chaining, error recovery, honesty on empty results, declining without a suitable tool, and a Linux command in WSL).
+- <a id="tools"></a>**Tool calling:** nine small tasks against sandboxed tools (right tool, exact arguments, no call when none is needed, chaining, error recovery, honesty on empty results, declining without a suitable tool, and a Linux command in WSL).
+
+**Try it.** Watch one fake question flip from invented to honest with a single system prompt line:
+[The system prompt](/learn/parameters/#accuracy). A complete tool-calling round trip is in [Tools](/learn/parameters/#tools).
 
 ## Speed and fit
 
@@ -50,4 +108,4 @@ Four jobs: [transparent logo PNGs](/images/) (generated on a flat green backgrou
 
 ## Not tested yet
 
-Real agent harnesses (Claude Code, Codex, Hermes) are deliberately out of scope: the point is what a model can do on its own. Rust waits for a toolchain. Apple silicon, and GGUF against MLX, come next.
+Real agent harnesses (Claude Code, Codex, Hermes) are deliberately out of scope: the point is what a model can do on its own. Rust waits for a toolchain. Apple silicon is done: see [the Mac page](/mac/).

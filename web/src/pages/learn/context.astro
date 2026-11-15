@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="What is context?" description="What a context window holds in real terms, how it gets used up, and how big a window you need for the work you do." prose>
+  <h1>What is context, and what does it mean for you?</h1>
+  <p>
+    Context is the model's desk. Everything it can see while it works has to be on that desk at once: your instructions, the stuff you
+    handed it, its own thinking, and the answer it is writing. Whatever falls off the desk, it simply does not know about. No memory, no
+    "I read that earlier". Gone.
+  </p>
+  <p>
+    The size of the desk is measured in <b>tokens</b>. Forget the definition; what you need is the exchange rate. I measured it with real
+    files from this repo, run through Qwen 3.5's tokenizer:
+  </p>
+  <table>
+    <thead><tr><th>Stuff</th><th>Exchange rate</th><th>So 1,000 tokens is about</th></tr></thead>
+    <tbody>
+      <tr><td>Business English (reports, emails, transcripts)</td><td>about 1.5 tokens per word</td><td>670 words, a bit over one page</td></tr>
+      <tr><td>Python code</td><td>about 19 tokens per line</td><td>50 lines</td></tr>
+      <tr><td>JSON data</td><td>about 12 tokens per line</td><td>85 short lines</td></tr>
+      <tr><td>Markdown docs with links and tables</td><td>about 1.6 tokens per word</td><td>640 words</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Other models use other tokenizers, so expect 10 to 20 percent either way. Numbers, code, URLs and non-English text cost more per character than plain English.</p>
+
+  <h2>The desk is never all yours</h2>
+  <p>A context window is a budget, and four things spend it at the same time:</p>
+  <div class="budget" aria-hidden="true">
+    <span class="b1">instructions</span><span class="b2">your material</span><span class="b3">thinking</span><span class="b4">answer</span>
+  </div>
+  <ul>
+    <li><b>Instructions:</b> the system prompt and your request. A few hundred tokens for a chat, 10,000 to 20,000 in agent tools before you type a word (every tool definition costs a few hundred).</li>
+    <li><b>Your material:</b> the document, code, transcript or data.</li>
+    <li><b>Thinking:</b> reasoning models write notes to themselves before answering. Easy questions take a few hundred tokens; hard puzzles can take 5,000 to 15,000.</li>
+    <li><b>The answer:</b> a paragraph is 150 tokens, a page of report 800, a 100-line script about 2,000. In an agent, every tool result also lands on the desk and stays there.</li>
+  </ul>
+  <p>
+    <b>Rule of thumb used on this site: give your material at most half the window.</b> The other half is the room the model needs to
+    actually do something with it. Fill the window to the brim and it can still read, but it cannot think.
+  </p>
+
+  <h2>What fits, window by window</h2>
+  <div class="card">
+    <label for="win" class="k">Pick a window size</label>
+    <select id="win" style="max-width:220px">
+      <option value="8">8k (8,192 tokens)</option>
+      <option value="16" selected>16k (16,384 tokens)</option>
+      <option value="32">32k (32,768 tokens)</option>
+      <option value="64">64k (65,536 tokens)</option>
+      <option value="128">128k (131,072 tokens)</option>
+    </select>
+    <div id="fit" style="margin-top:10px"></div>
+  </div>
+  <script>
+    const T = {
+      8: ['about 2,700 words, five pages', 'a 200-line script', 'a 15-minute meeting transcript',
+        'answer questions about it, summarize it, fix one bug, or make three or four tool calls',
+        'thinking hard: a reasoning model can burn the whole spare half on one tricky puzzle'],
+      16: ['about 5,400 words, eleven pages', 'a 400-line module', 'a 30-minute meeting transcript',
+        'summarize and categorize, write a function with its tests, or reason through a medium puzzle with thinking on',
+        'agent work: tool definitions and results fill it after a handful of steps'],
+      32: ['about 10,900 words, a 22-page report', 'around 850 lines of code, a handful of files', 'a one-hour meeting transcript',
+        'analyze it and write a structured report, find patterns in a table, or run an agent loop of 10 to 15 tool calls',
+        'comparing several long documents side by side'],
+      64: ['about 21,800 words, a 45-page contract', 'around 1,700 lines, a small project', 'a two-hour workshop transcript',
+        'compare documents, trace a bug across files, and surface insights across all of it',
+        'a whole codebase, or a book'],
+      128: ['about 43,700 words, a short novel such as Animal Farm with room to spare', 'around 3,400 lines, a real codebase slice', 'a four-hour workshop transcript',
+        'synthesize many sources into one report, or run long agent sessions without forgetting the start',
+        'speed on small hardware: on the 24 GB Mac, filling 64k already means minutes of waiting before the first word'],
+    };
+    const sel = document.getElementById('win');
+    const out = document.getElementById('fit');
+    const show = () => {
+      const [words, code, talk, can, cant] = T[sel.value];
+      out.innerHTML = `<p>Half the window for material holds <b>${words}</b>, or <b>${code}</b>, or <b>${talk}</b>.</p>
+        <p>With the other half, it has room to <b>${can}</b>.</p><p class="note">Where it runs out: ${cant}.</p>`;
+    };
+    sel.addEventListener('input', show);
+    show();
+  </script>
+
+  <h2>Advertised versus viable</h2>
+  <p>
+    A model card might say 256k. That is the size the model was built to accept, not the size you can use. Two things cut it down. First,
+    memory: the model keeps notes on every token (the <a href="/learn/kv-cache/">KV cache</a>), and those notes have to fit beside the
+    model in your GPU memory. Second, patience: reading a long prompt takes time before the first word appears. On the 24 GB Mac, Gemma
+    took about seven minutes to answer a 64k prompt, nearly all of it spent reading.
+  </p>
+  <p>
+    That is why this site measures <b>viable context</b>: the biggest window where the model still finds all three facts we hid in it,
+    at a speed you would tolerate. Use the "Minimum viable context" filter on the <a href="/">compare page</a> with the table above: work
+    out how big your material is, double it, and filter for that.
+  </p>
+
+  <h2>Try it yourself</h2>
+  <p>Count the tokens in any file with a local model. Ollama reports how many tokens it read as <code>prompt_eval_count</code>:</p>
+  <pre><code>{`# count_tokens.py  -  usage: python count_tokens.py myfile.txt
+import json, sys, urllib.request
+
+text = open(sys.argv[1], encoding="utf-8").read()
+body = {"model": "qwen3.5:9b", "prompt": text, "raw": True, "stream": False,
+        "options": {"num_predict": 1, "num_ctx": 131072}}
+req = urllib.request.Request("http://localhost:11434/api/generate",
+                             json.dumps(body).encode(), {"Content-Type": "application/json"})
+n = json.load(urllib.request.urlopen(req))["prompt_eval_count"]
+words = len(text.split())
+print(f"{n} tokens, {words} words, {n / max(words, 1):.2f} tokens per word")`}</code></pre>
+  <p class="note">
+    Swap in any model you have pulled. If the file is bigger than <code>num_ctx</code>, the count tops out at that number, which is
+    itself the lesson: the rest was cut off. See the <a href="/learn/activities/">cognitive activities</a> for what each kind of job costs.
+  </p>
+
+  <style>
+    .budget{display:flex;height:34px;border-radius:8px;overflow:hidden;margin:12px 0;font-size:12px;color:#fff;font-weight:600}
+    .budget span{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;animation:grow 2.4s ease-out both}
+    .b1{background:#6b7280;flex:1}.b2{background:#2a78d6;flex:4;animation-delay:.3s!important}.b3{background:#a86f00;flex:2.2;animation-delay:.6s!important}.b4{background:#14855f;flex:1.4;animation-delay:.9s!important}
+    @keyframes grow{from{flex-grow:.01;opacity:.2}}
+    @media (prefers-reduced-motion:reduce){.budget span{animation:none}}
+  </style>
+</Base>
